@@ -2,6 +2,8 @@
 
 **Laboratorio Didáctico e Interactivo de Valor Posicional (Base 10) para Educación Primaria.**
 
+🎮 **Jugar en vivo (GitHub Pages)**: [https://elchocazo.github.io/casa-de-los-numeros-lego/](https://elchocazo.github.io/casa-de-los-numeros-lego/)
+
 Una aplicación web educativa interactiva desarrollada con HTML5, Tailwind CSS y Three.js, diseñada para ayudar a los estudiantes a comprender y experimentar el valor posicional de las cifras de forma visual, táctil y manipulativa.
 
 ---
