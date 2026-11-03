@@ -1,0 +1,2938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Casa de los Números LEGO · Laboratorio de Valor Posicional</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Fredoka', 'Inter', sans-serif;
+      background-color: #eef2f7;
+      background-image: radial-gradient(#cbd5e1 1.6px, transparent 1.6px);
+      background-size: 24px 24px;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow-x: hidden;
+    }
+
+    .lego-font {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-weight: 800;
+    }
+
+    .btn-tactile {
+      transition: all 0.12s ease;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18);
+    }
+    .btn-tactile:hover:not(:disabled) {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+    .btn-tactile:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+    }
+    .btn-tactile:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .game-panel {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px -4px rgba(30, 41, 59, 0.09);
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      height: 7px;
+      width: 7px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+
+    @keyframes dock-bounce {
+      0% { transform: scale(0.92); opacity: 0; }
+      70% { transform: scale(1.03); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .anim-dock {
+      animation: dock-bounce 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes brick-pop {
+      0% { transform: scale(0.4) translateY(-8px); opacity: 0; }
+      75% { transform: scale(1.08) translateY(0); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .brick-anim {
+      animation: brick-pop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes shake-soft {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .anim-shake {
+      animation: shake-soft 0.25s ease-in-out;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.55); }
+      50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+    }
+    .slot-needed {
+      animation: pulse-ring 1.6s infinite;
+    }
+
+    .mission-badge {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: white;
+    }
+
+    /* Piezas LEGO Base-10 estilizadas */
+    .lego-unit {
+      width: 20px;
+      height: 16px;
+      background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+      border: 1.5px solid #991b1b;
+      border-radius: 3px;
+      position: relative;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 2px 0 rgba(127,29,29,0.35);
+    }
+    .lego-unit::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 4px;
+      width: 9px;
+      height: 3.5px;
+      background: #ef4444;
+      border: 1px solid #991b1b;
+      border-bottom: none;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .lego-ten {
+      width: 11px;
+      height: 68px;
+      background: repeating-linear-gradient(
+        to bottom,
+        #3b82f6 0px,
+        #3b82f6 5.5px,
+        #1d4ed8 5.5px,
+        #1d4ed8 6.8px
+      );
+      border: 1.5px solid #1e3a8a;
+      border-radius: 2px;
+      position: relative;
+      box-shadow: inset 1px 0 0 rgba(255,255,255,0.4), 0 2px 2px rgba(30,58,138,0.25);
+    }
+    .lego-ten::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 1.5px;
+      width: 5px;
+      height: 3px;
+      background: #60a5fa;
+      border: 1px solid #1e3a8a;
+      border-bottom: none;
+      border-radius: 1.5px 1.5px 0 0;
+    }
+
+    .lego-hundred {
+      width: 34px;
+      height: 34px;
+      background-color: #10b981;
+      background-image:
+        radial-gradient(#6ee7b7 1.3px, transparent 1.4px),
+        linear-gradient(135deg, rgba(255,255,255,0.22), rgba(0,0,0,0.12));
+      background-size: 6px 6px, 100% 100%;
+      border: 1.5px solid #065f46;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #047857;
+    }
+
+    .lego-thousand {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, #a855f7 0%, #7e22ce 60%, #581c87 100%);
+      border: 1.5px solid #4c1d95;
+      border-radius: 5px;
+      position: relative;
+      box-shadow: 3px 3px 0 #3b0764, inset 1px 1px 0 rgba(255,255,255,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 900;
+    }
+    .lego-thousand::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 6px;
+      width: 14px;
+      height: 3.5px;
+      background: #c084fc;
+      border: 1px solid #4c1d95;
+      border-bottom: none;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .lego-tenthousand {
+      width: 30px;
+      height: 34px;
+      background: linear-gradient(180deg, #fbbf24 0%, #d97706 65%, #92400e 100%);
+      border: 1.5px solid #78350f;
+      border-radius: 5px;
+      position: relative;
+      box-shadow: 3px 3px 0 #78350f, inset 1px 1px 0 rgba(255,255,255,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fffbeb;
+      font-size: 7.5px;
+      font-weight: 900;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.45);
+    }
+    .lego-tenthousand::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 5px;
+      width: 16px;
+      height: 3.5px;
+      background: #fde68a;
+      border: 1px solid #78350f;
+      border-bottom: none;
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* Partícula voladora de canje Base 10 */
+    .flying-carry {
+      position: fixed;
+      z-index: 80;
+      pointer-events: none;
+      transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.62s ease;
+    }
+
+    /* Fantasma de arrastre táctil */
+    #touchDragGhost {
+      position: fixed;
+      z-index: 90;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 p-2 sm:p-3.5 flex flex-col items-center justify-between">
+
+  <!-- TOAST NO BLOQUEANTE PARA CANJES BASE 10 Y AVISOS RÁPIDOS -->
+  <div id="liveToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-3">
+    <div class="bg-slate-900/95 text-white px-4 py-2.5 rounded-2xl shadow-xl border-2 border-amber-400 flex items-center gap-2.5 text-xs sm:text-sm font-bold">
+      <span id="liveToastEmoji" class="text-xl">✨</span>
+      <span id="liveToastText">¡Canje Base 10!</span>
+    </div>
+  </div>
+
+  <!-- BARRA DE MARCA SUPERIOR -->
+  <div class="w-full max-w-7xl mb-2 flex flex-wrap items-center justify-between gap-2 bg-white/95 border border-slate-200 shadow-sm rounded-2xl px-3 sm:px-4 py-2">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-rose-500 text-white font-black text-xl flex items-center justify-center shadow-sm">
+        🧱
+      </div>
+      <div>
+        <span class="text-[9px] font-black uppercase text-indigo-700 tracking-widest block leading-none">Material Didáctico Primaria · Base 10</span>
+        <h1 class="text-base sm:text-lg font-black text-slate-900 lego-font leading-tight">
+          La Casa de los Números <span class="text-rose-600">LEGO</span>
+        </h1>
+      </div>
+    </div>
+
+    <!-- SELECTOR DE MODO DE JUEGO (3 MODOS) + HERRAMIENTAS DE AULA -->
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+        <button id="btnModeAdventure" onclick="switchGameMode('adventure')" class="text-xs font-black px-2.5 sm:px-3 py-1.5 rounded-lg transition mission-badge shadow-sm flex items-center gap-1">
+          <span>🗺️</span> Aventura
+        </button>
+        <button id="btnModeChallenge" onclick="switchGameMode('challenge')" class="text-xs font-black px-2.5 sm:px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center gap-1">
+          <span>🧩</span> Desafíos
+        </button>
+        <button id="btnModeFree" onclick="switchGameMode('free')" class="text-xs font-black px-2.5 sm:px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center gap-1">
+          <span>✏️</span> Taller Libre
+        </button>
+      </div>
+
+      <!-- Controles rápidos docentes: Vista de Bloques y Sonido -->
+      <div class="flex items-center gap-1.5">
+        <button id="btnViewMode" onclick="cycleRoomViewMode()" class="btn-tactile bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 text-[11px] font-black px-2.5 py-1.5 rounded-xl flex items-center gap-1" title="Cambiar entre Bloques + Cifras, Solo Bloques (Modo Pizarra) o Solo Cifras">
+          <span>👁️</span> <span id="viewModeLabel">Bloques + Cifras</span>
+        </button>
+        <button id="btnSoundToggle" onclick="toggleMute()" class="btn-tactile bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-xs font-black px-2.5 py-1.5 rounded-xl" title="Activar o silenciar sonidos y voz">
+          🔊
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENCABEZADO: WEBCAM 3D DE LEO + PANEL DE CONTROL -->
+  <header class="w-full max-w-7xl mb-2.5">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
+
+      <!-- WEBCAM 3D EN VIVO DE LEO EL CONSTRUCTOR -->
+      <div class="lg:col-span-4 game-panel border-2 border-amber-300 p-3 bg-gradient-to-b from-amber-50/70 to-white flex flex-col justify-between relative overflow-hidden shadow-md">
+        <div class="flex items-center justify-between border-b border-amber-100 pb-1.5 mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+            </span>
+            <span class="text-[11px] font-black tracking-wider text-amber-950 uppercase">Radio-Com Leo 3D</span>
+          </div>
+          <span class="text-[10px] font-extrabold bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-full">
+            👷‍♂️ Maestro Constructor
+          </span>
+        </div>
+
+        <!-- Ventana visual 3D Canvas interactiva -->
+        <div class="relative w-full h-32 bg-gradient-to-b from-sky-300 via-sky-200 to-amber-100 rounded-2xl overflow-hidden border border-amber-200 shadow-inner flex items-center justify-center">
+          <canvas id="leoWebcam3DCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing" title="Arrastra para girar a Leo o haz clic para saludar"></canvas>
+          <div class="absolute top-2 left-2 pointer-events-none bg-black/45 backdrop-blur-sm text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> EN DIRECTO · Gírame
+          </div>
+          <button onclick="triggerLeoSpeech()" class="absolute bottom-2 right-2 bg-amber-400 hover:bg-amber-500 text-amber-950 text-xs font-black px-2.5 py-1 rounded-xl shadow-md transition active:scale-95 flex items-center gap-1 border border-amber-500">
+            <span>🗣️</span> ¡Escuchar!
+          </button>
+        </div>
+
+        <!-- Globo de diálogo de Leo -->
+        <div class="mt-2 bg-white rounded-xl p-2 border border-amber-200 shadow-sm flex items-start gap-2 min-h-[48px]">
+          <span class="text-base shrink-0">💬</span>
+          <p id="leoSpeechBubble" class="text-xs font-bold text-slate-700 leading-snug">
+            ¡Hola arquitecto! Vamos a construir juntos el edificio con bloques LEGO.
+          </p>
+        </div>
+      </div>
+
+      <!-- PANEL DE CONTROL DEL RETO (AVENTURA / DESAFÍOS / LIBRE) + CIUDAD LEGO -->
+      <div id="targetControlBox" class="lg:col-span-8 game-panel border-2 border-indigo-200 p-3.5 flex flex-col justify-between gap-2 bg-gradient-to-r from-white via-indigo-50/30 to-white shadow-md">
+
+        <!-- 1. BARRA MODO AVENTURA -->
+        <div id="adventureMissionBar" class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-indigo-100">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-2xl bg-indigo-100 border border-indigo-200 flex items-center justify-center text-2xl shadow-sm" id="missionIcon">
+              🥖
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span id="missionStepBadge" class="text-[10px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">
+                  Misión 1 de 8
+                </span>
+                <span id="missionLevelBadge" class="text-[10px] font-bold text-slate-500">
+                  Paso 1: Unidades y Decenas
+                </span>
+              </div>
+              <h2 id="missionTitle" class="text-sm sm:text-base font-black text-slate-900 lego-font leading-tight">
+                La Panadería de la Plaza
+              </h2>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5">
+            <div id="missionStarsRow" class="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-xl border border-amber-200" title="Haz clic en una misión desbloqueada para viajar a ella"></div>
+            <button onclick="givePedagogicalHint()" class="btn-tactile bg-amber-400 hover:bg-amber-500 text-amber-950 font-black text-xs py-1.5 px-2.5 rounded-xl flex items-center gap-1" title="Ver pista pedagógica">
+              <span>💡</span> Pista
+            </button>
+            <button id="btnNextMission" onclick="advanceNextMission()" class="btn-tactile hidden bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-1.5 px-3 rounded-xl flex items-center gap-1 animate-bounce">
+              Siguiente Obra ⏩
+            </button>
+            <button onclick="openCityMapModal()" class="btn-tactile bg-purple-600 hover:bg-purple-700 text-white font-black text-xs py-1.5 px-2.5 rounded-xl flex items-center gap-1" title="Ver Isla Numbrópolis">
+              <span>🏝️</span> Isla (<span id="cityCountBadge">0</span>/8)
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. BARRA MODO DESAFÍOS (DETECTIVE POSICIONAL) -->
+        <div id="challengeControlsRow" class="hidden flex-wrap items-center justify-between gap-2 pb-2 border-b border-indigo-100">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <select id="challengeTypeSelect" onchange="generateNewChallenge()" class="bg-indigo-50 border-2 border-indigo-200 rounded-xl px-2.5 py-1 text-xs font-black text-indigo-950 outline-none cursor-pointer">
+              <option value="mixed">🎲 Reto Sorpresa (Mixto)</option>
+              <option value="scrambled">📐 Planos Desordenados (Ej: 4U + 2C)</option>
+              <option value="dictation">🎧 Dictado en Letras (Sin cifras)</option>
+              <option value="additive">🧮 Suma de Bloques (Ej: 1.000 + 40)</option>
+            </select>
+
+            <select id="challengeLevelSelect" onchange="generateNewChallenge()" class="bg-amber-50 border-2 border-amber-200 rounded-xl px-2.5 py-1 text-xs font-black text-amber-950 outline-none cursor-pointer">
+              <option value="2">Nivel 1 · Hasta 99 (D y U)</option>
+              <option value="3" selected>Nivel 2 · Hasta 999 (Centenas)</option>
+              <option value="4">Nivel 3 · Miles (Hasta 9.999)</option>
+              <option value="5">Nivel 4 · Maestro (Hasta 99.999)</option>
+            </select>
+
+            <button onclick="generateNewChallenge()" class="btn-tactile bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs py-1.5 px-2.5 rounded-xl">
+              🔄 Nuevo Acertijo
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="bg-orange-50 border border-orange-200 px-2.5 py-1 rounded-xl text-xs font-black text-orange-700 flex items-center gap-1">
+              🔥 Racha: <span id="challengeStreakBadge">0</span>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-xl text-xs font-black text-emerald-700 flex items-center gap-1">
+              🏆 Puntos: <span id="challengeScoreBadge">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. BARRA MODO TALLER LIBRE / PIZARRA DOCENTE -->
+        <div id="freeControlsRow" class="hidden flex-wrap items-center justify-between gap-2 pb-2 border-b border-indigo-100">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-xs font-black text-slate-700">Objetivo:</span>
+            <input
+              type="number"
+              id="inputCustomNumber"
+              min="0"
+              max="99999"
+              placeholder="Ej: 1405"
+              class="w-24 bg-indigo-50 border-2 border-indigo-300 rounded-xl py-1 px-2 font-black text-indigo-950 text-center text-sm outline-none focus:border-indigo-600"
+              onkeydown="if(event.key === 'Enter') applyCustomNumber()"
+            >
+            <button onclick="applyCustomNumber()" class="btn-tactile bg-indigo-600 text-white font-black text-xs py-1.5 px-2.5 rounded-xl">
+              Fijar 🎯
+            </button>
+            <button onclick="generateRandomTarget()" class="btn-tactile bg-amber-500 text-white font-black text-xs py-1.5 px-2.5 rounded-xl flex items-center gap-1">
+              <span>🎲</span> Azar
+            </button>
+            <button onclick="autoBuildDemo()" class="btn-tactile bg-emerald-600 text-white font-black text-xs py-1.5 px-2.5 rounded-xl flex items-center gap-1" title="Construir paso a paso automáticamente">
+              <span>🪄</span> Auto
+            </button>
+          </div>
+
+          <!-- Sumador/Restador en vivo para demostrar canjes en clase -->
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <span class="text-[10px] font-black text-slate-500 px-1 uppercase"> Total:</span>
+            <button onclick="stepTotalBy(-1)" class="btn-tactile bg-rose-100 hover:bg-rose-200 text-rose-900 font-black text-xs px-2 py-1 rounded-lg border border-rose-300" title="Restar 1 al edificio (con desagrupación automática)">−1</button>
+            <button onclick="stepTotalBy(1)" class="btn-tactile bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs px-2 py-1 rounded-lg" title="Sumar 1 al edificio (observa el canje al llegar a 10)">+1</button>
+            <button onclick="stepTotalBy(10)" class="btn-tactile bg-blue-500 hover:bg-blue-600 text-white font-black text-xs px-2 py-1 rounded-lg">+10</button>
+            <button onclick="stepTotalBy(100)" class="btn-tactile bg-teal-600 hover:bg-teal-700 text-white font-black text-xs px-2 py-1 rounded-lg">+100</button>
+          </div>
+        </div>
+
+        <!-- Riel skyline de la ciudad -->
+        <div class="bg-indigo-50/45 p-2 rounded-xl border border-indigo-100 flex flex-col gap-1">
+          <div class="flex items-center justify-between text-[11px] font-black text-indigo-900">
+            <span>🏙️ Avenida Numbrópolis (Tus Edificios Inaugurados):</span>
+            <button onclick="openCityMapModal()" class="text-[10px] text-purple-700 hover:underline font-extrabold">Ver Mapa Completo 🗺️</button>
+          </div>
+          <div id="citySkylineRow" class="flex items-end gap-2 overflow-x-auto py-1 px-1 min-h-[46px] custom-scroll"></div>
+        </div>
+
+        <!-- Exhibidor del Número / Reto Objetivo + Acciones de Obra -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+          <div class="flex flex-col">
+            <span id="targetHeaderLabel" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">ENCARGO DE LA OBRA</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <div id="targetNumberDisplay" class="text-2xl sm:text-4xl font-black lego-font tracking-wider flex items-center flex-wrap"></div>
+              <button onclick="speakTargetNumber()" class="w-8 h-8 rounded-xl bg-indigo-100 hover:bg-indigo-200 border border-indigo-300 flex items-center justify-center text-sm shadow-sm transition active:scale-95" title="Escuchar encargo en voz alta">
+                📢
+              </button>
+            </div>
+          </div>
+
+          <!-- Botones de Comprobar (Modo Desafío), Limpiar Casa y Estado -->
+          <div class="flex items-center gap-2">
+            <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden btn-tactile bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm py-2 px-3.5 rounded-xl flex items-center gap-1.5">
+              <span>✅</span> ¡Comprobar Obra!
+            </button>
+
+            <button onclick="resetHouseBlocks()" class="btn-tactile bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-black text-xs py-1.5 px-2.5 rounded-xl flex items-center gap-1" title="Vaciar todos los bloques de la casa">
+              <span>🧹</span> Vaciar
+            </button>
+
+            <div class="bg-white rounded-xl border border-slate-200 px-3 py-1.5 flex items-center gap-2 shadow-sm">
+              <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></div>
+              <div>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider block leading-none">Estado</span>
+                <span id="badgeHouseStatus" class="text-xs font-black text-amber-600 uppercase">En construcción 🔨</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ÁREA CENTRAL: ARQUITECTURA INTEGRADA DE LA CASA LEGO CON BLOQUES BASE-10 -->
+  <main class="w-full max-w-7xl flex flex-col items-center justify-center my-1">
+
+    <!-- CINTA DE INAUGURACIÓN OFICIAL -->
+    <div id="inaugurationBanner" class="hidden w-full max-w-2xl bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 text-white py-2 px-4 rounded-2xl shadow-lg border-2 border-amber-300 mb-2.5 flex items-center justify-between anim-dock z-20">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl animate-bounce">✂️</span>
+        <div>
+          <h3 class="font-black text-xs sm:text-sm uppercase tracking-wider">¡EDIFICIO OFICIALMENTE INAUGURADO! 🎀</h3>
+          <p id="inaugurationNumberWords" class="text-xs font-semibold text-amber-100 capitalize">
+            "Treinta y cinco"
+          </p>
+        </div>
+      </div>
+      <button onclick="speakInauguration()" class="bg-white/20 hover:bg-white/30 text-white font-black text-xs py-1 px-3 rounded-lg border border-white/40">
+        Escuchar 📢
+      </button>
+    </div>
+
+    <!-- ESCENARIO COMPLETO: EXTENSIONES (DM, UM) + PUNTO DE MIL + CASA PRINCIPAL (C, D, U) -->
+    <div class="w-full flex items-end justify-center overflow-x-auto p-2 pb-3 custom-scroll">
+      <div class="flex items-end gap-2.5 p-3.5 bg-gradient-to-b from-slate-200/55 to-emerald-100/50 rounded-3xl border-2 border-slate-300 shadow-md relative min-w-max">
+
+        <!-- 1. ZONA MODULAR DE EXTENSIÓN: DECENAS DE MIL (DM) -->
+        <div id="slotDM" class="w-[172px] rounded-2xl transition-all duration-300 relative flex flex-col items-center">
+          <!-- Estado vacío -->
+          <div id="emptyDM" class="w-full h-[328px] border-2 border-dashed border-amber-400 bg-amber-50/65 rounded-2xl p-2.5 flex flex-col items-center justify-center text-center gap-2 transition">
+            <div class="text-3xl">🏰</div>
+            <span class="font-black text-xs text-amber-900 lego-font">Parcela Torreón DM</span>
+            <p class="text-[10px] font-bold text-amber-800/80 leading-tight">
+              Arrastra o acopla el módulo de Decenas de Mil (10.000)
+            </p>
+            <button onclick="attachRoom('DM')" class="btn-tactile bg-amber-500 hover:bg-amber-600 text-white font-black text-xs py-1.5 px-3 rounded-xl">
+              + Acoplar DM
+            </button>
+          </div>
+
+          <!-- Habitación acoplada DM con tejado almenado dorado -->
+          <div id="roomDM" class="hidden w-full flex flex-col items-center anim-dock">
+            <!-- Almenas LEGO de Torreón -->
+            <div class="w-full flex justify-around px-2 -mb-0.5 z-10">
+              <div class="w-6 h-3.5 bg-amber-500 border-2 border-b-0 border-amber-700 rounded-t"></div>
+              <div class="w-6 h-3.5 bg-amber-500 border-2 border-b-0 border-amber-700 rounded-t"></div>
+              <div class="w-6 h-3.5 bg-amber-500 border-2 border-b-0 border-amber-700 rounded-t"></div>
+              <div class="w-6 h-3.5 bg-amber-500 border-2 border-b-0 border-amber-700 rounded-t"></div>
+            </div>
+            <div class="w-full h-[328px] bg-white border-2 border-amber-600 rounded-b-2xl rounded-t-lg p-2.5 flex flex-col justify-between shadow-md">
+              <div class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-1 px-2 rounded-xl shadow-sm flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase tracking-wider">Decenas de Mil</span>
+                <button onclick="detachRoom('DM')" class="text-xs font-black text-amber-100 hover:text-white px-1" title="Desacoplar habitación DM">✕</button>
+              </div>
+
+              <!-- Cámara de Bloques LEGO + Cifra -->
+              <div onclick="changeBlocks('DM', 1)" id="chamberDM" class="flex-1 my-1.5 bg-amber-50/75 hover:bg-amber-100/60 cursor-pointer rounded-xl border border-dashed border-amber-300 p-1.5 flex flex-col items-center justify-between transition" title="Haz clic para añadir 1 bloque de 10.000">
+                <div id="blocksAreaDM" class="w-full flex-1 flex flex-wrap items-center justify-center content-center gap-1 p-0.5 min-h-[112px]"></div>
+                <div id="digitCardDM" class="w-full bg-[#FFFDF5] rounded-xl border-2 border-amber-200 py-1 px-2 flex items-center justify-between shadow-sm">
+                  <span class="text-[9px] font-black uppercase text-amber-800">Cifra DM</span>
+                  <span id="digitDM" class="text-3xl font-black text-amber-600 lego-font leading-none">0</span>
+                </div>
+              </div>
+
+              <!-- Controles inferiores -->
+              <div class="bg-amber-50 rounded-xl p-1.5 border border-amber-200 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-[10px] font-black text-amber-900">1 DM = 10.000</span>
+                  <span id="valBadgeDM" class="text-[10px] font-black text-amber-700 bg-amber-200/70 px-1.5 rounded">0</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button onclick="changeBlocks('DM', -1)" class="btn-tactile bg-amber-100 hover:bg-amber-200 text-amber-900 font-black text-base py-0.5 rounded-lg border border-amber-300">−</button>
+                  <button onclick="changeBlocks('DM', 1)" class="btn-tactile bg-amber-500 hover:bg-amber-600 text-white font-black text-base py-0.5 rounded-lg">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. ZONA MODULAR DE EXTENSIÓN: UNIDADES DE MIL (UM) -->
+        <div id="slotUM" class="w-[172px] rounded-2xl transition-all duration-300 relative flex flex-col items-center">
+          <!-- Estado vacío -->
+          <div id="emptyUM" class="w-full h-[328px] border-2 border-dashed border-purple-400 bg-purple-50/65 rounded-2xl p-2.5 flex flex-col items-center justify-center text-center gap-2 transition">
+            <div class="text-3xl">📦</div>
+            <span class="font-black text-xs text-purple-900 lego-font">Parcela Ala UM</span>
+            <p class="text-[10px] font-bold text-purple-800/80 leading-tight">
+              Arrastra o acopla el módulo de Unidades de Mil (1.000)
+            </p>
+            <button onclick="attachRoom('UM')" class="btn-tactile bg-purple-600 hover:bg-purple-700 text-white font-black text-xs py-1.5 px-3 rounded-xl">
+              + Acoplar UM
+            </button>
+          </div>
+
+          <!-- Habitación acoplada UM con tejado anexo morado -->
+          <div id="roomUM" class="hidden w-full flex flex-col items-center anim-dock">
+            <div class="w-[94%] h-4 bg-gradient-to-r from-purple-700 to-purple-600 border-2 border-b-0 border-purple-900 rounded-t-xl flex items-center justify-center">
+              <span class="text-[8px] font-black text-purple-100 tracking-widest uppercase">ALA DE LOS MILES</span>
+            </div>
+            <div class="w-full h-[328px] bg-white border-2 border-purple-600 rounded-b-2xl rounded-t-md p-2.5 flex flex-col justify-between shadow-md">
+              <div class="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-1 px-2 rounded-xl shadow-sm flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase tracking-wider">Unidades de Mil</span>
+                <button onclick="detachRoom('UM')" class="text-xs font-black text-purple-200 hover:text-white px-1" title="Desacoplar habitación UM">✕</button>
+              </div>
+
+              <!-- Cámara de Bloques LEGO + Cifra -->
+              <div onclick="changeBlocks('UM', 1)" id="chamberUM" class="flex-1 my-1.5 bg-purple-50/75 hover:bg-purple-100/60 cursor-pointer rounded-xl border border-dashed border-purple-300 p-1.5 flex flex-col items-center justify-between transition" title="Haz clic para añadir 1 cubo de 1.000">
+                <div id="blocksAreaUM" class="w-full flex-1 flex flex-wrap items-center justify-center content-center gap-1 p-0.5 min-h-[112px]"></div>
+                <div id="digitCardUM" class="w-full bg-[#FFFDF5] rounded-xl border-2 border-purple-200 py-1 px-2 flex items-center justify-between shadow-sm">
+                  <div class="flex items-center gap-1">
+                    <span class="text-[9px] font-black uppercase text-purple-800">Cifra UM</span>
+                    <button onclick="event.stopPropagation(); borrowFromLeft('C')" id="btnUnpackUM" class="hidden text-[9px] bg-purple-200 hover:bg-purple-300 text-purple-900 font-black px-1 rounded" title="Desagrupar 1 UM en 10 Centenas">1➡️10C</button>
+                  </div>
+                  <span id="digitUM" class="text-3xl font-black text-purple-600 lego-font leading-none">0</span>
+                </div>
+              </div>
+
+              <!-- Controles inferiores -->
+              <div class="bg-purple-50 rounded-xl p-1.5 border border-purple-200 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-[10px] font-black text-purple-900">1 UM = 1.000</span>
+                  <span id="valBadgeUM" class="text-[10px] font-black text-purple-700 bg-purple-200/70 px-1.5 rounded">0</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button onclick="changeBlocks('UM', -1)" class="btn-tactile bg-purple-100 hover:bg-purple-200 text-purple-900 font-black text-base py-0.5 rounded-lg border border-purple-300">−</button>
+                  <button onclick="changeBlocks('UM', 1)" class="btn-tactile bg-purple-600 hover:bg-purple-700 text-white font-black text-base py-0.5 rounded-lg">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EL PUNTO DE MIL (PUENTE SONORO ENTRE MILES Y CASA PRINCIPAL) -->
+        <div class="relative flex flex-col items-center justify-center z-20 pb-20 px-0.5 self-center">
+          <button
+            onclick="speakMilPoint()"
+            id="milPointBtn"
+            class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 border-2 border-white shadow-md flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition"
+            title="¡Punto de Mil! Al cruzarlo leemos la palabra MIL"
+          >
+            <span class="text-amber-950 text-2xl font-black leading-none mb-0.5">•</span>
+          </button>
+          <span class="text-[9px] font-black text-amber-950 bg-amber-200 px-1.5 py-0.5 rounded-md border border-amber-400 mt-1 uppercase shadow-sm">
+            MIL
+          </span>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- LA CASA PRINCIPAL (TEJADO ROJO UNIFICADO + CENTENAS, DECENAS, UNIDADES) -->
+        <!-- =================================================================== -->
+        <div class="flex flex-col items-center relative">
+
+          <!-- TEJADO ROJO CON CHIMENEA -->
+          <div class="w-full relative flex flex-col items-center">
+            <div class="absolute -top-4 right-10 z-10 flex flex-col items-center pointer-events-none">
+              <div class="w-2.5 h-2.5 rounded-full bg-white/80 animate-ping mb-0.5"></div>
+              <div class="w-6 h-7 bg-amber-800 rounded-t border border-amber-950 flex flex-col justify-between py-1 shadow-sm">
+                <div class="w-full h-0.5 bg-amber-700"></div>
+                <div class="w-full h-0.5 bg-amber-700"></div>
+              </div>
+            </div>
+
+            <div class="w-full h-16 sm:h-[72px] relative flex items-end justify-center">
+              <svg viewBox="0 0 600 100" preserveAspectRatio="none" class="w-full h-full drop-shadow-md">
+                <defs>
+                  <linearGradient id="roofGradUnified" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#EF4444" />
+                    <stop offset="100%" stop-color="#B91C1C" />
+                  </linearGradient>
+                </defs>
+                <polygon points="300,8 598,98 2,98" fill="url(#roofGradUnified)" stroke="#7F1D1D" stroke-width="4" stroke-linejoin="round"/>
+                <rect x="266" y="4" width="68" height="8" rx="3" fill="#FEE2E2" stroke="#991B1B" stroke-width="2"/>
+              </svg>
+
+              <div id="houseRoofBadge" class="absolute bottom-1.5 font-black text-[11px] uppercase text-white tracking-widest bg-red-950/85 px-4 py-0.5 rounded-full shadow border border-red-700 flex items-center gap-1.5">
+                <span>🏠</span> <span id="houseTitleText">La Casa Principal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CUERPO DE LA CASA: C, D, U -->
+          <div class="flex items-center gap-2.5 p-2.5 bg-white border-2 border-slate-700 rounded-b-2xl shadow-md -mt-0.5">
+
+            <!-- 3. CENTENAS (C) -->
+            <div id="chamberWrapC" class="w-[172px] h-[328px] bg-emerald-50/40 border-2 border-emerald-600 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm">
+              <div class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-center py-1 px-2 rounded-xl shadow-sm">
+                <span class="text-[11px] font-black uppercase tracking-wider">Centenas (C)</span>
+              </div>
+
+              <div onclick="changeBlocks('C', 1)" id="chamberC" class="flex-1 my-1.5 bg-emerald-50/80 hover:bg-emerald-100/60 cursor-pointer rounded-xl border border-dashed border-emerald-300 p-1.5 flex flex-col items-center justify-between transition" title="Haz clic para añadir 1 placa de 100">
+                <div id="blocksAreaC" class="w-full flex-1 flex flex-wrap items-center justify-center content-center gap-1 p-0.5 min-h-[112px]"></div>
+                <div id="digitCardC" class="w-full bg-[#FFFDF5] rounded-xl border-2 border-emerald-200 py-1 px-2 flex items-center justify-between shadow-sm">
+                  <div class="flex items-center gap-1">
+                    <span class="text-[9px] font-black uppercase text-emerald-800">Cifra C</span>
+                    <button onclick="event.stopPropagation(); borrowFromLeft('D')" id="btnUnpackC" class="hidden text-[9px] bg-emerald-200 hover:bg-emerald-300 text-emerald-900 font-black px-1 rounded" title="Desagrupar 1 Centena en 10 Decenas">1➡️10D</button>
+                  </div>
+                  <span id="digitC" class="text-3xl font-black text-emerald-600 lego-font leading-none">0</span>
+                </div>
+              </div>
+
+              <div class="bg-emerald-50 rounded-xl p-1.5 border border-emerald-200 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-[10px] font-black text-emerald-900">1 C = 100 u</span>
+                  <span id="valBadgeC" class="text-[10px] font-black text-emerald-700 bg-emerald-200/70 px-1.5 rounded">0</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button onclick="changeBlocks('C', -1)" class="btn-tactile bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-black text-base py-0.5 rounded-lg border border-emerald-300">−</button>
+                  <button onclick="changeBlocks('C', 1)" class="btn-tactile bg-emerald-600 hover:bg-emerald-700 text-white font-black text-base py-0.5 rounded-lg">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. DECENAS (D) -->
+            <div id="chamberWrapD" class="w-[172px] h-[328px] bg-blue-50/40 border-2 border-blue-600 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm">
+              <div class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white text-center py-1 px-2 rounded-xl shadow-sm">
+                <span class="text-[11px] font-black uppercase tracking-wider">Decenas (D)</span>
+              </div>
+
+              <div onclick="changeBlocks('D', 1)" id="chamberD" class="flex-1 my-1.5 bg-blue-50/80 hover:bg-blue-100/60 cursor-pointer rounded-xl border border-dashed border-blue-300 p-1.5 flex flex-col items-center justify-between transition" title="Haz clic para añadir 1 barra de 10">
+                <div id="blocksAreaD" class="w-full flex-1 flex items-end justify-center gap-1 p-1 min-h-[112px]"></div>
+                <div id="digitCardD" class="w-full bg-[#FFFDF5] rounded-xl border-2 border-blue-200 py-1 px-2 flex items-center justify-between shadow-sm">
+                  <div class="flex items-center gap-1">
+                    <span class="text-[9px] font-black uppercase text-blue-800">Cifra D</span>
+                    <button onclick="event.stopPropagation(); borrowFromLeft('U')" id="btnUnpackD" class="hidden text-[9px] bg-blue-200 hover:bg-blue-300 text-blue-900 font-black px-1 rounded" title="Desagrupar 1 Decena en 10 Unidades">1➡️10U</button>
+                  </div>
+                  <span id="digitD" class="text-3xl font-black text-blue-600 lego-font leading-none">0</span>
+                </div>
+              </div>
+
+              <div class="bg-blue-50 rounded-xl p-1.5 border border-blue-200 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-[10px] font-black text-blue-900">1 D = 10 u</span>
+                  <span id="valBadgeD" class="text-[10px] font-black text-blue-700 bg-blue-200/70 px-1.5 rounded">0</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button onclick="changeBlocks('D', -1)" class="btn-tactile bg-blue-100 hover:bg-blue-200 text-blue-900 font-black text-base py-0.5 rounded-lg border border-blue-300">−</button>
+                  <button onclick="changeBlocks('D', 1)" class="btn-tactile bg-blue-600 hover:bg-blue-700 text-white font-black text-base py-0.5 rounded-lg">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. UNIDADES (U) -->
+            <div id="chamberWrapU" class="w-[172px] h-[328px] bg-red-50/40 border-2 border-red-600 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm">
+              <div class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white text-center py-1 px-2 rounded-xl shadow-sm">
+                <span class="text-[11px] font-black uppercase tracking-wider">Unidades (U)</span>
+              </div>
+
+              <div onclick="changeBlocks('U', 1)" id="chamberU" class="flex-1 my-1.5 bg-red-50/80 hover:bg-red-100/60 cursor-pointer rounded-xl border border-dashed border-red-300 p-1.5 flex flex-col items-center justify-between transition" title="Haz clic para añadir 1 ladrillo de unidad">
+                <div id="blocksAreaU" class="w-full flex-1 grid grid-cols-5 place-items-center content-center gap-y-2 gap-x-1 p-1 min-h-[112px]"></div>
+                <div id="digitCardU" class="w-full bg-[#FFFDF5] rounded-xl border-2 border-red-200 py-1 px-2 flex items-center justify-between shadow-sm">
+                  <span class="text-[9px] font-black uppercase text-red-800">Cifra U</span>
+                  <span id="digitU" class="text-3xl font-black text-red-600 lego-font leading-none">0</span>
+                </div>
+              </div>
+
+              <div class="bg-red-50 rounded-xl p-1.5 border border-red-200 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-[10px] font-black text-red-900">1 U = 1 ladrillo</span>
+                  <span id="valBadgeU" class="text-[10px] font-black text-red-700 bg-red-200/70 px-1.5 rounded">0</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button onclick="changeBlocks('U', -1)" class="btn-tactile bg-red-100 hover:bg-red-200 text-red-900 font-black text-base py-0.5 rounded-lg border border-red-300">−</button>
+                  <button onclick="changeBlocks('U', 1)" class="btn-tactile bg-red-600 hover:bg-red-700 text-white font-black text-base py-0.5 rounded-lg">+</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TALLER INFERIOR: MÓDULOS ARRASTRABLES (MOUSE + TÁCTIL) + CUADRILLA LEGO 3D -->
+    <section class="w-full max-w-5xl mt-1.5 game-panel border border-slate-200 p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-3 bg-white/95">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <span class="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+          Ampliar edificio (arrastra o pulsa):
+        </span>
+
+        <!-- Tarjeta Arrastrable UM -->
+        <div
+          id="dragSourceUM"
+          draggable="true"
+          ondragstart="onDragStartModule(event, 'UM')"
+          data-room-drag="UM"
+          class="touch-none flex items-center gap-2 bg-purple-50 hover:bg-purple-100 border border-purple-300 rounded-xl py-1 px-2.5 cursor-grab active:cursor-grabbing shadow-sm transition"
+        >
+          <span class="text-lg">📦</span>
+          <div>
+            <span class="text-[11px] font-black text-purple-950 block leading-tight">Ala UM</span>
+            <span class="text-[9px] font-bold text-purple-700">1.000 (Mil)</span>
+          </div>
+          <button onclick="attachRoom('UM')" class="btn-tactile bg-purple-600 text-white font-black text-[10px] py-0.5 px-2 rounded-lg ml-1">
+            + Acoplar
+          </button>
+        </div>
+
+        <!-- Tarjeta Arrastrable DM -->
+        <div
+          id="dragSourceDM"
+          draggable="true"
+          ondragstart="onDragStartModule(event, 'DM')"
+          data-room-drag="DM"
+          class="touch-none flex items-center gap-2 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl py-1 px-2.5 cursor-grab active:cursor-grabbing shadow-sm transition"
+        >
+          <span class="text-lg">🏰</span>
+          <div>
+            <span class="text-[11px] font-black text-amber-950 block leading-tight">Torreón DM</span>
+            <span class="text-[9px] font-bold text-amber-700">10.000 (Dec. de Mil)</span>
+          </div>
+          <button onclick="attachRoom('DM')" class="btn-tactile bg-amber-500 text-white font-black text-[10px] py-0.5 px-2 rounded-lg ml-1">
+            + Acoplar
+          </button>
+        </div>
+      </div>
+
+      <!-- Cuadrilla de obreros Lego 3D -->
+      <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1.5 shadow-sm">
+        <div class="relative w-16 h-10 bg-sky-100 rounded-lg overflow-hidden border border-slate-300">
+          <canvas id="crew3DCanvas" class="w-full h-full block"></canvas>
+        </div>
+        <div>
+          <span class="text-[11px] font-black text-slate-800 block leading-tight">Lucas y Sofía 3D</span>
+          <span id="crewStatusLabel" class="text-[9px] font-bold text-emerald-600 block">✓ Listos en la obra</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL PEDAGÓGICO DOBLE: DESCOMPOSICIÓN POSICIONAL + ADITIVA + LECTURA EN LETRAS -->
+    <div class="w-full max-w-5xl mt-2 bg-white rounded-2xl border border-indigo-100 p-2.5 sm:p-3 shadow-sm flex flex-col gap-1.5">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-1.5">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Posicional:</span>
+          <div id="positionalDecompBox" class="flex items-center gap-1.5 text-xs font-black lego-font flex-wrap"></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="numberInWordsLabel" class="text-xs sm:text-sm font-extrabold text-indigo-950 italic capitalize">
+            "Cero"
+          </span>
+          <button onclick="speakCurrentNumber()" class="btn-tactile text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-2 py-1 rounded-lg border border-indigo-200 flex items-center gap-1" title="Escuchar cómo se lee el número construido">
+            <span>🔊</span> Leer
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-[10px] font-black text-indigo-900 uppercase tracking-wider">Valor Aditivo:</span>
+        <div id="additiveDecompBox" class="flex items-center gap-1.5 text-xs sm:text-sm font-black lego-font flex-wrap"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL DE LA ISLA DE NUMBRÓPOLIS (8 DISTRITOS + GALERÍA URBANA) -->
+  <div id="modalCityMap" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 hidden">
+    <div class="bg-gradient-to-b from-sky-100 via-emerald-50 to-white rounded-3xl max-w-4xl w-full p-4 sm:p-5 shadow-2xl border-2 border-purple-400 flex flex-col gap-3 max-h-[93vh] overflow-y-auto custom-scroll anim-dock">
+
+      <div class="flex items-center justify-between border-b border-purple-200 pb-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 text-white flex items-center justify-center text-xl shadow-md">
+            🏝️
+          </div>
+          <div>
+            <h2 class="text-lg sm:text-xl font-black text-purple-950 lego-font leading-none">Isla Numbrópolis · Plano Territorial</h2>
+            <p class="text-xs font-bold text-purple-700">Completa las 8 misiones para fundar todos los distritos de la isla</p>
+          </div>
+        </div>
+        <button onclick="closeCityMapModal()" class="w-8 h-8 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-black text-sm flex items-center justify-center border border-purple-300">
+          ✕
+        </button>
+      </div>
+
+      <!-- MAPA ILUSTRADO VECTORIAL DE LA ISLA -->
+      <div class="relative w-full aspect-[16/9] min-h-[300px] max-h-[460px] bg-[#60a5fa] rounded-2xl overflow-hidden border-2 border-emerald-400 shadow-inner shrink-0">
+        <svg viewBox="0 0 1000 562" class="w-full h-full absolute inset-0 select-none pointer-events-none">
+          <defs>
+            <radialGradient id="waterGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#93c5fd"/>
+              <stop offset="100%" stop-color="#2563eb"/>
+            </radialGradient>
+            <linearGradient id="grassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#86efac"/>
+              <stop offset="50%" stop-color="#4ade80"/>
+              <stop offset="100%" stop-color="#16a34a"/>
+            </linearGradient>
+            <linearGradient id="snowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#dbeafe"/>
+            </linearGradient>
+            <linearGradient id="sandGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a"/>
+              <stop offset="100%" stop-color="#facc15"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Océano con olas -->
+          <rect width="1000" height="562" fill="url(#waterGlow)"/>
+          <path d="M50,80 Q90,70 130,80 M810,115 Q850,105 890,115 M95,485 Q135,475 175,485 M810,470 Q850,460 890,470 M70,270 Q105,260 140,270" stroke="#bfdbfe" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+          <!-- Playa de Arena -->
+          <path d="M 160,280 C 140,135 315,65 500,55 C 725,45 885,125 875,300 C 865,445 735,525 500,525 C 265,525 170,425 160,280 Z" fill="url(#sandGrad)" stroke="#ca8a04" stroke-width="4"/>
+
+          <!-- Isla Verde Césped Lego -->
+          <path d="M 185,280 C 175,155 325,85 500,75 C 705,65 855,145 845,295 C 835,425 715,495 500,495 C 285,495 195,405 185,280 Z" fill="url(#grassGrad)" stroke="#15803d" stroke-width="4"/>
+
+          <!-- Bosques decorativos -->
+          <circle cx="290" cy="330" r="16" fill="#15803d"/><circle cx="310" cy="340" r="13" fill="#166534"/>
+          <circle cx="385" cy="185" r="14" fill="#15803d"/><circle cx="620" cy="185" r="14" fill="#15803d"/>
+
+          <!-- Colina del Norte con Nieve -->
+          <path d="M 390,92 C 425,65 575,65 610,92 C 632,135 585,175 500,175 C 415,175 368,135 390,92 Z" fill="url(#snowGrad)" stroke="#cbd5e1" stroke-width="3"/>
+          <text x="500" y="108" font-size="11" font-weight="900" fill="#475569" text-anchor="middle">🏔️ CUMBRE REAL</text>
+
+          <!-- Río y puente -->
+          <path d="M 520,172 C 550,220 605,255 630,315 C 650,360 630,420 665,492" fill="none" stroke="#38bdf8" stroke-width="24" stroke-linecap="round"/>
+          <path d="M 520,172 C 550,220 605,255 630,315 C 650,360 630,420 665,492" fill="none" stroke="#bae6fd" stroke-width="10" stroke-linecap="round"/>
+
+          <!-- Red vial circular + ramales -->
+          <path d="M 255,285 C 305,210 415,215 500,215 C 605,215 725,235 760,315 C 780,365 735,435 645,442 C 535,452 415,445 320,418 C 255,398 230,335 255,285 Z" fill="none" stroke="#e2e8f0" stroke-width="22" stroke-linecap="round"/>
+          <path d="M 255,285 C 305,210 415,215 500,215 C 605,215 725,235 760,315 C 780,365 735,435 645,442 C 535,452 415,445 320,418 C 255,398 230,335 255,285 Z" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="8 6"/>
+
+          <!-- Plaza Central y fuente -->
+          <circle cx="500" cy="292" r="44" fill="#fef08a" stroke="#ca8a04" stroke-width="3"/>
+          <circle cx="500" cy="292" r="17" fill="#38bdf8" stroke="#0284c7" stroke-width="3"/>
+
+          <!-- Faro marítimo -->
+          <path d="M 760,468 L 780,422 L 795,422 L 812,468 Z" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+          <circle cx="787" cy="416" r="8" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+        </svg>
+
+        <!-- CAPA DINÁMICA DE PARCELAS -->
+        <div id="cityMapPlotsOverlay" class="absolute inset-0 z-10 pointer-events-auto"></div>
+      </div>
+
+      <!-- Registro de Edificios Extra (Taller Libre / Desafíos) -->
+      <div id="extraBuildingsSection" class="hidden bg-white/90 rounded-2xl border border-purple-200 p-2.5">
+        <span class="text-[10px] font-black uppercase text-purple-900 tracking-wider block mb-1.5">🏘️ Barrio de Creaciones Libres y Desafíos:</span>
+        <div id="extraBuildingsList" class="flex flex-wrap gap-1.5"></div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-slate-600">
+            📍 Toca un edificio para escucharlo o una parcela disponible para viajar a su misión.
+          </span>
+          <button onclick="resetAllProgress()" class="text-[11px] font-bold text-rose-600 hover:underline">
+            Reiniciar progreso
+          </button>
+        </div>
+        <button onclick="closeCityMapModal()" class="btn-tactile bg-purple-600 hover:bg-purple-700 text-white font-black text-xs py-2 px-4 rounded-xl">
+          Volver a la Obra 🔨
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE MENSAJES Y CELEBRACIÓN -->
+  <div id="modalBox" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border-2 border-amber-400 text-center anim-dock flex flex-col items-center">
+      <div id="modalEmoji" class="text-4xl mb-1.5">🎉</div>
+      <h3 id="modalTitle" class="text-lg font-black text-slate-800 mb-1">¡Felicitaciones!</h3>
+      <p id="modalDesc" class="text-xs font-semibold text-slate-600 mb-4 leading-relaxed">Mensaje pedagógico</p>
+      <div class="w-full flex gap-2">
+        <button onclick="closeModal()" class="btn-tactile flex-1 bg-amber-500 hover:bg-amber-600 text-white font-black py-2.5 rounded-xl text-sm">
+          ¡Continuar! ✨
+        </button>
+        <button id="modalNextBtn" onclick="closeModal(); advanceNextMission();" class="hidden btn-tactile flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-sm">
+          Siguiente ⏩
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-2 text-center text-slate-400 text-[10px] font-semibold">
+    La Casa de los Números LEGO · Laboratorio Interactivo de Valor Posicional (U · D · C · UM · DM) para Primaria
+  </footer>
+
+  <!-- LÓGICA DE JUEGO, BLOQUES BASE-10, MODOS PEDAGÓGICOS Y ESCENAS 3D -->
+  <script>
+    // 8 DISTRITOS OFICIALES DE LA ISLA DE NUMBRÓPOLIS
+    const CITY_DISTRICTS = [
+      { id: 1, name: "Plaza Mayor", top: "51%", left: "50%" },
+      { id: 2, name: "Mirador del Lago", top: "33%", left: "67%" },
+      { id: 3, name: "Paseo de la Ribera", top: "51%", left: "75%" },
+      { id: 4, name: "Valle Esmeralda", top: "76%", left: "47%" },
+      { id: 5, name: "Bahía del Faro", top: "73%", left: "71%" },
+      { id: 6, name: "Jardines del Bosque", top: "68%", left: "28%" },
+      { id: 7, name: "Colina Occidental", top: "43%", left: "25%" },
+      { id: 8, name: "Cumbre Real", top: "24%", left: "50%" }
+    ];
+
+    // 8 MISIONES PROGRESIVAS (1 POR CADA DISTRITO DE LA ISLA)
+    const MISSIONS = [
+      {
+        id: 1,
+        districtId: 1,
+        title: "La Panadería de la Plaza",
+        icon: "🥖",
+        number: 35,
+        district: "Plaza Mayor",
+        step: "Misión 1 de 8",
+        phaseLabel: "Paso 1: Unidades y Decenas",
+        leoIntro: "¡Bienvenido arquitecto! Fundemos la Panadería en la Plaza Mayor con el número 35: coloca 3 barras de Decenas y 5 ladrillos de Unidades.",
+        hint: "Para formar 35: pon 3 barras azules en Decenas (D) y 5 ladrillos rojos en Unidades (U). Las Centenas quedan en 0.",
+        palette: { bg: "from-amber-400 to-amber-600", roof: "bg-red-600" }
+      },
+      {
+        id: 2,
+        districtId: 2,
+        title: "La Cabaña del Lago",
+        icon: "🏕️",
+        number: 78,
+        district: "Mirador del Lago",
+        step: "Misión 2 de 8",
+        phaseLabel: "Paso 1: Agrupación en Decenas",
+        leoIntro: "¡Genial! En el Mirador del Lago nos encargaron la Cabaña #78. ¡Mira cómo se agrupan los bloques de 10 en 10!",
+        hint: "El número 78 se forma con 7 Decenas (70) y 8 Unidades (8). ¡También puedes juntar 10 unidades para ver cómo se transforman!",
+        palette: { bg: "from-sky-400 to-blue-600", roof: "bg-indigo-700" }
+      },
+      {
+        id: 3,
+        districtId: 3,
+        title: "La Escuela Primaria",
+        icon: "🏫",
+        number: 246,
+        district: "Paseo de la Ribera",
+        step: "Misión 3 de 8",
+        phaseLabel: "Paso 2: ¡Llegaron las Centenas!",
+        leoIntro: "¡La isla crece! La Escuela del Paseo de la Ribera lleva el número 246. ¡Estrenamos las placas verdes de 100 en Centenas!",
+        hint: "Para 246: coloca 2 placas en Centenas (200), 4 barras en Decenas (40) y 6 ladrillos en Unidades (6).",
+        palette: { bg: "from-emerald-400 to-emerald-600", roof: "bg-amber-600" }
+      },
+      {
+        id: 4,
+        districtId: 4,
+        title: "El Parque del Cero Mágico",
+        icon: "🎡",
+        number: 508,
+        district: "Valle Esmeralda",
+        step: "Misión 4 de 8",
+        phaseLabel: "Paso 2: El Cero Intermedio",
+        leoIntro: "¡Atención al plano del Parque Central (#508)! Hay un 0 en la mitad. ¿Qué habitación debe quedar vacía pero guardando su lugar?",
+        hint: "508 tiene 5 Centenas (500), 0 Decenas (¡deja las Decenas en 0!) y 8 Unidades (8).",
+        palette: { bg: "from-rose-400 to-rose-600", roof: "bg-blue-700" }
+      },
+      {
+        id: 5,
+        districtId: 5,
+        title: "Estación de Bomberos de los Miles",
+        icon: "🚒",
+        number: 1340,
+        district: "Bahía del Faro",
+        step: "Misión 5 de 8",
+        phaseLabel: "Paso 3: Ala UM y el Punto de Mil",
+        leoIntro: "¡Superamos el 999! Arrastra o acopla el Ala UM morada a la izquierda para construir la Estación #1.340 junto al Faro.",
+        hint: "1. Acopla el Ala UM. 2. Coloca 1 en UM (1.000), 3 en C (300), 4 en D (40) y 0 en U.",
+        palette: { bg: "from-purple-400 to-purple-600", roof: "bg-rose-600" }
+      },
+      {
+        id: 6,
+        districtId: 6,
+        title: "Observatorio del Bosque",
+        icon: "🔭",
+        number: 4029,
+        district: "Jardines del Bosque",
+        step: "Misión 6 de 8",
+        phaseLabel: "Paso 3: Miles con Cero en Centenas",
+        leoIntro: "En los Jardines del Bosque levantaremos el Observatorio #4.029. ¡Fíjate bien dónde va el cero para no confundir centenas con decenas!",
+        hint: "Con el Ala UM acoplada: pon 4 en UM (4.000), deja 0 en Centenas, pon 2 en Decenas (20) y 9 en Unidades.",
+        palette: { bg: "from-teal-400 to-emerald-700", roof: "bg-indigo-800" }
+      },
+      {
+        id: 7,
+        districtId: 7,
+        title: "Estación del Tren Occidental",
+        icon: "🚂",
+        number: 23615,
+        district: "Colina Occidental",
+        step: "Misión 7 de 8",
+        phaseLabel: "Paso 4: ¡Torreón de Decenas de Mil (DM)!",
+        leoIntro: "¡Obra colosal de 5 cifras! Acopla tanto el Ala UM como el Torreón dorado DM para inaugurar la Estación #23.615.",
+        hint: "Acopla DM y UM. Luego coloca: 2 en DM (20.000), 3 en UM (3.000), 6 en C (600), 1 en D (10) y 5 en U (5).",
+        palette: { bg: "from-indigo-400 to-indigo-700", roof: "bg-amber-500" }
+      },
+      {
+        id: 8,
+        districtId: 8,
+        title: "Gran Palacio de la Cumbre Real",
+        icon: "🏛️",
+        number: 50402,
+        district: "Cumbre Real",
+        step: "Misión 8 de 8",
+        phaseLabel: "Paso 4: Graduación de Maestro Arquitecto",
+        leoIntro: "¡La joya final en la Cumbre Nevada! Construye el Palacio #50.402 dominando los ceros posicionales en UM y D.",
+        hint: "Acopla DM y UM. Pon 5 en DM (50.000), 0 en UM, 4 en C (400), 0 en D y 2 en U. ¡50.000 + 400 + 2!",
+        palette: { bg: "from-amber-400 to-yellow-600", roof: "bg-purple-800" }
+      }
+    ];
+
+    const STORAGE_KEY = "casa_numeros_lego_v2";
+
+    const state = {
+      DM: 0,
+      UM: 0,
+      C: 0,
+      D: 0,
+      U: 0,
+      attachedUM: false,
+      attachedDM: false,
+      target: 35,
+      targetDM: 0,
+      targetUM: 0,
+      targetC: 0,
+      targetD: 3,
+      targetU: 5,
+      mode: "adventure", // 'adventure' | 'challenge' | 'free'
+      roomViewMode: "both", // 'both' | 'blocks' | 'digits'
+      muted: false,
+      currentMissionIdx: 0,
+      maxUnlockedMissionIdx: 0,
+      completedMissionIds: [],
+      isAutoBuilding: false,
+      isInaugurated: false,
+      builtBuildings: [],
+      challenge: {
+        promptHtml: "",
+        promptSpeech: "",
+        subtype: "scrambled",
+        solved: false,
+        streak: 0,
+        score: 0
+      }
+    };
+
+    // PERSISTENCIA LOCAL
+    function saveProgress() {
+      try {
+        const data = {
+          currentMissionIdx: state.currentMissionIdx,
+          maxUnlockedMissionIdx: state.maxUnlockedMissionIdx,
+          completedMissionIds: state.completedMissionIds,
+          builtBuildings: state.builtBuildings,
+          challengeScore: state.challenge.score
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (typeof data.currentMissionIdx === "number") {
+          state.currentMissionIdx = Math.min(MISSIONS.length - 1, Math.max(0, data.currentMissionIdx));
+        }
+        if (typeof data.maxUnlockedMissionIdx === "number") {
+          state.maxUnlockedMissionIdx = Math.min(MISSIONS.length - 1, Math.max(0, data.maxUnlockedMissionIdx));
+        }
+        if (Array.isArray(data.completedMissionIds)) {
+          state.completedMissionIds = data.completedMissionIds;
+        }
+        if (Array.isArray(data.builtBuildings)) {
+          state.builtBuildings = data.builtBuildings;
+        }
+        if (typeof data.challengeScore === "number") {
+          state.challenge.score = data.challengeScore;
+        }
+      } catch (e) {}
+    }
+
+    function resetAllProgress() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      state.currentMissionIdx = 0;
+      state.maxUnlockedMissionIdx = 0;
+      state.completedMissionIds = [];
+      state.builtBuildings = [];
+      state.challenge.score = 0;
+      state.challenge.streak = 0;
+      closeCityMapModal();
+      renderCitySkyline();
+      switchGameMode("adventure");
+      showToast("🌱 ¡Isla reiniciada! Lista para una nueva partida.", "🔄");
+    }
+
+    // TOAST RÁPIDO NO BLOQUEANTE
+    let toastTimeout = null;
+    function showToast(text, emoji = "✨") {
+      const toast = document.getElementById("liveToast");
+      const tText = document.getElementById("liveToastText");
+      const tEmoji = document.getElementById("liveToastEmoji");
+      if (!toast || !tText || !tEmoji) return;
+
+      tText.innerText = text;
+      tEmoji.innerText = emoji;
+      toast.classList.remove("opacity-0", "-translate-y-3");
+      toast.classList.add("opacity-100", "translate-y-0");
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("opacity-100", "translate-y-0");
+        toast.classList.add("opacity-0", "-translate-y-3");
+      }, 3100);
+    }
+
+    // SONIDO Y VOZ CON BOTÓN DE SILENCIO
+    let audioCtx = null;
+    function initAudio() {
+      if (state.muted) return;
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleMute() {
+      state.muted = !state.muted;
+      const btn = document.getElementById("btnSoundToggle");
+      if (btn) btn.innerText = state.muted ? "🔇" : "🔊";
+      if (state.muted && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      showToast(state.muted ? "Sonido y voz silenciados" : "Sonido y voz activados", state.muted ? "🔇" : "🔊");
+    }
+
+    function playSound(type) {
+      if (state.muted) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+
+        if (type === "add") {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(460, now);
+          osc.frequency.exponentialRampToValueAtTime(920, now + 0.075);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.075);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.075);
+        } else if (type === "remove") {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(500, now);
+          osc.frequency.exponentialRampToValueAtTime(250, now + 0.08);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === "snap") {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "square";
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.exponentialRampToValueAtTime(740, now + 0.11);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.11);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.11);
+        } else if (type === "carry") {
+          [523.25, 659.25, 880].forEach((f, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(f, now + i * 0.06);
+            gain.gain.setValueAtTime(0.16, now + i * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.06 + 0.22);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.06);
+            osc.stop(now + i * 0.06 + 0.22);
+          });
+        } else if (type === "error") {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(150, now + 0.18);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.18);
+        } else if (type === "win") {
+          const freqs = [523.25, 659.25, 783.99, 1046.5];
+          freqs.forEach((f, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(f, now + i * 0.085);
+            gain.gain.setValueAtTime(0.2, now + i * 0.085);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.085 + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.085);
+            osc.stop(now + i * 0.085 + 0.35);
+          });
+        }
+      } catch (e) {}
+    }
+
+    // ORTOGRAFÍA ESPAÑOLA RAE EXACTA (CON TILDES EN VEINTIDÓS, VEINTITRÉS, VEINTISÉIS Y APÓCOPE ANTE MIL: VEINTIÚN MIL, TREINTA Y UN MIL)
+    function numberToWordsEs(num) {
+      if (num === 0) return "cero";
+
+      const unitsStandalone = ["", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"];
+      const unitsApocopated = ["", "un", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"];
+      const teens = ["diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve"];
+      const twentiesStandalone = ["veinte", "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"];
+      const twentiesApocopated = ["veinte", "veintiún", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"];
+      const tens = ["", "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"];
+      const hundreds = ["", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"];
+
+      function convertGroup(n, beforeMil) {
+        if (n === 0) return "";
+        if (n === 100) return "cien";
+
+        const c = Math.floor(n / 100);
+        const rest = n % 100;
+        const d = Math.floor(rest / 10);
+        const u = rest % 10;
+
+        let str = c > 0 ? hundreds[c] + " " : "";
+        if (rest === 0) return str.trim();
+
+        const uArr = beforeMil ? unitsApocopated : unitsStandalone;
+        const twArr = beforeMil ? twentiesApocopated : twentiesStandalone;
+
+        if (rest < 10) {
+          str += uArr[rest];
+        } else if (rest < 20) {
+          str += teens[rest - 10];
+        } else if (rest < 30) {
+          str += twArr[u];
+        } else {
+          str += tens[d];
+          if (u > 0) str += " y " + uArr[u];
+        }
+        return str.trim();
+      }
+
+      if (num < 1000) return convertGroup(num, false);
+
+      const thousands = Math.floor(num / 1000);
+      const remainder = num % 1000;
+      let result = thousands === 1 ? "mil" : convertGroup(thousands, true) + " mil";
+
+      if (remainder > 0) result += " " + convertGroup(remainder, false);
+      return result.trim();
+    }
+
+    function speakText(text) {
+      if (state.muted) return;
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "es-ES";
+        utterance.rate = 0.96;
+        if (window.threeLeo) window.threeLeo.talkTimer = Math.min(4.2, Math.max(1.5, text.length * 0.045));
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function getCurrentTotal() {
+      return (state.attachedDM ? state.DM * 10000 : 0) +
+             (state.attachedUM ? state.UM * 1000 : 0) +
+             (state.C * 100) + (state.D * 10) + state.U;
+    }
+
+    function speakTargetNumber() {
+      if (state.mode === "challenge") {
+        speakText(state.challenge.promptSpeech || "Construye el número del acertijo.");
+        return;
+      }
+      const words = numberToWordsEs(state.target);
+      speakText(`Encargo de obra: ${words}.`);
+    }
+
+    function speakCurrentNumber() {
+      const total = getCurrentTotal();
+      const words = numberToWordsEs(total);
+      speakText(`Has construido: ${words}.`);
+    }
+
+    function speakMilPoint() {
+      playSound("snap");
+      const btn = document.getElementById("milPointBtn");
+      if (btn) {
+        btn.classList.add("scale-125");
+        setTimeout(() => btn.classList.remove("scale-125"), 250);
+      }
+      showToast("¡Punto de Mil! Al cruzarlo decimos la palabra «MIL».", "•");
+      speakText("¡Punto de Mil! Al cruzar este punto hacia la derecha, pronunciamos la palabra mil.");
+    }
+
+    function speakInauguration() {
+      const words = numberToWordsEs(state.target);
+      speakText(`¡Edificio oficialmente inaugurado! Número ${words}.`);
+    }
+
+    // ALTERNAR VISTA DE HABITACIONES (BLOQUES + CIFRAS / SOLO BLOQUES / SOLO CIFRAS)
+    function cycleRoomViewMode() {
+      const modes = ["both", "blocks", "digits"];
+      const labels = {
+        both: "Bloques + Cifras",
+        blocks: "Solo Bloques (Pizarra)",
+        digits: "Solo Cifras"
+      };
+      const nextIdx = (modes.indexOf(state.roomViewMode) + 1) % modes.length;
+      state.roomViewMode = modes[nextIdx];
+      const lbl = document.getElementById("viewModeLabel");
+      if (lbl) lbl.innerText = labels[state.roomViewMode];
+
+      ["DM", "UM", "C", "D", "U"].forEach((k) => {
+        const blocksEl = document.getElementById(`blocksArea${k}`);
+        const digitEl = document.getElementById(`digitCard${k}`);
+        if (!blocksEl || !digitEl) return;
+
+        if (state.roomViewMode === "both") {
+          blocksEl.classList.remove("hidden");
+          digitEl.classList.remove("hidden");
+        } else if (state.roomViewMode === "blocks") {
+          blocksEl.classList.remove("hidden");
+          digitEl.classList.add("hidden");
+        } else {
+          blocksEl.classList.add("hidden");
+          digitEl.classList.remove("hidden");
+        }
+      });
+
+      playSound("snap");
+      showToast(`Vista cambiada a: ${labels[state.roomViewMode]}`, "👁️");
+    }
+
+    // RENDERIZADO VISUAL DE BLOQUES LEGO BASE-10 EN CADA HABITACIÓN
+    const prevCounts = { DM: -1, UM: -1, C: -1, D: -1, U: -1 };
+    function renderRoomBlocks(roomKey, count) {
+      const container = document.getElementById(`blocksArea${roomKey}`);
+      if (!container) return;
+      if (prevCounts[roomKey] === count) return;
+      const grew = count > prevCounts[roomKey];
+      prevCounts[roomKey] = count;
+
+      container.innerHTML = "";
+      if (count === 0) {
+        const emptyHint = document.createElement("span");
+        emptyHint.className = "text-[10px] font-bold text-slate-400/80 select-none col-span-5 text-center";
+        emptyHint.innerText = "Vacío (0)";
+        container.appendChild(emptyHint);
+        return;
+      }
+
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement("div");
+        const animateLast = grew && i === count - 1 ? " brick-anim" : "";
+        if (roomKey === "U") {
+          piece.className = "lego-unit" + animateLast;
+        } else if (roomKey === "D") {
+          piece.className = "lego-ten" + animateLast;
+        } else if (roomKey === "C") {
+          piece.className = "lego-hundred" + animateLast;
+        } else if (roomKey === "UM") {
+          piece.className = "lego-thousand" + animateLast;
+          piece.innerText = "1k";
+        } else if (roomKey === "DM") {
+          piece.className = "lego-tenthousand" + animateLast;
+          piece.innerText = "10k";
+        }
+        container.appendChild(piece);
+      }
+    }
+
+    // ANIMACIÓN DE VUELO CUANDO 10 PIEZAS SE TRANSFORMAN EN 1 DEL ORDEN SUPERIOR
+    function spawnCarryParticle(fromRoom, toRoom, colorClass, label) {
+      const fromEl = document.getElementById(`chamber${fromRoom}`);
+      const toEl = document.getElementById(`chamber${toRoom}`);
+      if (!fromEl || !toEl) return;
+
+      const r1 = fromEl.getBoundingClientRect();
+      const r2 = toEl.getBoundingClientRect();
+      if (r1.width === 0 || r2.width === 0) return;
+
+      const badge = document.createElement("div");
+      badge.className = `flying-carry ${colorClass} text-white font-black text-xs px-2.5 py-1 rounded-xl shadow-lg border-2 border-white flex items-center gap-1`;
+      badge.innerHTML = `<span>✨</span><span>${label}</span>`;
+      badge.style.left = `${r1.left + r1.width / 2 - 36}px`;
+      badge.style.top = `${r1.top + r1.height / 2 - 14}px`;
+      document.body.appendChild(badge);
+
+      requestAnimationFrame(() => {
+        const dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
+        const dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2) - 18;
+        badge.style.transform = `translate(${dx}px, ${dy}px) scale(1.12)`;
+        badge.style.opacity = "0.15";
+      });
+
+      setTimeout(() => badge.remove(), 660);
+    }
+
+    // ACOPLAR / DESACOPLAR HABITACIONES MODULARES (UM, DM)
+    function attachRoom(roomKey, silent = false) {
+      if (!silent) {
+        initAudio();
+        playSound("snap");
+      }
+      if (roomKey === "UM") {
+        state.attachedUM = true;
+        document.getElementById("emptyUM")?.classList.add("hidden");
+        document.getElementById("roomUM")?.classList.remove("hidden");
+      } else if (roomKey === "DM") {
+        // Para tener DM en lectura posicional coherente, acoplamos también UM si no estaba
+        if (!state.attachedUM) {
+          state.attachedUM = true;
+          document.getElementById("emptyUM")?.classList.add("hidden");
+          document.getElementById("roomUM")?.classList.remove("hidden");
+        }
+        state.attachedDM = true;
+        document.getElementById("emptyDM")?.classList.add("hidden");
+        document.getElementById("roomDM")?.classList.remove("hidden");
+      }
+      prevCounts[roomKey] = -1;
+      boostCrewAnimation();
+      updateUI();
+    }
+
+    function detachRoom(roomKey) {
+      initAudio();
+      playSound("remove");
+      if (roomKey === "UM") {
+        if (state.attachedDM) {
+          state.attachedDM = false;
+          state.DM = 0;
+          document.getElementById("roomDM")?.classList.add("hidden");
+          document.getElementById("emptyDM")?.classList.remove("hidden");
+        }
+        state.attachedUM = false;
+        state.UM = 0;
+        document.getElementById("roomUM")?.classList.add("hidden");
+        document.getElementById("emptyUM")?.classList.remove("hidden");
+      } else if (roomKey === "DM") {
+        state.attachedDM = false;
+        state.DM = 0;
+        document.getElementById("roomDM")?.classList.add("hidden");
+        document.getElementById("emptyDM")?.classList.remove("hidden");
+      }
+      updateUI();
+    }
+
+    // SOPORTE DRAG & DROP UNIVERSAL (RATÓN HTML5 + TÁCTIL POINTER EVENTS PARA TABLETS/PIZARRAS)
+    function onDragStartModule(ev, roomKey) {
+      if (ev && ev.dataTransfer) {
+        ev.dataTransfer.setData("text/plain", roomKey);
+      }
+    }
+
+    function setupDragAndDrop() {
+      const slotUM = document.getElementById("slotUM");
+      const slotDM = document.getElementById("slotDM");
+
+      [slotUM, slotDM].forEach((slot) => {
+        if (!slot) return;
+        slot.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          slot.classList.add("scale-105");
+        });
+        slot.addEventListener("dragleave", () => slot.classList.remove("scale-105"));
+        slot.addEventListener("drop", (e) => {
+          e.preventDefault();
+          slot.classList.remove("scale-105");
+          const room = (e.dataTransfer && e.dataTransfer.getData("text/plain")) || "";
+          if (room === "UM" && slot.id === "slotUM") attachRoom("UM");
+          if (room === "DM" && slot.id === "slotDM") attachRoom("DM");
+        });
+      });
+
+      // Soporte táctil para pantallas interactivas y tablets
+      document.querySelectorAll("[data-room-drag]").forEach((card) => {
+        let ghost = null;
+        let draggingKey = null;
+
+        card.addEventListener("pointerdown", (e) => {
+          if (e.pointerType === "mouse") return; // El ratón usa drag nativo
+          if (e.target.closest("button")) return;
+          draggingKey = card.getAttribute("data-room-drag");
+          ghost = document.createElement("div");
+          ghost.id = "touchDragGhost";
+          ghost.className = "bg-indigo-600 text-white font-black text-xs px-3 py-2 rounded-xl shadow-xl border-2 border-white";
+          ghost.innerText = draggingKey === "UM" ? "📦 Soltar en Ala UM" : "🏰 Soltar en Torreón DM";
+          ghost.style.left = `${e.clientX}px`;
+          ghost.style.top = `${e.clientY}px`;
+          document.body.appendChild(ghost);
+          card.setPointerCapture(e.pointerId);
+        });
+
+        card.addEventListener("pointermove", (e) => {
+          if (!ghost) return;
+          ghost.style.left = `${e.clientX}px`;
+          ghost.style.top = `${e.clientY}px`;
+        });
+
+        const endTouchDrag = (e) => {
+          if (!ghost) return;
+          ghost.remove();
+          ghost = null;
+          const targetSlot = draggingKey === "UM" ? slotUM : slotDM;
+          if (targetSlot) {
+            const rect = targetSlot.getBoundingClientRect();
+            const inside = e.clientX >= rect.left - 25 && e.clientX <= rect.right + 25 &&
+                           e.clientY >= rect.top - 25 && e.clientY <= rect.bottom + 25;
+            if (inside) attachRoom(draggingKey);
+          }
+          draggingKey = null;
+        };
+
+        card.addEventListener("pointerup", endTouchDrag);
+        card.addEventListener("pointercancel", endTouchDrag);
+      });
+    }
+
+    // GESTIÓN DE BLOQUES Y CANJES BASE-10 EN CASCADA REAL (99 + 1 = 100, 999 + 1 = 1.000, ETC.)
+    function changeBlocks(roomKey, delta) {
+      initAudio();
+      const current = state[roomKey];
+      const next = current + delta;
+
+      if (next < 0) {
+        const ch = document.getElementById(`chamber${roomKey}`);
+        if (ch) {
+          ch.classList.remove("anim-shake");
+          void ch.offsetWidth;
+          ch.classList.add("anim-shake");
+        }
+        playSound("error");
+        return;
+      }
+
+      if (next > 9) {
+        performCascadingCarry(roomKey);
+        return;
+      }
+
+      state[roomKey] = next;
+      playSound(delta > 0 ? "add" : "remove");
+      boostCrewAnimation();
+      if (window.threeLeo) window.threeLeo.nodTimer = 0.4;
+      updateUI();
+    }
+
+    function performCascadingCarry(startRoom) {
+      const order = ["U", "D", "C", "UM", "DM"];
+      const idx = order.indexOf(startRoom);
+      if (idx === -1) return;
+
+      // Verificar si la casa llegaría a > 99.999
+      let canCarry = false;
+      for (let i = idx + 1; i < order.length; i++) {
+        const key = order[i];
+        const val = (key === "UM" && !state.attachedUM) ? 0 : (key === "DM" && !state.attachedDM) ? 0 : state[key];
+        if (val < 9) {
+          canCarry = true;
+          break;
+        }
+      }
+
+      if (!canCarry) {
+        playSound("error");
+        showToast("¡Capacidad máxima alcanzada (99.999)!", "🏗️");
+        return;
+      }
+
+      playSound("carry");
+      if (window.threeLeo) window.threeLeo.celebrateTimer = 1.2;
+
+      const meta = {
+        U: { next: "D", color: "bg-blue-600", label: "10 U ➡️ 1 D", msg: "¡Canje Base 10! 10 Unidades forman 1 Decena azul 🟦" },
+        D: { next: "C", color: "bg-emerald-600", label: "10 D ➡️ 1 C", msg: "¡Canje Base 10! 10 Decenas forman 1 Centena verde 🟩" },
+        C: { next: "UM", color: "bg-purple-600", label: "10 C ➡️ 1 UM", msg: "¡Llegaron los Miles! 10 Centenas forman 1 Unidad de Mil 📦" },
+        UM: { next: "DM", color: "bg-amber-500", label: "10 UM ➡️ 1 DM", msg: "¡Gran Torreón! 10 Unidades de Mil forman 1 Decena de Mil 🏰" }
+      };
+
+      let curIdx = idx;
+      let lastToastMsg = "";
+      while (curIdx < order.length - 1) {
+        const curKey = order[curIdx];
+        const nextKey = order[curIdx + 1];
+
+        state[curKey] = 0;
+        if (nextKey === "UM" && !state.attachedUM) attachRoom("UM", true);
+        if (nextKey === "DM" && !state.attachedDM) attachRoom("DM", true);
+
+        spawnCarryParticle(curKey, nextKey, meta[curKey].color, meta[curKey].label);
+        lastToastMsg = meta[curKey].msg;
+
+        if (state[nextKey] < 9) {
+          state[nextKey] += 1;
+          break;
+        } else {
+          curIdx++;
+        }
+      }
+
+      showToast(lastToastMsg, "✨");
+      boostCrewAnimation();
+      updateUI();
+    }
+
+    // DESAGRUPAR (1 ORDEN SUPERIOR ➡️ 10 DEL ORDEN INFERIOR, CUANDO EL INFERIOR ESTÁ EN 0)
+    function borrowFromLeft(targetLowerRoom) {
+      initAudio();
+      const map = {
+        U: { from: "D", color: "bg-red-600", label: "1 D ➡️ 10 U", msg: "Desagrupaste 1 Decena en 9 Unidades + 1 (quedan 9 o usa −1)" },
+        D: { from: "C", color: "bg-blue-600", label: "1 C ➡️ 10 D", msg: "Desagrupaste 1 Centena en Decenas" },
+        C: { from: "UM", color: "bg-emerald-600", label: "1 UM ➡️ 10 C", msg: "Desagrupaste 1 Unidad de Mil en Centenas" }
+      };
+      const cfg = map[targetLowerRoom];
+      if (!cfg) return;
+      if (state[cfg.from] <= 0 || state[targetLowerRoom] > 0) return;
+
+      state[cfg.from] -= 1;
+      state[targetLowerRoom] = 9;
+      playSound("snap");
+      spawnCarryParticle(cfg.from, targetLowerRoom, cfg.color, "1 ➡️ 9+1");
+      showToast(`¡1 ${cfg.from} se abrió para dar bloques a ${targetLowerRoom}!`, "🔄");
+      updateUI();
+    }
+
+    // SUMAR / RESTAR AL TOTAL EN MODO LIBRE PARA DEMOSTRAR CONTEO Y PRÉSTAMOS EN VIVO
+    function stepTotalBy(delta) {
+      initAudio();
+      const current = getCurrentTotal();
+      const next = Math.max(0, Math.min(99999, current + delta));
+      if (next === current) {
+        playSound("error");
+        return;
+      }
+
+      const dm = Math.floor(next / 10000);
+      const um = Math.floor((next % 10000) / 1000);
+      const c = Math.floor((next % 1000) / 100);
+      const d = Math.floor((next % 100) / 10);
+      const u = next % 10;
+
+      if (dm > 0 && !state.attachedDM) attachRoom("DM", true);
+      else if ((um > 0 || dm > 0) && !state.attachedUM) attachRoom("UM", true);
+
+      const hadCarry = (delta > 0) && (
+        (u < state.U) || (d < state.D && dm >= state.DM) || (c < state.C && um >= state.UM)
+      );
+
+      state.DM = dm;
+      state.UM = um;
+      state.C = c;
+      state.D = d;
+      state.U = u;
+
+      playSound(hadCarry ? "carry" : delta > 0 ? "add" : "remove");
+      boostCrewAnimation();
+      updateUI();
+    }
+
+    function resetHouseBlocks() {
+      initAudio();
+      playSound("remove");
+      state.DM = 0;
+      state.UM = 0;
+      state.C = 0;
+      state.D = 0;
+      state.U = 0;
+      state.isInaugurated = false;
+      updateUI();
+    }
+
+    // MODOS DE JUEGO: AVENTURA, DESAFÍOS Y TALLER LIBRE
+    function switchGameMode(mode) {
+      state.mode = mode;
+      const btnAdv = document.getElementById("btnModeAdventure");
+      const btnCha = document.getElementById("btnModeChallenge");
+      const btnFree = document.getElementById("btnModeFree");
+
+      const barAdv = document.getElementById("adventureMissionBar");
+      const barCha = document.getElementById("challengeControlsRow");
+      const barFree = document.getElementById("freeControlsRow");
+      const btnVerify = document.getElementById("btnVerifyChallenge");
+      const headerLbl = document.getElementById("targetHeaderLabel");
+
+      const activeClass = "text-xs font-black px-2.5 sm:px-3 py-1.5 rounded-lg transition mission-badge shadow-sm flex items-center gap-1";
+      const idleClass = "text-xs font-black px-2.5 sm:px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
+
+      if (btnAdv) btnAdv.className = mode === "adventure" ? activeClass : idleClass;
+      if (btnCha) btnCha.className = mode === "challenge" ? activeClass : idleClass;
+      if (btnFree) btnFree.className = mode === "free" ? activeClass : idleClass;
+
+      barAdv?.classList.toggle("hidden", mode !== "adventure");
+      barCha?.classList.toggle("hidden", mode !== "challenge");
+      barCha?.classList.toggle("flex", mode === "challenge");
+      barFree?.classList.toggle("hidden", mode !== "free");
+      barFree?.classList.toggle("flex", mode === "free");
+      btnVerify?.classList.toggle("hidden", mode !== "challenge");
+
+      if (mode === "adventure") {
+        if (headerLbl) headerLbl.innerText = "NÚMERO OBJETIVO DE LA OBRA";
+        loadCurrentMission();
+      } else if (mode === "challenge") {
+        if (headerLbl) headerLbl.innerText = "ACERTIJO DEL ARQUITECTO (CONSTRUYE Y COMPRUEBA)";
+        updateChallengeScoreUI();
+        generateNewChallenge();
+      } else {
+        if (headerLbl) headerLbl.innerText = "NÚMERO OBJETIVO DEL TALLER LIBRE";
+        setTargetNumber(state.target || 245);
+        const leoBubble = document.getElementById("leoSpeechBubble");
+        if (leoBubble) {
+          leoBubble.innerText = "¡Estás en el Taller Libre! Escribe cualquier número, usa +1/−1 para ver canjes en vivo o cambia la vista a Solo Bloques.";
+        }
+      }
+    }
+
+    // CAMPAÑA MODO AVENTURA (8 MISIONES)
+    function loadCurrentMission() {
+      const mission = MISSIONS[state.currentMissionIdx];
+      if (!mission) return;
+
+      const iconEl = document.getElementById("missionIcon"); if (iconEl) iconEl.innerText = mission.icon;
+      const stepEl = document.getElementById("missionStepBadge"); if (stepEl) stepEl.innerText = mission.step;
+      const levelEl = document.getElementById("missionLevelBadge"); if (levelEl) levelEl.innerText = mission.phaseLabel;
+      const titleEl = document.getElementById("missionTitle"); if (titleEl) titleEl.innerText = `${mission.title} · ${mission.district}`;
+
+      document.getElementById("btnNextMission")?.classList.add("hidden");
+      renderMissionStars();
+      setTargetNumber(mission.number);
+
+      const leoBubble = document.getElementById("leoSpeechBubble");
+      if (leoBubble) leoBubble.innerText = mission.leoIntro;
+      speakText(mission.leoIntro);
+    }
+
+    function jumpToMission(idx) {
+      if (idx < 0 || idx >= MISSIONS.length) return;
+      if (idx > state.maxUnlockedMissionIdx) {
+        playSound("error");
+        showToast("¡Completa primero las misiones anteriores para desbloquear este distrito!", "🔒");
+        return;
+      }
+      playSound("snap");
+      state.currentMissionIdx = idx;
+      if (state.mode !== "adventure") {
+        switchGameMode("adventure");
+      } else {
+        loadCurrentMission();
+      }
+    }
+
+    function renderMissionStars() {
+      const starsRow = document.getElementById("missionStarsRow");
+      if (!starsRow) return;
+      starsRow.innerHTML = "";
+      MISSIONS.forEach((m, idx) => {
+        const btn = document.createElement("button");
+        const isDone = state.completedMissionIds.includes(m.id);
+        const isCurrent = idx === state.currentMissionIdx;
+        const isUnlocked = idx <= state.maxUnlockedMissionIdx;
+
+        btn.type = "button";
+        btn.onclick = () => jumpToMission(idx);
+        if (isCurrent) {
+          btn.innerText = isDone ? "🌟" : "🧱";
+          btn.className = "text-xs sm:text-sm transform scale-115 animate-bounce px-0.5 cursor-pointer";
+        } else if (isDone) {
+          btn.innerText = "⭐";
+          btn.className = "text-xs hover:scale-125 transition px-0.5 cursor-pointer";
+        } else if (isUnlocked) {
+          btn.innerText = "🔓";
+          btn.className = "text-xs hover:scale-125 transition px-0.5 cursor-pointer";
+        } else {
+          btn.innerText = "⚪";
+          btn.className = "text-xs opacity-40 px-0.5 cursor-not-allowed";
+        }
+        btn.title = `${m.step}: ${m.title} (${m.district})`;
+        starsRow.appendChild(btn);
+      });
+    }
+
+    function givePedagogicalHint() {
+      initAudio();
+      playSound("snap");
+      if (state.mode === "adventure") {
+        const mission = MISSIONS[state.currentMissionIdx];
+        if (!mission) return;
+        showModal("💡 Pista del Maestro Leo", mission.hint, mission.icon, false);
+        speakText(mission.hint);
+      } else {
+        const hintText = `Recuerda el orden de las habitaciones de derecha a izquierda: Unidades (1), Decenas (10), Centenas (100), Unidades de Mil (1.000) y Decenas de Mil (10.000).`;
+        showModal("💡 Pista Posicional", hintText, "🧭", false);
+        speakText(hintText);
+      }
+    }
+
+    function advanceNextMission() {
+      initAudio();
+      playSound("snap");
+      if (state.currentMissionIdx < MISSIONS.length - 1) {
+        state.currentMissionIdx++;
+        state.maxUnlockedMissionIdx = Math.max(state.maxUnlockedMissionIdx, state.currentMissionIdx);
+        saveProgress();
+        loadCurrentMission();
+      } else {
+        openCityMapModal();
+        showModal(
+          "👑 ¡ISLA NUMBRÓPOLIS 100% CONSTRUIDA!",
+          "¡Eres Arquitecto Maestro LEGO! Fundaste los 8 distritos desde decenas simples hasta decenas de mil. ¡Ahora pon a prueba tu ingenio en el Modo Desafíos!",
+          "🏆",
+          false
+        );
+      }
+    }
+
+    // MODO DESAFÍOS (DETECTIVE POSICIONAL: PLANOS DESORDENADOS, DICTADO EN LETRAS Y SUMA DE BLOQUES)
+    function generateSmartChallengeNumber(digitsCount) {
+      if (digitsCount === 2) {
+        return Math.floor(Math.random() * 89) + 11;
+      }
+      if (digitsCount === 3) {
+        const c = Math.floor(Math.random() * 9) + 1;
+        const zeroMid = Math.random() < 0.45;
+        const d = zeroMid ? 0 : Math.floor(Math.random() * 9) + 1;
+        const u = Math.floor(Math.random() * 9) + 1;
+        return c * 100 + d * 10 + u;
+      }
+      if (digitsCount === 4) {
+        const um = Math.floor(Math.random() * 9) + 1;
+        const zeroSpot = Math.floor(Math.random() * 3); // 0: C=0, 1: D=0, 2: sin cero
+        const c = zeroSpot === 0 ? 0 : Math.floor(Math.random() * 9) + 1;
+        const d = zeroSpot === 1 ? 0 : Math.floor(Math.random() * 9) + 1;
+        const u = Math.floor(Math.random() * 9) + 1;
+        return um * 1000 + c * 100 + d * 10 + u;
+      }
+      const dm = Math.floor(Math.random() * 8) + 1;
+      const um = Math.random() < 0.4 ? 0 : Math.floor(Math.random() * 9) + 1;
+      const c = Math.floor(Math.random() * 9) + 1;
+      const d = Math.random() < 0.4 ? 0 : Math.floor(Math.random() * 9) + 1;
+      const u = Math.floor(Math.random() * 9) + 1;
+      return dm * 10000 + um * 1000 + c * 100 + d * 10 + u;
+    }
+
+    function generateNewChallenge() {
+      initAudio();
+      const typeSel = document.getElementById("challengeTypeSelect")?.value || "mixed";
+      const digitsCount = parseInt(document.getElementById("challengeLevelSelect")?.value || "3", 10);
+
+      const subtypes = ["scrambled", "dictation", "additive"];
+      const chosenType = typeSel === "mixed" ? subtypes[Math.floor(Math.random() * subtypes.length)] : typeSel;
+
+      const n = generateSmartChallengeNumber(digitsCount);
+      state.challenge.subtype = chosenType;
+      state.challenge.solved = false;
+
+      // Configurar objetivo sin revelar cifras coloreadas
+      state.target = n;
+      state.targetDM = Math.floor(n / 10000);
+      state.targetUM = Math.floor((n % 10000) / 1000);
+      state.targetC = Math.floor((n % 1000) / 100);
+      state.targetD = Math.floor((n % 100) / 10);
+      state.targetU = n % 10;
+      state.isInaugurated = false;
+
+      // Reiniciar bloques
+      state.DM = 0; state.UM = 0; state.C = 0; state.D = 0; state.U = 0;
+      if (state.targetDM === 0 && state.attachedDM) detachRoom("DM");
+      if (state.targetUM === 0 && state.targetDM === 0 && state.attachedUM) detachRoom("UM");
+
+      const words = numberToWordsEs(n);
+      let promptHtml = "";
+      let promptSpeech = "";
+
+      if (chosenType === "dictation") {
+        promptHtml = `<span class="text-lg sm:text-2xl font-black text-indigo-900 bg-indigo-50 border-2 border-indigo-200 px-3 py-1 rounded-xl capitalize">«${words}»</span>`;
+        promptSpeech = `Dictado de Leo: construye el número ${words}.`;
+      } else if (chosenType === "scrambled") {
+        const items = [];
+        if (state.targetDM > 0) items.push({ txt: `${state.targetDM} DM`, speech: `${state.targetDM} decenas de mil`, cls: "bg-amber-100 text-amber-800 border-amber-300" });
+        if (state.targetUM > 0) items.push({ txt: `${state.targetUM} UM`, speech: `${state.targetUM} unidades de mil`, cls: "bg-purple-100 text-purple-800 border-purple-300" });
+        if (state.targetC > 0) items.push({ txt: `${state.targetC} C`, speech: `${state.targetC} centenas`, cls: "bg-emerald-100 text-emerald-800 border-emerald-300" });
+        if (state.targetD > 0) items.push({ txt: `${state.targetD} D`, speech: `${state.targetD} decenas`, cls: "bg-blue-100 text-blue-800 border-blue-300" });
+        if (state.targetU > 0) items.push({ txt: `${state.targetU} U`, speech: `${state.targetU} unidades`, cls: "bg-red-100 text-red-800 border-red-300" });
+
+        // Desordenar pistas para evaluar comprensión real del valor posicional
+        for (let i = items.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [items[i], items[j]] = [items[j], items[i]];
+        }
+        promptHtml = items.map((it) => `<span class="text-sm sm:text-lg font-black px-2.5 py-0.5 rounded-xl border ${it.cls}">${it.txt}</span>`).join(`<span class="text-slate-400 text-base mx-1">+</span>`);
+        promptSpeech = `Plano desordenado: ubica ${items.map((i) => i.speech).join(", más ")}. ¡Fíjate bien en cada letra!`;
+      } else {
+        const parts = [];
+        if (state.targetDM > 0) parts.push((state.targetDM * 10000).toLocaleString("es-CO"));
+        if (state.targetUM > 0) parts.push((state.targetUM * 1000).toLocaleString("es-CO"));
+        if (state.targetC > 0) parts.push((state.targetC * 100).toLocaleString("es-CO"));
+        if (state.targetD > 0) parts.push((state.targetD * 10).toLocaleString("es-CO"));
+        if (state.targetU > 0) parts.push(String(state.targetU));
+        promptHtml = `<span class="text-lg sm:text-2xl font-black text-slate-800 bg-amber-50 border-2 border-amber-200 px-3 py-1 rounded-xl">${parts.join(" + ")}</span>`;
+        promptSpeech = `Suma de bloques: descubre qué edificio forman ${parts.join(" más ")}.`;
+      }
+
+      state.challenge.promptHtml = promptHtml;
+      state.challenge.promptSpeech = promptSpeech;
+
+      const displayEl = document.getElementById("targetNumberDisplay");
+      if (displayEl) displayEl.innerHTML = promptHtml;
+
+      const leoBubble = document.getElementById("leoSpeechBubble");
+      if (leoBubble) leoBubble.innerText = `${promptSpeech} Cuando termines, pulsa «¡Comprobar Obra!».`;
+
+      updateUI();
+      speakText(promptSpeech);
+    }
+
+    function updateChallengeScoreUI() {
+      const sEl = document.getElementById("challengeStreakBadge");
+      const pEl = document.getElementById("challengeScoreBadge");
+      if (sEl) sEl.innerText = state.challenge.streak;
+      if (pEl) pEl.innerText = state.challenge.score;
+    }
+
+    function verifyChallengeAttempt() {
+      initAudio();
+      const needsDM = state.targetDM > 0;
+      const needsUM = state.targetUM > 0 || needsDM;
+
+      if (needsDM && !state.attachedDM) {
+        playSound("error");
+        showToast("¡Este número requiere acoplar el Torreón DM!", "🏰");
+        return;
+      }
+      if (needsUM && !state.attachedUM) {
+        playSound("error");
+        showToast("¡Este número requiere acoplar el Ala UM!", "📦");
+        return;
+      }
+
+      const wrongRooms = [];
+      if ((state.attachedDM ? state.DM : 0) !== state.targetDM) wrongRooms.push("Decenas de Mil (DM)");
+      if ((state.attachedUM ? state.UM : 0) !== state.targetUM) wrongRooms.push("Unidades de Mil (UM)");
+      if (state.C !== state.targetC) wrongRooms.push("Centenas (C)");
+      if (state.D !== state.targetD) wrongRooms.push("Decenas (D)");
+      if (state.U !== state.targetU) wrongRooms.push("Unidades (U)");
+
+      if (wrongRooms.length === 0) {
+        if (state.challenge.solved) {
+          generateNewChallenge();
+          return;
+        }
+        state.challenge.solved = true;
+        state.challenge.streak += 1;
+        const pointsEarned = 100 + (state.challenge.streak - 1) * 25;
+        state.challenge.score += pointsEarned;
+        updateChallengeScoreUI();
+
+        playSound("win");
+        triggerConfetti();
+        if (window.threeLeo) window.threeLeo.celebrateTimer = 2.4;
+
+        const words = numberToWordsEs(state.target);
+        renderColoredTargetDigits();
+        registerBuildingInCity(state.target, words, `Reto #${state.target.toLocaleString("es-CO")}`, null);
+        saveProgress();
+        updateUI();
+
+        const msg = `¡Exacto! Construiste el ${state.target.toLocaleString("es-CO")} («${words}»). Ganaste +${pointsEarned} puntos y llevas racha de ${state.challenge.streak}.`;
+        speakText(msg);
+        showModal("🏆 ¡Acertijo Superado!", msg, "🎉", false, true);
+      } else {
+        state.challenge.streak = 0;
+        updateChallengeScoreUI();
+        playSound("error");
+        const feedback = `¡Casi lo tienes! Llevas construido ${getCurrentTotal().toLocaleString("es-CO")}. Revisa con calma: ${wrongRooms.join(", ")}.`;
+        const leoBubble = document.getElementById("leoSpeechBubble");
+        if (leoBubble) leoBubble.innerText = feedback;
+        showToast(`Revisa: ${wrongRooms.join(", ")}`, "🧐");
+        speakText(feedback);
+      }
+    }
+
+    // RENDERIZAR NÚMERO COLOREADO POR VALOR POSICIONAL
+    function renderColoredTargetDigits() {
+      const displayEl = document.getElementById("targetNumberDisplay");
+      if (!displayEl) return;
+      let htmlStr = "";
+      if (state.targetDM > 0) htmlStr += `<span class="text-amber-500">${state.targetDM}</span>`;
+      if (state.targetUM > 0 || state.targetDM > 0) {
+        htmlStr += `<span class="text-purple-600">${state.targetUM}</span>`;
+        htmlStr += `<span class="text-amber-400 px-1">•</span>`;
+      }
+      if (state.targetC > 0 || state.targetUM > 0 || state.targetDM > 0) {
+        htmlStr += `<span class="text-emerald-600">${state.targetC}</span>`;
+      }
+      if (state.targetD > 0 || state.targetC > 0 || state.targetUM > 0 || state.targetDM > 0) {
+        htmlStr += `<span class="text-blue-600">${state.targetD}</span>`;
+      }
+      htmlStr += `<span class="text-red-600">${state.targetU}</span>`;
+      displayEl.innerHTML = htmlStr;
+    }
+
+    // ACTUALIZACIÓN INTEGRAL DE LA INTERFAZ
+    function updateUI() {
+      const keys = ["DM", "UM", "C", "D", "U"];
+      const multipliers = { DM: 10000, UM: 1000, C: 100, D: 10, U: 1 };
+
+      keys.forEach((k) => {
+        const dEl = document.getElementById(`digit${k}`);
+        if (dEl) dEl.innerText = state[k];
+
+        const vBadge = document.getElementById(`valBadge${k}`);
+        if (vBadge) vBadge.innerText = (state[k] * multipliers[k]).toLocaleString("es-CO");
+
+        renderRoomBlocks(k, state[k]);
+      });
+
+      // Resaltar parcelas vacías si el número objetivo requiere acoplar UM o DM
+      const needsDM = state.targetDM > 0;
+      const needsUM = state.targetUM > 0 || needsDM;
+      document.getElementById("emptyUM")?.classList.toggle("slot-needed", needsUM && !state.attachedUM);
+      document.getElementById("emptyDM")?.classList.toggle("slot-needed", needsDM && !state.attachedDM);
+
+      const currentTotal = getCurrentTotal();
+
+      // 1. Descomposición Posicional (Ej: 1 DM + 4 UM + 5 C + 0 D + 2 U)
+      const posBox = document.getElementById("positionalDecompBox");
+      if (posBox) {
+        const posParts = [];
+        if (state.attachedDM) posParts.push(`<span class="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">${state.DM} DM</span>`);
+        if (state.attachedUM) posParts.push(`<span class="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded">${state.UM} UM</span>`);
+        posParts.push(`<span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">${state.C} C</span>`);
+        posParts.push(`<span class="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">${state.D} D</span>`);
+        posParts.push(`<span class="bg-red-100 text-red-800 px-1.5 py-0.5 rounded">${state.U} U</span>`);
+        posBox.innerHTML = posParts.join(" + ");
+      }
+
+      // 2. Descomposición Aditiva (Ej: 10.000 + 4.000 + 500 + 2 = 14.502)
+      const decompBox = document.getElementById("additiveDecompBox");
+      if (decompBox) {
+        const parts = [];
+        if (state.attachedDM && state.DM > 0) parts.push(`<span class="text-amber-600">${(state.DM * 10000).toLocaleString("es-CO")}</span>`);
+        if (state.attachedUM && state.UM > 0) parts.push(`<span class="text-purple-600">${(state.UM * 1000).toLocaleString("es-CO")}</span>`);
+        if (state.C > 0) parts.push(`<span class="text-emerald-600">${state.C * 100}</span>`);
+        if (state.D > 0) parts.push(`<span class="text-blue-600">${state.D * 10}</span>`);
+        if (state.U > 0) parts.push(`<span class="text-red-600">${state.U}</span>`);
+
+        decompBox.innerHTML = parts.length > 0
+          ? parts.join(" + ") + ` = <span class="text-slate-900 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-200 font-extrabold text-sm sm:text-base">${currentTotal.toLocaleString("es-CO")}</span>`
+          : `<span class="text-slate-400">0 = 0</span>`;
+      }
+
+      const writtenWord = numberToWordsEs(currentTotal);
+      const wordsLbl = document.getElementById("numberInWordsLabel");
+      if (wordsLbl) wordsLbl.innerText = `"${writtenWord}"`;
+
+      const inauWords = document.getElementById("inaugurationNumberWords");
+      if (inauWords) inauWords.innerText = `"${writtenWord}"`;
+
+      if (state.mode !== "challenge") {
+        updateLeoSpeech(currentTotal);
+      }
+      checkTargetStatus(currentTotal, writtenWord);
+    }
+
+    function updateLeoSpeech(currentTotal) {
+      const bubble = document.getElementById("leoSpeechBubble");
+      if (!bubble) return;
+
+      const needsDM = state.targetDM > 0;
+      const needsUM = state.targetUM > 0 || needsDM;
+
+      if (needsDM && !state.attachedDM) {
+        bubble.innerText = "🏰 ¡Este edificio llega a las Decenas de Mil! Arrastra o acopla el Torreón DM dorado a la izquierda.";
+      } else if (needsUM && !state.attachedUM) {
+        bubble.innerText = "📦 ¡Superamos las centenas! Acopla el Ala UM morada a la izquierda del Punto de Mil.";
+      } else if (currentTotal < state.target) {
+        bubble.innerText = `Llevamos ${currentTotal.toLocaleString("es-CO")} bloques («${numberToWordsEs(currentTotal)}»). ¡Añade las piezas que faltan para llegar a ${state.target.toLocaleString("es-CO")}!`;
+      } else if (currentTotal > state.target) {
+        bubble.innerText = `¡Nos pasamos! Llevamos ${currentTotal.toLocaleString("es-CO")} y buscamos ${state.target.toLocaleString("es-CO")}. Usa (−) para retirar piezas.`;
+      } else {
+        bubble.innerText = `🎀 ¡Obra maestra! Exactamente ${currentTotal.toLocaleString("es-CO")} («${numberToWordsEs(currentTotal)}»). ¡Edificio inaugurado!`;
+      }
+    }
+
+    function triggerLeoSpeech() {
+      const bubble = document.getElementById("leoSpeechBubble");
+      if (bubble) speakText(bubble.innerText);
+    }
+
+    function checkTargetStatus(currentTotal, writtenWord) {
+      const badgeStatus = document.getElementById("badgeHouseStatus");
+      const statusDot = document.getElementById("statusDot");
+      const banner = document.getElementById("inaugurationBanner");
+      const roofBadge = document.getElementById("houseRoofBadge");
+      const roofTitle = document.getElementById("houseTitleText");
+      const btnNext = document.getElementById("btnNextMission");
+
+      // En Modo Desafíos la verificación es manual mediante el botón "¡Comprobar Obra!"
+      if (state.mode === "challenge") {
+        if (state.challenge.solved) {
+          if (badgeStatus) {
+            badgeStatus.className = "text-xs font-black text-emerald-600 uppercase";
+            badgeStatus.innerText = "¡Acertijo Resuelto! 🏆";
+          }
+          banner?.classList.remove("hidden");
+        } else {
+          banner?.classList.add("hidden");
+          if (badgeStatus) {
+            badgeStatus.className = "text-xs font-black text-indigo-600 uppercase";
+            badgeStatus.innerText = `Llevas ${currentTotal.toLocaleString("es-CO")} 🧱`;
+          }
+        }
+        return;
+      }
+
+      const needsDM = state.targetDM > 0;
+      const needsUM = state.targetUM > 0 || needsDM;
+      const isDMAttachedOk = !needsDM || state.attachedDM;
+      const isUMAttachedOk = !needsUM || state.attachedUM;
+
+      const isDMOk = (state.attachedDM ? state.DM : 0) === state.targetDM;
+      const isUMOk = (state.attachedUM ? state.UM : 0) === state.targetUM;
+      const isCOk = state.C === state.targetC;
+      const isDOk = state.D === state.targetD;
+      const isUOk = state.U === state.targetU;
+
+      const allOk = isDMAttachedOk && isUMAttachedOk && isDMOk && isUMOk && isCOk && isDOk && isUOk;
+
+      if (allOk && currentTotal === state.target && (currentTotal > 0 || state.mode === "free")) {
+        if (badgeStatus) {
+          badgeStatus.className = "text-xs bg-emerald-500 text-white font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider animate-bounce";
+          badgeStatus.innerText = "¡INAUGURADO! 🎀";
+        }
+        if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+        banner?.classList.remove("hidden");
+
+        if (roofBadge) {
+          roofBadge.className = "absolute bottom-1.5 font-black text-[11px] uppercase text-amber-200 tracking-widest bg-emerald-900/90 px-4 py-0.5 rounded-full shadow border border-emerald-400 flex items-center gap-1.5 transition-all";
+        }
+        if (roofTitle) roofTitle.innerText = "¡EDIFICIO INAUGURADO!";
+
+        if (!state.isInaugurated && !state.isAutoBuilding && currentTotal > 0) {
+          state.isInaugurated = true;
+          playSound("win");
+          triggerConfetti();
+          if (window.threeLeo) window.threeLeo.celebrateTimer = 2.5;
+
+          let customBuildingName = `Edificio #${state.target.toLocaleString("es-CO")}`;
+          let missionRef = null;
+          let hasNextMission = false;
+
+          if (state.mode === "adventure" && MISSIONS[state.currentMissionIdx]) {
+            missionRef = MISSIONS[state.currentMissionIdx];
+            customBuildingName = missionRef.title;
+            if (!state.completedMissionIds.includes(missionRef.id)) {
+              state.completedMissionIds.push(missionRef.id);
+            }
+            if (state.currentMissionIdx < MISSIONS.length - 1) {
+              state.maxUnlockedMissionIdx = Math.max(state.maxUnlockedMissionIdx, state.currentMissionIdx + 1);
+              hasNextMission = true;
+            }
+            btnNext?.classList.remove("hidden");
+            renderMissionStars();
+          }
+
+          registerBuildingInCity(state.target, writtenWord, customBuildingName, missionRef);
+          saveProgress();
+
+          showModal(
+            "🎀 ¡EDIFICIO INAUGURADO! 🏙️",
+            `¡Excelente arquitectura! Inauguraste «${customBuildingName}» con el número ${state.target.toLocaleString("es-CO")} («${writtenWord}») en Isla Numbrópolis.`,
+            missionRef ? missionRef.icon : "🏆",
+            hasNextMission
+          );
+        }
+      } else {
+        state.isInaugurated = false;
+        banner?.classList.add("hidden");
+        btnNext?.classList.add("hidden");
+
+        if (roofBadge) {
+          roofBadge.className = "absolute bottom-1.5 font-black text-[11px] uppercase text-white tracking-widest bg-red-950/85 px-4 py-0.5 rounded-full shadow border border-red-700 flex items-center gap-1.5 transition-all";
+        }
+        if (roofTitle) roofTitle.innerText = "La Casa Principal";
+        if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping";
+
+        if (badgeStatus) {
+          badgeStatus.className = "text-xs font-black text-amber-600 uppercase";
+          if (!isUMAttachedOk) badgeStatus.innerText = "¡Acopla Ala UM! 📦";
+          else if (!isDMAttachedOk) badgeStatus.innerText = "¡Acopla Torreón DM! 🏰";
+          else badgeStatus.innerText = "En construcción 🔨";
+        }
+      }
+    }
+
+    // CONFIGURAR OBJETIVO EN MODO AVENTURA Y TALLER LIBRE
+    function setTargetNumber(val) {
+      const n = Math.max(0, Math.min(99999, parseInt(val, 10) || 0));
+      state.target = n;
+      state.targetDM = Math.floor(n / 10000);
+      state.targetUM = Math.floor((n % 10000) / 1000);
+      state.targetC = Math.floor((n % 1000) / 100);
+      state.targetD = Math.floor((n % 100) / 10);
+      state.targetU = n % 10;
+      state.isInaugurated = false;
+
+      renderColoredTargetDigits();
+
+      const inputCustom = document.getElementById("inputCustomNumber");
+      if (inputCustom) inputCustom.value = n;
+
+      state.DM = 0; state.UM = 0; state.C = 0; state.D = 0; state.U = 0;
+
+      if (state.targetDM === 0 && state.attachedDM) detachRoom("DM");
+      if (state.targetUM === 0 && state.targetDM === 0 && state.attachedUM) detachRoom("UM");
+
+      updateUI();
+    }
+
+    function applyCustomNumber() {
+      initAudio();
+      playSound("snap");
+      const inputEl = document.getElementById("inputCustomNumber");
+      setTargetNumber(inputEl ? inputEl.value : 0);
+    }
+
+    function generateRandomTarget() {
+      initAudio();
+      playSound("snap");
+      const roll = Math.random();
+      let rand = 0;
+      if (roll < 0.25) rand = Math.floor(Math.random() * 89) + 10;
+      else if (roll < 0.6) rand = Math.floor(Math.random() * 899) + 100;
+      else if (roll < 0.85) rand = Math.floor(Math.random() * 8999) + 1000;
+      else rand = Math.floor(Math.random() * 89999) + 10000;
+      setTargetNumber(rand);
+    }
+
+    async function autoBuildDemo() {
+      if (state.isAutoBuilding) return;
+      initAudio();
+      state.isAutoBuilding = true;
+      state.DM = 0; state.UM = 0; state.C = 0; state.D = 0; state.U = 0;
+      updateUI();
+
+      if (state.targetDM > 0 && !state.attachedDM) {
+        attachRoom("DM");
+        await new Promise((r) => setTimeout(r, 240));
+      } else if ((state.targetUM > 0 || state.targetDM > 0) && !state.attachedUM) {
+        attachRoom("UM");
+        await new Promise((r) => setTimeout(r, 240));
+      }
+
+      const rooms = ["DM", "UM", "C", "D", "U"];
+      const targets = [state.targetDM, state.targetUM, state.targetC, state.targetD, state.targetU];
+
+      for (let i = 0; i < rooms.length; i++) {
+        const rKey = rooms[i];
+        const targetVal = targets[i];
+        while (state[rKey] < targetVal) {
+          state[rKey]++;
+          playSound("add");
+          boostCrewAnimation();
+          updateUI();
+          await new Promise((r) => setTimeout(r, 130));
+        }
+      }
+
+      state.isAutoBuilding = false;
+      updateUI();
+    }
+
+    function triggerConfetti() {
+      if (typeof confetti === "function") {
+        confetti({ particleCount: 75, spread: 72, origin: { y: 0.6 } });
+      }
+    }
+
+    function showModal(title, desc, emoji, showNextMissionBtn = false, isChallengeNext = false) {
+      const t = document.getElementById("modalTitle"); if (t) t.innerText = title;
+      const d = document.getElementById("modalDesc"); if (d) d.innerText = desc;
+      const e = document.getElementById("modalEmoji"); if (e) e.innerText = emoji;
+      const nextBtn = document.getElementById("modalNextBtn");
+      if (nextBtn) {
+        if (showNextMissionBtn) {
+          nextBtn.classList.remove("hidden");
+          nextBtn.innerText = "Siguiente Misión ⏩";
+          nextBtn.onclick = () => { closeModal(); advanceNextMission(); };
+        } else if (isChallengeNext) {
+          nextBtn.classList.remove("hidden");
+          nextBtn.innerText = "Otro Acertijo 🎲";
+          nextBtn.onclick = () => { closeModal(); generateNewChallenge(); };
+        } else {
+          nextBtn.classList.add("hidden");
+        }
+      }
+      document.getElementById("modalBox")?.classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("modalBox")?.classList.add("hidden");
+    }
+
+    // CIUDAD E ISLA NUMBRÓPOLIS (MAPEO EXACTO DE CADA MISIÓN A SU DISTRITO REAL)
+    function registerBuildingInCity(number, words, customName, missionRef) {
+      const districtId = missionRef ? missionRef.districtId : null;
+      const existingIdx = state.builtBuildings.findIndex((b) =>
+        (districtId && b.districtId === districtId) || (!districtId && b.number === number)
+      );
+
+      const defaultPalettes = [
+        { bg: "from-amber-400 to-amber-600", roof: "bg-red-600" },
+        { bg: "from-sky-400 to-blue-600", roof: "bg-indigo-700" },
+        { bg: "from-emerald-400 to-emerald-600", roof: "bg-amber-600" },
+        { bg: "from-purple-400 to-purple-600", roof: "bg-rose-600" }
+      ];
+
+      const entry = {
+        number,
+        words,
+        name: customName || `Edificio #${number.toLocaleString("es-CO")}`,
+        icon: missionRef ? missionRef.icon : "🏢",
+        districtId: districtId,
+        district: missionRef ? missionRef.district : "Barrio Creativo",
+        palette: missionRef ? missionRef.palette : defaultPalettes[state.builtBuildings.length % defaultPalettes.length]
+      };
+
+      if (existingIdx >= 0) {
+        state.builtBuildings[existingIdx] = entry;
+      } else {
+        state.builtBuildings.push(entry);
+      }
+      renderCitySkyline();
+    }
+
+    function renderCitySkyline() {
+      const row = document.getElementById("citySkylineRow");
+      const badge = document.getElementById("cityCountBadge");
+      if (!row) return;
+
+      const islandCount = state.builtBuildings.filter((b) => b.districtId).length;
+      if (badge) badge.innerText = islandCount;
+
+      if (state.builtBuildings.length === 0) {
+        row.innerHTML = `
+          <div class="text-xs text-slate-400 font-bold italic my-auto flex items-center gap-1.5">
+            <span>🌱</span> Parcela lista... ¡Completa tu primer edificio para inaugurar la avenida!
+          </div>
+        `;
+        return;
+      }
+
+      row.innerHTML = "";
+      state.builtBuildings.forEach((building) => {
+        const houseEl = document.createElement("div");
+        houseEl.className = "group relative flex flex-col items-center cursor-pointer transition transform hover:scale-110 active:scale-95 shrink-0";
+        houseEl.onclick = () => speakText(`${building.name}, en ${building.district}. Número ${building.words}.`);
+        houseEl.title = `${building.icon} ${building.name} (#${building.number.toLocaleString("es-CO")}) · ${building.district}`;
+
+        houseEl.innerHTML = `
+          <div class="w-10 h-2.5 ${building.palette.roof} rounded-t-md shadow-sm"></div>
+          <div class="px-1.5 py-1 min-w-[40px] bg-gradient-to-b ${building.palette.bg} rounded-b-md border border-white/80 shadow flex items-center justify-center gap-0.5">
+            <span class="text-[10px]">${building.icon || "🏠"}</span>
+            <span class="text-[9px] font-black text-white lego-font leading-none drop-shadow">
+              ${building.number.toLocaleString("es-CO")}
+            </span>
+          </div>
+        `;
+        row.appendChild(houseEl);
+      });
+    }
+
+    function openCityMapModal() {
+      initAudio();
+      playSound("snap");
+      const modal = document.getElementById("modalCityMap");
+      const overlay = document.getElementById("cityMapPlotsOverlay");
+      const extraSec = document.getElementById("extraBuildingsSection");
+      const extraList = document.getElementById("extraBuildingsList");
+      if (!modal || !overlay) return;
+
+      overlay.innerHTML = "";
+
+      CITY_DISTRICTS.forEach((district, idx) => {
+        const mission = MISSIONS.find((m) => m.districtId === district.id);
+        const built = state.builtBuildings.find((b) => b.districtId === district.id);
+        const isUnlocked = idx <= state.maxUnlockedMissionIdx;
+
+        const plotWrap = document.createElement("div");
+        plotWrap.className = "absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 z-20";
+        plotWrap.style.top = district.top;
+        plotWrap.style.left = district.left;
+
+        if (built) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "group cursor-pointer flex flex-col items-center hover:scale-120 transition-transform";
+          btn.title = `${built.name} (${district.name}) · Clic para escuchar`;
+          btn.onclick = () => speakText(`${built.name}, en ${district.name}. Número ${built.words}.`);
+          btn.innerHTML = `
+            <div class="w-12 h-3.5 ${built.palette.roof} rounded-t-md border-2 border-b-0 border-white shadow flex items-center justify-center"></div>
+            <div class="px-2 py-1 bg-gradient-to-b ${built.palette.bg} rounded-b-lg border-2 border-white shadow-lg flex flex-col items-center">
+              <span class="text-sm leading-none mb-0.5">${built.icon || "🏠"}</span>
+              <span class="text-[9px] font-black text-white lego-font leading-none drop-shadow">
+                ${built.number.toLocaleString("es-CO")}
+              </span>
+            </div>
+            <span class="text-[8px] font-black text-slate-900 bg-white/90 px-1.5 py-0.5 rounded-full shadow mt-0.5 border border-slate-200 whitespace-nowrap">${district.name}</span>
+          `;
+          plotWrap.appendChild(btn);
+        } else {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `flex flex-col items-center transition ${isUnlocked ? "cursor-pointer hover:scale-110" : "opacity-75 cursor-not-allowed"}`;
+          btn.title = isUnlocked && mission ? `Ir a ${mission.title} (#${mission.number.toLocaleString("es-CO")})` : `Distrito bloqueado: ${district.name}`;
+          btn.onclick = () => {
+            if (isUnlocked) {
+              closeCityMapModal();
+              jumpToMission(idx);
+            } else {
+              playSound("error");
+              showToast(`Completa las misiones anteriores para desbloquear ${district.name}`, "🔒");
+            }
+          };
+          btn.innerHTML = `
+            <div class="w-11 h-9 border-2 border-dashed ${isUnlocked ? "border-amber-500 bg-amber-50/90 animate-pulse" : "border-slate-400 bg-white/75"} rounded-xl flex items-center justify-center shadow-sm">
+              <span class="text-sm">${isUnlocked ? (mission ? mission.icon : "🏗️") : "🔒"}</span>
+            </div>
+            <span class="text-[8px] font-black text-slate-800 bg-white/85 px-1.5 rounded mt-0.5 whitespace-nowrap">${district.name}</span>
+          `;
+          plotWrap.appendChild(btn);
+        }
+
+        overlay.appendChild(plotWrap);
+      });
+
+      // Mostrar edificios extra construidos en Modo Libre o Desafíos
+      const extras = state.builtBuildings.filter((b) => !b.districtId);
+      if (extraSec && extraList) {
+        if (extras.length > 0) {
+          extraSec.classList.remove("hidden");
+          extraList.innerHTML = "";
+          extras.forEach((b) => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.onclick = () => speakText(`${b.name}, ${b.words}`);
+            chip.className = "bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl px-2.5 py-1 text-xs font-black text-indigo-900 flex items-center gap-1";
+            chip.innerHTML = `<span>🏢</span><span>#${b.number.toLocaleString("es-CO")}</span>`;
+            extraList.appendChild(chip);
+          });
+        } else {
+          extraSec.classList.add("hidden");
+        }
+      }
+
+      modal.classList.remove("hidden");
+    }
+
+    function closeCityMapModal() {
+      document.getElementById("modalCityMap")?.classList.add("hidden");
+    }
+
+    // =========================================================================
+    // MOTOR THREE.JS MEJORADO: MINIFIGURAS LEGO AUTÉNTICAS E INTERACTIVAS
+    // =========================================================================
+    window.threeLeo = null;
+    window.threeCrew = null;
+
+    function drawLegoFace(ctx, mouthOpen = false, blink = false) {
+      ctx.fillStyle = "#FFD700";
+      ctx.fillRect(0, 0, 256, 256);
+
+      const cx = 128;
+      const eyeY = 114;
+      const eyeDist = 38;
+
+      // Cejas expresivas
+      ctx.strokeStyle = "#451a03";
+      ctx.lineWidth = 7;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(cx - eyeDist - 14, eyeY - 24);
+      ctx.quadraticCurveTo(cx - eyeDist, eyeY - 31, cx - eyeDist + 14, eyeY - 23);
+      ctx.moveTo(cx + eyeDist - 14, eyeY - 23);
+      ctx.quadraticCurveTo(cx + eyeDist, eyeY - 31, cx + eyeDist + 14, eyeY - 24);
+      ctx.stroke();
+
+      // Ojos (con parpadeo)
+      ctx.fillStyle = "#111827";
+      if (blink) {
+        ctx.fillRect(cx - eyeDist - 14, eyeY - 2, 28, 5);
+        ctx.fillRect(cx + eyeDist - 14, eyeY - 2, 28, 5);
+      } else {
+        ctx.beginPath();
+        ctx.arc(cx - eyeDist, eyeY, 14, 0, Math.PI * 2);
+        ctx.arc(cx + eyeDist, eyeY, 14, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.beginPath();
+        ctx.arc(cx - eyeDist + 4, eyeY - 4, 5, 0, Math.PI * 2);
+        ctx.arc(cx + eyeDist + 4, eyeY - 4, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Boca (sonrisa o hablando)
+      ctx.strokeStyle = "#111827";
+      ctx.lineWidth = 6.5;
+      if (mouthOpen) {
+        ctx.fillStyle = "#7f1d1d";
+        ctx.beginPath();
+        ctx.ellipse(cx, eyeY + 38, 22, 14, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.arc(cx, eyeY + 22, 30, 0.14 * Math.PI, 0.86 * Math.PI);
+        ctx.stroke();
+      }
+    }
+
+    function build3DMinifigure(options = {}) {
+      const group = new THREE.Group();
+      const vestColor = options.vestColor || "orange";
+      const helmetColor = options.helmetColor || 0xFBBF24;
+      const plasticMat = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.26, metalness: 0.06 });
+
+      // Textura dinámica para el rostro
+      const faceCanvas = document.createElement("canvas");
+      faceCanvas.width = 256;
+      faceCanvas.height = 256;
+      const faceCtx = faceCanvas.getContext("2d");
+      drawLegoFace(faceCtx, false, false);
+      const faceTex = new THREE.CanvasTexture(faceCanvas);
+
+      const headGroup = new THREE.Group();
+      headGroup.position.y = 1.16;
+
+      // Cuello y Cabeza con botón superior LEGO (stud)
+      const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.16, 20), plasticMat(0xFFD700));
+      neck.position.y = -0.32;
+      headGroup.add(neck);
+
+      const head = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.37, 0.37, 0.56, 32),
+        new THREE.MeshStandardMaterial({ map: faceTex, roughness: 0.26 })
+      );
+      head.rotation.y = Math.PI;
+      headGroup.add(head);
+
+      const topStud = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.12, 20), plasticMat(0xFFD700));
+      topStud.position.y = 0.33;
+      headGroup.add(topStud);
+
+      // Casco de constructor con visera frontal
+      const helmetGroup = new THREE.Group();
+      helmetGroup.position.set(0, 0.2, 0);
+      const helmetDome = new THREE.Mesh(
+        new THREE.SphereGeometry(0.43, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.52),
+        plasticMat(helmetColor)
+      );
+      helmetGroup.add(helmetDome);
+
+      const visor = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.48, 0.06, 24, 1, false, -Math.PI * 0.4, Math.PI * 0.8), plasticMat(helmetColor));
+      visor.position.set(0, 0.02, 0.08);
+      helmetGroup.add(visor);
+
+      headGroup.add(helmetGroup);
+      group.add(headGroup);
+
+      // Torso con franjas reflectivas de chaleco de obra
+      const mainTorsoColor = vestColor === "orange" ? 0xFF6B00 : 0x2563EB;
+      const torso = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.86, 0.44), plasticMat(mainTorsoColor));
+      torso.position.y = 0.48;
+      group.add(torso);
+
+      const stripeMat = plasticMat(0xE2E8F0);
+      const stripe1 = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.09, 0.46), stripeMat);
+      stripe1.position.y = 0.3;
+      group.add(stripe1);
+
+      // Brazos + Manos amarillas LEGO
+      const armMat = plasticMat(vestColor === "orange" ? 0xEA580C : 0x1D4ED8);
+      const handMat = plasticMat(0xFFD700);
+
+      const leftArmGroup = new THREE.Group();
+      leftArmGroup.position.set(-0.52, 0.82, 0);
+      const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.13, 0.52, 14), armMat);
+      leftArm.position.y = -0.24;
+      const leftHand = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.045, 10, 16, Math.PI * 1.45), handMat);
+      leftHand.position.y = -0.54;
+      leftArmGroup.add(leftArm, leftHand);
+      group.add(leftArmGroup);
+
+      const rightArmGroup = new THREE.Group();
+      rightArmGroup.position.set(0.52, 0.82, 0);
+      const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.13, 0.52, 14), armMat);
+      rightArm.position.y = -0.24;
+      const rightHand = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.045, 10, 16, Math.PI * 1.45), handMat);
+      rightHand.position.y = -0.54;
+      rightArmGroup.add(rightArm, rightHand);
+      group.add(rightArmGroup);
+
+      // Cintura y Piernas
+      const belt = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.14, 0.42), plasticMat(0x1E293B));
+      belt.position.y = 0.0;
+      group.add(belt);
+
+      const legGeo = new THREE.BoxGeometry(0.36, 0.62, 0.4);
+      const legMat = plasticMat(0x334155);
+      const leftLeg = new THREE.Mesh(legGeo, legMat);
+      leftLeg.position.set(-0.21, -0.38, 0);
+      const rightLeg = new THREE.Mesh(legGeo, legMat);
+      rightLeg.position.set(0.21, -0.38, 0);
+      group.add(leftLeg, rightLeg);
+
+      return { mesh: group, headGroup, leftArmGroup, rightArmGroup, faceCtx, faceTex };
+    }
+
+    function init3DLeoWebcam() {
+      const canvas = document.getElementById("leoWebcam3DCanvas");
+      if (!canvas || typeof THREE === "undefined") return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(36, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.set(0, 1.05, 2.75);
+      camera.lookAt(0, 0.98, 0);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xd97706, 0.95));
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+      dirLight.position.set(2.5, 4, 3);
+      scene.add(dirLight);
+
+      const leo = build3DMinifigure({ vestColor: "orange", helmetColor: 0xFBBF24 });
+      scene.add(leo.mesh);
+
+      // Ladrillos 3D flotando en el estudio de Leo
+      const floatingBricks = [];
+      const brickColors = [0xEF4444, 0x3B82F6, 0x10B981, 0xA855F7];
+      brickColors.forEach((col, i) => {
+        const bGroup = new THREE.Group();
+        const body = new THREE.Mesh(
+          new THREE.BoxGeometry(0.34, 0.22, 0.24),
+          new THREE.MeshStandardMaterial({ color: col, roughness: 0.3 })
+        );
+        const stud = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.07, 0.07, 0.06, 12),
+          new THREE.MeshStandardMaterial({ color: col, roughness: 0.3 })
+        );
+        stud.position.y = 0.14;
+        bGroup.add(body, stud);
+        bGroup.position.set(i % 2 === 0 ? -1.15 : 1.15, 0.55 + i * 0.32, -0.75);
+        scene.add(bGroup);
+        floatingBricks.push(bGroup);
+      });
+
+      const state3D = {
+        leo,
+        talkTimer: 0,
+        nodTimer: 0,
+        celebrateTimer: 0,
+        userRotY: 0,
+        isDragging: false,
+        lastX: 0,
+        dragMoved: 0,
+        lastMouthState: false,
+        lastBlinkState: false
+      };
+      window.threeLeo = state3D;
+
+      // Interacción: arrastrar para girar a Leo o clic para saludar
+      canvas.addEventListener("pointerdown", (e) => {
+        state3D.isDragging = true;
+        state3D.lastX = e.clientX;
+        state3D.dragMoved = 0;
+        canvas.setPointerCapture(e.pointerId);
+      });
+      canvas.addEventListener("pointermove", (e) => {
+        if (!state3D.isDragging) return;
+        const dx = e.clientX - state3D.lastX;
+        state3D.lastX = e.clientX;
+        state3D.dragMoved += Math.abs(dx);
+        state3D.userRotY += dx * 0.014;
+      });
+      const stopDrag = () => {
+        if (state3D.isDragging && state3D.dragMoved < 5) {
+          state3D.celebrateTimer = 1.1;
+          playSound("add");
+        }
+        state3D.isDragging = false;
+      };
+      canvas.addEventListener("pointerup", stopDrag);
+      canvas.addEventListener("pointercancel", stopDrag);
+
+      function resize() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
+          renderer.setSize(w, h, false);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+      }
+
+      function animateLeo() {
+        requestAnimationFrame(animateLeo);
+        resize();
+        const nowMs = performance.now();
+        const t = nowMs * 0.003;
+
+        if (!state3D.isDragging) {
+          state3D.userRotY *= 0.96;
+        }
+        leo.mesh.rotation.y = state3D.userRotY + Math.sin(t * 0.7) * 0.16;
+        leo.headGroup.rotation.y = Math.sin(t * 1.1) * 0.12;
+
+        // Parpadeo periódico y boca al hablar
+        const isBlinking = (nowMs % 3800) < 130;
+        const isMouthOpen = state3D.talkTimer > 0 && Math.sin(t * 9) > 0;
+        if (isBlinking !== state3D.lastBlinkState || isMouthOpen !== state3D.lastMouthState) {
+          state3D.lastBlinkState = isBlinking;
+          state3D.lastMouthState = isMouthOpen;
+          drawLegoFace(leo.faceCtx, isMouthOpen, isBlinking);
+          leo.faceTex.needsUpdate = true;
+        }
+
+        if (state3D.talkTimer > 0) {
+          state3D.talkTimer -= 0.016;
+          leo.headGroup.rotation.x = Math.sin(t * 7) * 0.1;
+          leo.rightArmGroup.rotation.x = -0.5 + Math.sin(t * 5) * 0.25;
+        } else if (state3D.celebrateTimer > 0) {
+          state3D.celebrateTimer -= 0.016;
+          leo.mesh.position.y = Math.abs(Math.sin(t * 6)) * 0.18;
+          leo.leftArmGroup.rotation.x = -2.4 + Math.sin(t * 8) * 0.25;
+          leo.rightArmGroup.rotation.x = -2.4 - Math.sin(t * 8) * 0.25;
+        } else if (state3D.nodTimer > 0) {
+          state3D.nodTimer -= 0.016;
+          leo.headGroup.rotation.x = Math.sin(t * 12) * 0.18;
+        } else {
+          leo.mesh.position.y = 0;
+          leo.headGroup.rotation.x = 0;
+          leo.leftArmGroup.rotation.x = Math.sin(t) * 0.08;
+          leo.rightArmGroup.rotation.x = -Math.sin(t) * 0.08;
+        }
+
+        floatingBricks.forEach((b, idx) => {
+          b.rotation.y = t * 0.6 + idx;
+          b.rotation.x = Math.sin(t + idx) * 0.25;
+        });
+
+        renderer.render(scene, camera);
+      }
+      animateLeo();
+    }
+
+    function boostCrewAnimation() {
+      if (window.threeCrew) {
+        window.threeCrew.boostTimer = 1.0;
+        const lbl = document.getElementById("crewStatusLabel");
+        if (lbl) {
+          lbl.innerText = "🔨 ¡Construyendo!";
+          clearTimeout(window.threeCrew.lblTimeout);
+          window.threeCrew.lblTimeout = setTimeout(() => {
+            lbl.innerText = "✓ Listos en la obra";
+          }, 900);
+        }
+      }
+    }
+
+    function init3DConstructionCrew() {
+      const canvas = document.getElementById("crew3DCanvas");
+      if (!canvas || typeof THREE === "undefined") return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.set(0, 0.65, 3.1);
+      camera.lookAt(0, 0.55, 0);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x0284c7, 0.95));
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+      dirLight.position.set(3, 5, 4);
+      scene.add(dirLight);
+
+      const lucas = build3DMinifigure({ vestColor: "orange", helmetColor: 0xFBBF24 });
+      lucas.mesh.position.set(-0.65, 0, 0);
+      lucas.mesh.scale.set(0.68, 0.68, 0.68);
+      lucas.mesh.rotation.y = 0.35;
+      scene.add(lucas.mesh);
+
+      const sofia = build3DMinifigure({ vestColor: "blue", helmetColor: 0xEF4444 });
+      sofia.mesh.position.set(0.65, 0, 0);
+      sofia.mesh.scale.set(0.68, 0.68, 0.68);
+      sofia.mesh.rotation.y = -0.35;
+      scene.add(sofia.mesh);
+
+      // Bloque rojo que Sofía sostiene
+      const miniBrick = new THREE.Mesh(
+        new THREE.BoxGeometry(0.28, 0.2, 0.2),
+        new THREE.MeshStandardMaterial({ color: 0xEF4444, roughness: 0.3 })
+      );
+      miniBrick.position.set(0, -0.58, 0.12);
+      sofia.leftArmGroup.add(miniBrick);
+
+      window.threeCrew = { lucas, sofia, boostTimer: 0, lblTimeout: null };
+
+      function resize() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
+          renderer.setSize(w, h, false);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+      }
+
+      function animateCrew() {
+        requestAnimationFrame(animateCrew);
+        resize();
+        const speed = window.threeCrew.boostTimer > 0 ? 0.016 : 0.005;
+        if (window.threeCrew.boostTimer > 0) window.threeCrew.boostTimer -= 0.016;
+        const t = performance.now() * speed;
+        lucas.rightArmGroup.rotation.x = -0.6 + Math.sin(t * 2.8) * 0.55;
+        sofia.leftArmGroup.rotation.x = -0.5 + Math.cos(t * 2.2) * 0.4;
+        renderer.render(scene, camera);
+      }
+      animateCrew();
+    }
+
+    // INICIALIZACIÓN GENERAL
+    window.addEventListener("DOMContentLoaded", () => {
+      loadProgress();
+      setupDragAndDrop();
+      renderCitySkyline();
+      switchGameMode("adventure");
+      setTimeout(() => {
+        init3DLeoWebcam();
+        init3DConstructionCrew();
+      }, 80);
+    });
+  </script>
+</body>
+</html>
