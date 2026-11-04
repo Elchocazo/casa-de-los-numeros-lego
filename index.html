@@ -1873,70 +1873,25 @@
     <!-- FILA PRINCIPAL: 3 ZONAS (PERSONAJE IZQ + OBJETIVO CENTRO + CTA DERECHA) -->
     <div class="flex flex-wrap items-center justify-between gap-3">
       
-      <!-- ZONA IZQUIERDA: PERSONAJE LEGO + GLOBO DE DIÁLOGO -->
-      <div class="flex items-center gap-2.5 min-w-0 flex-1 sm:flex-initial">
-        <!-- Retrato auténtico del aventurero LEGO (chico con sudadera roja y mochila) -->
-        <div class="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95" onclick="triggerLeoSpeech()" title="¡Haz clic para escuchar el diálogo!">
-          <!-- Destellos de entusiasmo en la parte superior derecha -->
-          <div class="absolute -top-1 right-1 text-amber-500 font-black text-sm select-none animate-pulse">✨</div>
-          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md overflow-visible">
-            <!-- Rayos de entusiasmo -->
-            <path d="M72 18 L82 12 M76 25 L88 24 M78 32 L89 36" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-            <!-- Mochila marrón detrás -->
-            <rect x="22" y="52" width="56" height="36" rx="8" fill="#78350f" stroke="#451a03" stroke-width="2"/>
-            <!-- Tirantes de la mochila -->
-            <path d="M30 52 C30 46 36 42 42 44" stroke="#92400e" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <path d="M70 52 C70 46 64 42 58 44" stroke="#92400e" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <!-- Torso: Sudadera con capucha roja -->
-            <path d="M26 62 C26 50 40 46 50 46 C60 46 74 50 74 62 L78 96 L22 96 Z" fill="#dc2626" stroke="#991b1b" stroke-width="2.5"/>
-            <!-- Cuello y camiseta gris -->
-            <path d="M44 46 L50 62 L56 46 Z" fill="#94a3b8"/>
-            <path d="M50 62 L50 96" stroke="#cbd5e1" stroke-width="2.5" stroke-dasharray="2,2"/>
-            <!-- Capucha caída sobre los hombros -->
-            <path d="M36 46 C34 54 40 58 50 58 C60 58 66 54 64 46" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
-            <!-- Cuello LEGO cilíndrico -->
-            <rect x="44" y="38" width="12" height="10" rx="3" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
-            <!-- Cabeza LEGO amarilla -->
-            <rect x="32" y="16" width="36" height="28" rx="8" fill="#fbbf24" stroke="#d97706" stroke-width="2.5"/>
-            <ellipse cx="50" cy="16" rx="10" ry="3.5" fill="#fef08a"/>
-            <!-- Cejas marrones amigables -->
-            <path d="M38 23 Q42 20 46 22" stroke="#78350f" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <path d="M54 22 Q58 20 62 23" stroke="#78350f" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <!-- Ojos LEGO grandes y expresivos -->
-            <circle cx="42" cy="27" r="3" fill="#1e293b"/>
-            <circle cx="41" cy="26" r="1" fill="#ffffff"/>
-            <circle cx="58" cy="27" r="3" fill="#1e293b"/>
-            <circle cx="57" cy="26" r="1" fill="#ffffff"/>
-            <!-- Mejillas rosadas -->
-            <circle cx="37" cy="31" r="2.5" fill="#f87171" opacity="0.6"/>
-            <circle cx="63" cy="31" r="2.5" fill="#f87171" opacity="0.6"/>
-            <!-- Sonrisa simpática con lengua -->
-            <path d="M44 32 Q50 38 56 32" stroke="#78350f" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <path d="M46 33 Q50 37 54 33" fill="#fb7185"/>
-            <!-- Pelo castaño ondulado peinado hacia un lado -->
-            <path d="M30 20 C28 8 44 4 52 4 C64 4 72 10 70 20 C68 22 64 22 62 18 C58 14 50 14 44 18 C40 21 34 22 30 20 Z" fill="#78350f" stroke="#451a03" stroke-width="2.5"/>
-            <path d="M34 14 C42 8 52 8 60 12" stroke="#92400e" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <!-- Mano LEGO amarilla con pulgar arriba (👍) -->
-            <g transform="translate(68, 60)">
-              <circle cx="10" cy="10" r="8" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
-              <rect x="6" y="-2" width="7" height="10" rx="3.5" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
-              <ellipse cx="9" cy="9" rx="3" ry="4" fill="#d97706" opacity="0.3"/>
-            </g>
-          </svg>
+      <!-- ZONA IZQUIERDA: NUEVO AVATAR CHIBI PNG TRANSPARENTE + DIÁLOGO COMPACTO -->
+      <div class="flex items-center gap-2 min-w-0 shrink-0">
+        <!-- Avatar de personaje chibi sin fondo, estético y nítido -->
+        <div class="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95" onclick="triggerLeoSpeech()" title="¡Tócame para escuchar!">
+          <img id="leoAvatarImg" src="assets/leo_avatar_talk.png" alt="Compañero Leo" class="w-full h-full object-contain drop-shadow select-none">
           <canvas id="leoWebcam3DCanvas" class="hidden"></canvas>
         </div>
 
-        <!-- Globo de diálogo estilo cómic/RPG con flecha -->
-        <div class="relative bg-white/95 border-2 border-amber-300 rounded-2xl px-3.5 py-2 shadow-sm max-w-[300px] sm:max-w-sm">
-          <!-- Pico del bocadillo hacia el avatar -->
-          <span class="absolute top-1/2 -left-2 -translate-y-1/2 w-3.5 h-3.5 rotate-45 bg-white border-l-2 border-b-2 border-amber-300"></span>
+        <!-- Globo de diálogo compacto y limpio -->
+        <div class="relative bg-white/95 border-2 border-amber-300 rounded-xl px-2.5 py-1.5 shadow-xs max-w-[160px] sm:max-w-[200px]">
+          <!-- Flecha hacia el avatar -->
+          <span class="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 rotate-45 bg-white border-l-2 border-b-2 border-amber-300"></span>
           <div class="mb-0.5">
-            <span id="rpgSpeakerLabel" class="text-xs sm:text-[13px] font-black text-amber-950 block leading-tight">
+            <span id="rpgSpeakerLabel" class="text-[11px] sm:text-xs font-black text-amber-950 block leading-tight">
               ¡Compañero Leo!
             </span>
           </div>
-          <p id="leoSpeechBubble" class="text-xs font-medium leading-snug text-slate-700">
-            Necesitamos construir el número 35. Usa la Casa de los Números para lograrlo.
+          <p id="leoSpeechBubble" class="text-[10px] sm:text-[11px] font-semibold leading-tight text-slate-700 line-clamp-2">
+            Necesitamos hornear 35 panes dorados. ¡Tú puedes!
           </p>
         </div>
       </div>
@@ -1972,15 +1927,26 @@
         </div>
       </div>
 
-      <!-- ZONA DERECHA: BOTÓN PRINCIPAL DE ACCIÓN (UN SOLO BOTÓN SEGÚN EL MODO) -->
-      <div class="flex items-center gap-2 shrink-0">
-        <button id="btnActionPrimary" onclick="handlePrimaryAction()" class="btn-gold-cta text-sm sm:text-base py-2.5 px-6 flex items-center gap-2">
+      <!-- ZONA DERECHA: BOTÓN PRINCIPAL Y MARCADOR DE RETOS ORGANIZADOS -->
+      <div class="flex flex-col items-center justify-center gap-1.5 shrink-0 min-w-[125px] sm:min-w-[140px]">
+        <!-- Botón de acción con estilo consistente -->
+        <button id="btnActionPrimary" onclick="handlePrimaryAction()" class="btn-gold-cta text-xs sm:text-sm py-2 px-5 w-full flex items-center justify-center gap-1.5 shadow-sm">
           <span id="btnActionPrimaryIcon">▶</span> <span id="btnActionPrimaryText">¡A construir!</span>
         </button>
 
-        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden btn-gold-cta text-sm sm:text-base py-2.5 px-6 flex items-center gap-2">
+        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden btn-gold-cta text-xs sm:text-sm py-2 px-5 w-full flex items-center justify-center gap-1.5 shadow-sm">
           <span>⚔️</span> ¡Comprobar!
         </button>
+
+        <!-- Pastillas organizadas de Racha y Puntos en Retos -->
+        <div id="challengeScoreBadges" class="hidden flex items-center justify-center gap-1.5 text-[11px] font-black w-full">
+          <div class="bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-300 text-amber-950 px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-2xs" title="Racha de aciertos">
+            <span>🔥</span> <span id="challengeStreakBadge" class="text-amber-800">0</span>
+          </div>
+          <div class="bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-300 text-amber-950 px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-2xs" title="Puntos ganados">
+            <span>⭐</span> <span id="challengeScoreBadge" class="text-amber-800">0</span>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -2012,13 +1978,14 @@
 
     <!-- FRANJA PARA MODO DESAFÍOS (OCULTO EN MODO AVENTURA) -->
     <div id="challengeControlBar" class="hidden flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-amber-200/80">
-      <div class="flex items-center gap-1.5 flex-wrap">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-xs font-extrabold text-amber-950 flex items-center gap-1">🎯 Reto:</span>
         <select id="selChallengeType" onchange="handleChallengeTypeChange()" class="text-xs rounded-lg border-2 border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
-            <option value="mixed">🎲 Reto Sorpresa (Mixto)</option>
-            <option value="number">🔢 Solo Número</option>
-            <option value="additive">🧩 Solo Descomposición Aditiva</option>
-            <option value="words">📖 Solo Número en Letras</option>
-          </select>
+          <option value="mixed">🎲 Reto Sorpresa (Mixto)</option>
+          <option value="number">🔢 Solo Número</option>
+          <option value="additive">🧩 Solo Descomposición Aditiva</option>
+          <option value="words">📖 Solo Número en Letras</option>
+        </select>
         <select id="selChallengeLevel" onchange="handleChallengeLevelChange()" class="text-xs rounded-lg border-2 border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
           <option value="1">Nivel 1 · Hasta 99 (D y U)</option>
           <option value="2" selected>Nivel 2 · Hasta 999 (Centenas)</option>
@@ -2029,9 +1996,8 @@
           <span>🎲</span> Nuevo Reto
         </button>
       </div>
-      <div class="flex items-center gap-2 text-xs font-black text-amber-950">
-        🔥 Racha: <span id="challengeStreakBadge" class="text-amber-800">0</span>
-        · ⭐ Puntos: <span id="challengeScoreBadge" class="text-amber-800">0</span>
+      <div class="text-[11px] font-bold text-amber-800">
+        <span>🏆 ¡Supera tu mejor racha!</span>
       </div>
     </div>
 
@@ -3791,6 +3757,9 @@
       missionBar?.classList.toggle("flex", mode === "adventure" || mode === "decompose");
       chalBar?.classList.toggle("hidden", mode !== "challenge");
       chalBar?.classList.toggle("flex", mode === "challenge");
+      const scoreBadges = document.getElementById("challengeScoreBadges");
+      scoreBadges?.classList.toggle("hidden", mode !== "challenge");
+      scoreBadges?.classList.toggle("flex", mode === "challenge");
 
       const btnActionPrimary = document.getElementById("btnActionPrimary");
       if (btnActionPrimary) {
@@ -4199,6 +4168,11 @@
 
         playSound("win");
         triggerConfetti();
+        const avatarImg = document.getElementById("leoAvatarImg");
+        if (avatarImg) {
+          avatarImg.src = "assets/leo_avatar_happy.png";
+          setTimeout(() => { if (avatarImg) avatarImg.src = "assets/leo_avatar_talk.png"; }, 3200);
+        }
         if (window.threeLeo) window.threeLeo.celebrateTimer = 2.4;
 
         const words = numberToWordsEs(state.target);
