@@ -1809,13 +1809,16 @@
       <button id="btnModeAdventure" onclick="switchGameMode('adventure')" class="mode-pill-btn mode-pill-active font-extrabold lego-font">
         <span>🚩</span> Misiones
       </button>
+      <button id="btnModeDecompose" onclick="switchGameMode('decompose')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
+        <span>🧩</span> Descomposición
+      </button>
       <button id="btnModeChallenge" onclick="switchGameMode('challenge')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
         <span>⚔️</span> Retos
       </button>
       <button id="btnModeFree" onclick="switchGameMode('free')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
         <span>💼</span> Taller
       </button>
-      <button id="btnModeDecompose" onclick="switchGameMode('decompose')" class="hidden" aria-hidden="true"></button>
+      
     </div>
 
     <!-- DERECHA: NIVEL + XP + MAPA + AJUSTES -->
@@ -2394,9 +2397,9 @@
     </div>
 
     <!-- =================================================================== -->
-    <!-- PANEL INFERIOR: «CONSTRUCCIÓN DEL NÚMERO» (DISEÑO FIDELIDAD TOTAL)  -->
+    <!-- PANEL PROTAGONISTA: «DESCOMPOSICIÓN ADITIVA Y VALOR POSICIONAL»     -->
     <!-- =================================================================== -->
-    <div class="w-full max-w-5xl mt-2 parchment-card-premium p-2.5 sm:p-3 flex flex-col gap-2 z-20">
+    <div class="w-full max-w-5xl mt-3 parchment-card-premium p-3 sm:p-4 flex flex-col gap-3 z-20 shadow-lg">
       
       <!-- Hojas decorativas de esquina -->
       <div class="leaf-corner-left" aria-hidden="true">
@@ -2410,61 +2413,86 @@
         </svg>
       </div>
 
-      <!-- FILA SUPERIOR: ETIQUETA + 5 TARJETAS DE POSICIÓN + RECUADRO VALOR TOTAL -->
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        
-        <!-- Etiqueta izquierda: "Construcción del número:" -->
-        <div class="bg-gradient-to-r from-amber-200 to-amber-300 border-2 border-amber-800/80 rounded-2xl px-3 py-1.5 shadow-sm">
-          <span class="text-xs sm:text-sm font-black text-amber-950 block leading-tight">
-            Construcción<br class="hidden sm:inline"> del número:
-          </span>
+      <!-- ENCABEZADO DEL PANEL DE DESCOMPOSICIÓN -->
+      <div class="flex items-center justify-between pb-2 border-b-2 border-amber-300/80 gap-2 flex-wrap">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-b from-amber-300 to-amber-500 border-2 border-amber-700 flex items-center justify-center text-base shadow-sm select-none">
+            🧩
+          </div>
+          <div>
+            <span class="text-xs sm:text-sm font-black text-amber-950 uppercase tracking-wide block leading-tight">
+              Panel de Descomposición Aditiva
+            </span>
+            <span class="text-[10px] sm:text-[11px] font-bold text-amber-800 leading-tight block">
+              Suma posicional exacta de los bloques en cada habitación
+            </span>
+          </div>
         </div>
 
-        <!-- 5 TARJETAS ALINEADAS POR POSICIÓN (DM · UM · C · D · U) -->
-        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-0.5">
+        <!-- Botón para escuchar la lectura y pronunciación del número -->
+        <div class="flex items-center gap-2">
+          <span id="numberInWordsLabel" class="text-xs sm:text-sm font-black text-amber-950 bg-amber-100/90 border border-amber-300 px-3 py-1 rounded-xl shadow-2xs">"Cero"</span>
+          <button onclick="speakCurrentNumber()" class="bg-gradient-to-b from-amber-300 to-amber-400 hover:from-amber-200 hover:to-amber-300 text-amber-950 text-xs font-black px-3 py-1.5 rounded-xl border-2 border-amber-600 shadow-sm flex items-center gap-1 transition-all active:scale-95" title="Escuchar cómo se lee este número">
+            <span>🔊</span> Escuchar
+          </button>
+        </div>
+      </div>
+
+      <!-- FILA PRINCIPAL: 5 BLOQUES POSICIONALES + SUMAS INTERMEDIAS + RECUADRO VALOR TOTAL -->
+      <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 py-1">
+        
+        <!-- CONTENEDOR CONECTADO DE LAS 5 TARJETAS CON SIGNOS + -->
+        <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto py-1 flex-1 justify-center sm:justify-start">
           
           <!-- Tarjeta DM (Morado) -->
-          <div class="pos-card-pill bg-purple-50 border-purple-300">
-            <span id="cardDigitDM" class="text-purple-600 font-black text-lg sm:text-xl leading-none">0</span>
-            <span class="text-purple-900 font-black text-[10px] sm:text-xs">DM</span>
-            <span id="cardValDM" class="text-purple-800 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          <div class="flex flex-col items-center justify-center bg-purple-50/95 border-2 border-purple-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-purple-900 uppercase">DM</span>
+            <span id="cardDigitDM" class="text-xl sm:text-2xl font-black text-purple-700 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValDM" class="bg-white text-purple-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-purple-300 shadow-2xs leading-none">0</span>
           </div>
+
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
 
           <!-- Tarjeta UM (Naranja) -->
-          <div class="pos-card-pill bg-orange-50 border-orange-300">
-            <span id="cardDigitUM" class="text-orange-500 font-black text-lg sm:text-xl leading-none">0</span>
-            <span class="text-orange-950 font-black text-[10px] sm:text-xs">UM</span>
-            <span id="cardValUM" class="text-orange-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          <div class="flex flex-col items-center justify-center bg-orange-50/95 border-2 border-orange-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-orange-950 uppercase">UM</span>
+            <span id="cardDigitUM" class="text-xl sm:text-2xl font-black text-orange-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValUM" class="bg-white text-orange-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-orange-300 shadow-2xs leading-none">0</span>
           </div>
+
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
 
           <!-- Tarjeta C (Verde) -->
-          <div class="pos-card-pill bg-emerald-50 border-emerald-300">
-            <span id="cardDigitC" class="text-emerald-600 font-black text-lg sm:text-xl leading-none">0</span>
-            <span class="text-emerald-950 font-black text-[10px] sm:text-xs">C</span>
-            <span id="cardValC" class="text-emerald-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          <div class="flex flex-col items-center justify-center bg-emerald-50/95 border-2 border-emerald-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-emerald-950 uppercase">C</span>
+            <span id="cardDigitC" class="text-xl sm:text-2xl font-black text-emerald-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValC" class="bg-white text-emerald-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-emerald-300 shadow-2xs leading-none">0</span>
           </div>
+
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
 
           <!-- Tarjeta D (Azul) -->
-          <div class="pos-card-pill bg-sky-50 border-sky-300">
-            <span id="cardDigitD" class="text-sky-600 font-black text-lg sm:text-xl leading-none">0</span>
-            <span class="text-sky-950 font-black text-[10px] sm:text-xs">D</span>
-            <span id="cardValD" class="text-sky-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          <div class="flex flex-col items-center justify-center bg-sky-50/95 border-2 border-sky-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-sky-950 uppercase">D</span>
+            <span id="cardDigitD" class="text-xl sm:text-2xl font-black text-sky-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValD" class="bg-white text-sky-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-sky-300 shadow-2xs leading-none">0</span>
           </div>
 
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
+
           <!-- Tarjeta U (Rojo) -->
-          <div class="pos-card-pill bg-rose-50 border-rose-300">
-            <span id="cardDigitU" class="text-rose-600 font-black text-lg sm:text-xl leading-none">0</span>
-            <span class="text-rose-950 font-black text-[10px] sm:text-xs">U</span>
-            <span id="cardValU" class="text-rose-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          <div class="flex flex-col items-center justify-center bg-rose-50/95 border-2 border-rose-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-rose-950 uppercase">U</span>
+            <span id="cardDigitU" class="text-xl sm:text-2xl font-black text-rose-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValU" class="bg-white text-rose-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-rose-300 shadow-2xs leading-none">0</span>
           </div>
 
         </div>
 
-        <!-- DIVISOR VERTICAL SUTIL -->
-        <div class="hidden md:block w-px h-10 bg-amber-300"></div>
+        <span class="hidden sm:inline-block text-xl sm:text-2xl font-black text-amber-900 select-none mx-1">=</span>
 
-        <!-- RECUADRO DESTACADO: VALOR TOTAL -->
-        <div class="golden-total-box">
+        <!-- RECUADRO DESTACADO: VALOR TOTAL PROTAGONISTA -->
+        <div class="golden-total-box min-w-[120px] sm:min-w-[140px] shrink-0">
           <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-amber-950/80 leading-none mb-0.5">
             Valor total:
           </span>
@@ -2475,29 +2503,19 @@
 
       </div>
 
-      <!-- FILA INFERIOR: FÓRMULA MATEMÁTICA ADITIVA + PRONUNCIACIÓN -->
-      <div class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-amber-200/80">
-        <!-- Expresión matemática que explica la composición del número -->
-        <div id="additiveFormulaDisplay" class="text-xs sm:text-sm font-extrabold text-slate-800 tracking-wide">
+      <!-- FRANJA DE FÓRMULA MATEMÁTICA ADITIVA PROTAGONISTA -->
+      <div class="bg-gradient-to-r from-amber-50 via-white to-amber-50 border-2 border-amber-300 rounded-xl px-4 py-2 shadow-inner flex items-center justify-center text-center">
+        <div id="additiveFormulaDisplay" class="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-wide font-fredoka leading-tight">
           0 + 0 + 0 + 0 + 0 = 0 unidades
-        </div>
-
-        <!-- Botón para escuchar la lectura -->
-        <div class="flex items-center gap-2">
-          <span id="numberInWordsLabel" class="text-xs font-bold italic text-amber-950">"Cero"</span>
-          <button onclick="speakCurrentNumber()" class="bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-black px-2.5 py-1 rounded-lg border border-amber-300 shadow-sm flex items-center gap-1 transition-all active:translate-y-0.5" title="Escuchar cómo se lee este número">
-            <span>🔊</span> Leer
-          </button>
         </div>
       </div>
 
       <!-- Compatibilidad oculta de elementos del contrato previo -->
       <div class="hidden" aria-hidden="true">
         <div id="positionalDecompBox"></div>
-      <button id="btnUnpackUM" onclick="event.stopPropagation(); borrowFromLeft('C')"></button>
-      <button id="btnUnpackC" onclick="event.stopPropagation(); borrowFromLeft('D')"></button>
-      <button id="btnUnpackD" onclick="event.stopPropagation(); borrowFromLeft('U')"></button>
-
+        <button id="btnUnpackUM" onclick="event.stopPropagation(); borrowFromLeft('C')"></button>
+        <button id="btnUnpackC" onclick="event.stopPropagation(); borrowFromLeft('D')"></button>
+        <button id="btnUnpackD" onclick="event.stopPropagation(); borrowFromLeft('U')"></button>
         <div id="additiveDecompBox"></div>
       </div>
 
@@ -3776,8 +3794,14 @@
         if (headerLbl) headerLbl.innerText = "Número objetivo:";
         loadCurrentMission();
       } else if (mode === "decompose") {
-        if (headerLbl) headerLbl.innerText = "Número a descomponer:";
+        if (headerLbl) headerLbl.innerText = "NÚMERO A DESCOMPONER:";
         if (speakerEl) speakerEl.innerHTML = '¡El Poder de los Números!';
+        const displayEl = document.getElementById("targetNumberDisplay");
+        if (displayEl) {
+          displayEl.className = "hero-number-digits text-5xl sm:text-6xl font-black text-blue-600 tracking-wide flex items-center justify-center";
+          displayEl.innerText = (state.target || 35).toLocaleString("es-CO");
+        }
+        document.getElementById("targetClueSubtitle")?.classList.add("hidden");
         const leoBubble = document.getElementById("leoSpeechBubble");
         if (leoBubble) {
           leoBubble.innerText = "¡Separa las cifras en sumandos posicionales! Comprueba cómo la suma forma el número completo.";
@@ -4095,8 +4119,8 @@
           [items[i], items[j]] = [items[j], items[i]];
         }
         const additiveBadges = items.map(function(it) {
-          return '<span class="text-base sm:text-xl font-black px-2.5 py-1 rounded-xl shadow-xs ' + it.cls + '">' + it.txt + '</span>';
-        }).join('<span class="text-amber-800 font-black text-lg mx-1">+</span>');
+          return '<span class="text-xl sm:text-2xl md:text-3xl font-black px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-2xl shadow-md border-3 font-fredoka ' + it.cls + '">' + it.txt + '</span>';
+        }).join('<span class="text-amber-900 font-black text-xl sm:text-2xl mx-1.5 sm:mx-2 select-none">+</span>');
 
         if (displayEl) {
           displayEl.className = "flex items-center justify-center flex-wrap gap-1.5 py-1";
@@ -4250,14 +4274,14 @@
       // Expresión matemática que explica la composición del número con todas las posiciones
       const formulaEl = document.getElementById("additiveFormulaDisplay");
       if (formulaEl) {
-        const fullParts = [
-          (state.DM * 10000).toLocaleString("es-CO"),
-          (state.UM * 1000).toLocaleString("es-CO"),
-          (state.C * 100).toLocaleString("es-CO"),
-          (state.D * 10).toLocaleString("es-CO"),
-          state.U.toLocaleString("es-CO")
-        ];
-        formulaEl.innerText = `${fullParts.join(" + ")} = ${currentTotal.toLocaleString("es-CO")} unidades`;
+        const vDM = (state.DM * 10000).toLocaleString("es-CO");
+        const vUM = (state.UM * 1000).toLocaleString("es-CO");
+        const vC = (state.C * 100).toLocaleString("es-CO");
+        const vD = (state.D * 10).toLocaleString("es-CO");
+        const vU = state.U.toLocaleString("es-CO");
+        const totalStr = currentTotal.toLocaleString("es-CO");
+
+        formulaEl.innerHTML = `<span class="text-purple-600">${vDM}</span> <span class="text-amber-800 mx-1">+</span> <span class="text-orange-600">${vUM}</span> <span class="text-amber-800 mx-1">+</span> <span class="text-emerald-600">${vC}</span> <span class="text-amber-800 mx-1">+</span> <span class="text-sky-600">${vD}</span> <span class="text-amber-800 mx-1">+</span> <span class="text-rose-600">${vU}</span> <span class="text-amber-950 mx-1.5 font-black">=</span> <span class="bg-amber-100 text-amber-950 px-2.5 py-0.5 rounded-lg border border-amber-300 font-black">${totalStr} unidades</span>`;
       }
 
       // 1. Descomposición Posicional (Ej: 1 DM + 4 UM + 5 C + 0 D + 2 U)
