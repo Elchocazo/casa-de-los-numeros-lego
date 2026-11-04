@@ -2014,11 +2014,11 @@
     <div id="challengeControlBar" class="hidden flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-amber-200/80">
       <div class="flex items-center gap-1.5 flex-wrap">
         <select id="selChallengeType" onchange="handleChallengeTypeChange()" class="text-xs rounded-lg border-2 border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
-          <option value="scrambled">🧩 Reto Posicional Mixto</option>
-          <option value="dictation">🎙️ Dictado del Maestro</option>
-          <option value="worded">📖 Acertijo de los Sabios</option>
-          <option value="exchange">🔄 Canje Mágico de Bloques</option>
-        </select>
+            <option value="mixed">🎲 Reto Sorpresa (Mixto)</option>
+            <option value="number">🔢 Solo Número</option>
+            <option value="additive">🧩 Solo Descomposición Aditiva</option>
+            <option value="words">📖 Solo Número en Letras</option>
+          </select>
         <select id="selChallengeLevel" onchange="handleChallengeLevelChange()" class="text-xs rounded-lg border-2 border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
           <option value="1">Nivel 1 · Hasta 99 (D y U)</option>
           <option value="2" selected>Nivel 2 · Hasta 999 (Centenas)</option>
@@ -2783,7 +2783,12 @@
     <svg class="hidden" aria-hidden="true"><defs><linearGradient id="roofGradUnified"></linearGradient></defs></svg>
 
     <div id="challengeControlsRow">
-      <select id="challengeTypeSelect" onchange="generateNewChallenge()"></select>
+      <select id="challengeTypeSelect" onchange="generateNewChallenge()">
+        <option value="mixed">Reto Sorpresa</option>
+        <option value="number">Solo Número</option>
+        <option value="additive">Solo Descomposición Aditiva</option>
+        <option value="words">Solo Número en Letras</option>
+      </select>
       <select id="challengeLevelSelect" onchange="generateNewChallenge()"></select>
     </div>
     <div id="citySkylineRow"></div>
@@ -4052,17 +4057,24 @@
 
     function generateNewChallenge() {
       initAudio();
-      const typeSel = document.getElementById("challengeTypeSelect")?.value || "mixed";
-      const digitsCount = parseInt(document.getElementById("challengeLevelSelect")?.value || "3", 10);
+      const selTypeEl = document.getElementById("selChallengeType");
+      let typeSel = selTypeEl?.value || document.getElementById("challengeTypeSelect")?.value || "mixed";
+      const digitsCount = parseInt(document.getElementById("selChallengeLevel")?.value || document.getElementById("challengeLevelSelect")?.value || "3", 10);
 
-      const subtypes = ["scrambled", "dictation", "additive"];
-      const chosenType = typeSel === "mixed" ? subtypes[Math.floor(Math.random() * subtypes.length)] : typeSel;
+      // Compatibilidad hacia atrás
+      if (typeSel === "scrambled") typeSel = "additive";
+      if (typeSel === "dictation" || typeSel === "worded") typeSel = "words";
+
+      const subtypes = ["number", "additive", "words"];
+      let chosenType = typeSel;
+      if (typeSel === "mixed" || !subtypes.includes(typeSel)) {
+        chosenType = subtypes[Math.floor(Math.random() * subtypes.length)];
+      }
 
       const n = generateSmartChallengeNumber(digitsCount);
       state.challenge.subtype = chosenType;
       state.challenge.solved = false;
 
-      // Configurar objetivo sin revelar cifras coloreadas
       state.target = n;
       state.targetDM = Math.floor(n / 10000);
       state.targetUM = Math.floor((n % 10000) / 1000);
@@ -4071,78 +4083,77 @@
       state.targetU = n % 10;
       state.isInaugurated = false;
 
-      // Reiniciar bloques
+      // Reiniciar bloques de la casa
       state.DM = 0; state.UM = 0; state.C = 0; state.D = 0; state.U = 0;
       state.attachedDM = true;
       state.attachedUM = true;
 
       const words = numberToWordsEs(n);
-      let promptHtml = "";
+      const displayEl = document.getElementById("targetNumberDisplay");
+      const headerLbl = document.getElementById("targetHeaderLabel");
+      const clueSub = document.getElementById("targetClueSubtitle");
+      if (clueSub) {
+        clueSub.classList.add("hidden");
+        clueSub.innerText = "";
+      }
+
       let promptSpeech = "";
 
-      if (chosenType === "dictation") {
-        promptHtml = `<span class="text-lg sm:text-2xl font-black text-indigo-900 bg-indigo-50 border-2 border-indigo-200 px-3 py-1 rounded-xl capitalize">«${words}»</span>`;
-        promptSpeech = `Dictado de Leo: construye el número ${words}.`;
-      } else if (chosenType === "scrambled") {
+      if (chosenType === "number") {
+        // MODO 1: SOLO NÚMERO
+        if (headerLbl) headerLbl.innerText = "NÚMERO OBJETIVO:";
+        if (displayEl) {
+          displayEl.className = "hero-number-digits text-5xl sm:text-6xl font-black text-blue-600 tracking-wide flex items-center justify-center";
+          displayEl.innerText = n.toLocaleString("es-CO");
+        }
+        promptSpeech = "Construye el número " + words + ".";
+        const leoBubble = document.getElementById("leoSpeechBubble");
+        if (leoBubble) leoBubble.innerText = "¡Construye el número " + n.toLocaleString("es-CO") + " en la Casa de los Números!";
+      } else if (chosenType === "additive") {
+        // MODO 2: SOLO DESCOMPOSICIÓN ADITIVA
+        if (headerLbl) headerLbl.innerText = "DESCOMPOSICIÓN ADITIVA:";
         const items = [];
-        if (state.targetDM > 0) items.push({ txt: `${state.targetDM} DM`, speech: `${state.targetDM} decenas de mil`, cls: "bg-purple-100 text-purple-800 border-purple-300" });
-        if (state.targetUM > 0) items.push({ txt: `${state.targetUM} UM`, speech: `${state.targetUM} unidades de mil`, cls: "bg-amber-100 text-amber-800 border-amber-300" });
-        if (state.targetC > 0) items.push({ txt: `${state.targetC} C`, speech: `${state.targetC} centenas`, cls: "bg-emerald-100 text-emerald-800 border-emerald-300" });
-        if (state.targetD > 0) items.push({ txt: `${state.targetD} D`, speech: `${state.targetD} decenas`, cls: "bg-blue-100 text-blue-800 border-blue-300" });
-        if (state.targetU > 0) items.push({ txt: `${state.targetU} U`, speech: `${state.targetU} unidades`, cls: "bg-red-100 text-red-800 border-red-300" });
+        if (state.targetDM > 0) items.push({ txt: state.targetDM + " DM", speech: state.targetDM + " decenas de mil", cls: "bg-purple-100 text-purple-900 border-2 border-purple-400" });
+        if (state.targetUM > 0) items.push({ txt: state.targetUM + " UM", speech: state.targetUM + " unidades de mil", cls: "bg-amber-100 text-amber-900 border-2 border-amber-400" });
+        if (state.targetC > 0) items.push({ txt: state.targetC + " C", speech: state.targetC + " centenas", cls: "bg-emerald-100 text-emerald-900 border-2 border-emerald-400" });
+        if (state.targetD > 0) items.push({ txt: state.targetD + " D", speech: state.targetD + " decenas", cls: "bg-blue-100 text-blue-900 border-2 border-blue-400" });
+        if (state.targetU > 0) items.push({ txt: state.targetU + " U", speech: state.targetU + " unidades", cls: "bg-red-100 text-red-900 border-2 border-red-400" });
 
-        // Desordenar pistas para evaluar comprensión real del valor posicional
+        if (items.length === 0) items.push({ txt: "0 U", speech: "cero unidades", cls: "bg-red-100 text-red-900 border-2 border-red-400" });
+
         for (let i = items.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [items[i], items[j]] = [items[j], items[i]];
         }
-        promptHtml = items.map((it) => `<span class="text-sm sm:text-lg font-black px-2.5 py-0.5 rounded-xl border ${it.cls}">${it.txt}</span>`).join(`<span class="text-slate-400 text-base mx-1">+</span>`);
-        promptSpeech = `Plano desordenado: ubica ${items.map((i) => i.speech).join(", más ")}. ¡Fíjate bien en cada letra!`;
-      } else {
-        const parts = [];
-        if (state.targetDM > 0) parts.push((state.targetDM * 10000).toLocaleString("es-CO"));
-        if (state.targetUM > 0) parts.push((state.targetUM * 1000).toLocaleString("es-CO"));
-        if (state.targetC > 0) parts.push((state.targetC * 100).toLocaleString("es-CO"));
-        if (state.targetD > 0) parts.push((state.targetD * 10).toLocaleString("es-CO"));
-        if (state.targetU > 0) parts.push(String(state.targetU));
-        promptHtml = `<span class="text-lg sm:text-2xl font-black text-slate-800 bg-amber-50 border-2 border-amber-200 px-3 py-1 rounded-xl">${parts.join(" + ")}</span>`;
-        promptSpeech = `Suma de bloques: descubre qué edificio forman ${parts.join(" más ")}.`;
-      }
+        const additiveBadges = items.map(function(it) {
+          return '<span class="text-base sm:text-xl font-black px-2.5 py-1 rounded-xl shadow-xs ' + it.cls + '">' + it.txt + '</span>';
+        }).join('<span class="text-amber-800 font-black text-lg mx-1">+</span>');
 
-      state.challenge.promptHtml = promptHtml;
-      state.challenge.promptSpeech = promptSpeech;
-
-      // El número objetivo es SIEMPRE el foco visual protagonista e indiscutible
-      const displayEl = document.getElementById("targetNumberDisplay");
-      if (displayEl) {
-        displayEl.innerText = n.toLocaleString("es-CO");
-      }
-
-      // El subtítulo / pista complementaria limpia (sin mezclar con la cifra gigante)
-      const clueSub = document.getElementById("targetClueSubtitle");
-      if (clueSub) {
-        clueSub.classList.remove("hidden");
-        if (chosenType === "dictation") {
-          clueSub.innerText = "«" + words + "»";
-        } else if (chosenType === "scrambled") {
-          clueSub.innerHTML = promptHtml;
-        } else {
-          clueSub.innerHTML = promptHtml;
+        if (displayEl) {
+          displayEl.className = "flex items-center justify-center flex-wrap gap-1.5 py-1";
+          displayEl.innerHTML = additiveBadges;
         }
+        promptSpeech = "Descubre qué número forman " + items.map(function(i) { return i.speech; }).join(", más ") + " y constrúyelo en la casa.";
+        const leoBubble = document.getElementById("leoSpeechBubble");
+        if (leoBubble) leoBubble.innerText = "¡Descubre qué número se forma con estos bloques y constrúyelo en la casa!";
+      } else {
+        // MODO 3: SOLO NÚMERO ESCRITO EN LETRAS
+        if (headerLbl) headerLbl.innerText = "NÚMERO EN LETRAS:";
+        if (displayEl) {
+          displayEl.className = "flex items-center justify-center text-center px-3 py-1";
+          displayEl.innerHTML = '<span class="text-xl sm:text-2xl md:text-3xl font-black text-indigo-950 font-fredoka capitalize tracking-normal">«' + words + '»</span>';
+        }
+        promptSpeech = "Construye el número " + words + ".";
+        const leoBubble = document.getElementById("leoSpeechBubble");
+        if (leoBubble) leoBubble.innerText = "¡Lee con atención las palabras y construye la cifra exacta en la casa!";
       }
 
-      // Mensaje amigable, corto y motivador de Leo (sin textos largos ni confusos para niños)
-      const leoBubble = document.getElementById("leoSpeechBubble");
-      if (leoBubble) {
-        leoBubble.innerText = "¡Construye el número " + n.toLocaleString("es-CO") + " en la Casa de los Números!";
-      }
+      state.challenge.promptSpeech = promptSpeech;
       const speakerEl = document.getElementById("rpgSpeakerLabel");
-      if (speakerEl) {
-        speakerEl.innerText = "¡Reto de Construcción!";
-      }
+      if (speakerEl) speakerEl.innerText = "¡Reto de Construcción!";
 
       updateUI();
-      speakText("Construye el número " + words + ".");
+      speakText(promptSpeech);
     }
 
     function updateChallengeScoreUI() {
@@ -4191,7 +4202,14 @@
         if (window.threeLeo) window.threeLeo.celebrateTimer = 2.4;
 
         const words = numberToWordsEs(state.target);
-        renderColoredTargetDigits();
+        // Revelar con orgullo el número conseguido
+        const displayEl = document.getElementById("targetNumberDisplay");
+        if (displayEl) {
+          displayEl.className = "hero-number-digits text-5xl sm:text-6xl font-black text-blue-600 tracking-wide flex items-center justify-center animate-bounce";
+          displayEl.innerText = state.target.toLocaleString("es-CO");
+        }
+        const headerLbl = document.getElementById("targetHeaderLabel");
+        if (headerLbl) headerLbl.innerText = "¡NÚMERO CONSEGUIDO!";
         registerBuildingInCity(state.target, words, `Reto #${state.target.toLocaleString("es-CO")}`, null);
         saveProgress();
         updateUI();
