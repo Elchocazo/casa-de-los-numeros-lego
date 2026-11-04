@@ -9,9 +9,78 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=Fredoka:wght@600;800;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 
   <style>
+    /* =====================================================================
+       DIRECCIÓN ARTÍSTICA: PIXEL ART RPG "CRÓNICAS DE NUMBRÓPOLIS"
+       ===================================================================== */
+    .pixel-font {
+      font-family: 'Silkscreen', monospace;
+      letter-spacing: -0.01em;
+    }
+    .retro-title {
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: -0.03em;
+    }
+
+    /* Marcos y biseles estilo RPG 16-bit */
+    .pixel-frame {
+      border: 3px solid #1b120c;
+      box-shadow:
+        inset -2px -2px 0 0 rgba(0, 0, 0, 0.4),
+        inset 2px 2px 0 0 rgba(255, 255, 255, 0.45),
+        0 4px 0 #1b120c;
+      image-rendering: pixelated;
+    }
+    .pixel-btn-retro {
+      font-family: 'Silkscreen', monospace;
+      font-weight: 700;
+      border: 2px solid #1b120c;
+      box-shadow:
+        inset -2px -2px 0 0 rgba(0, 0, 0, 0.35),
+        inset 2px 2px 0 0 rgba(255, 255, 255, 0.5),
+        0 3px 0 #1b120c;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .pixel-btn-retro:hover:not(:disabled) {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .pixel-btn-retro:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow:
+        inset 2px 2px 0 0 rgba(0, 0, 0, 0.5),
+        0 1px 0 #1b120c;
+    }
+
+    /* Barra de XP estilo videojuego */
+    .xp-meter-track {
+      height: 10px;
+      background: #2e1b0e;
+      border: 2px solid #1b120c;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 3px rgba(0,0,0,0.6);
+    }
+    .xp-meter-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #facc15 100%);
+      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Cursor retro de diálogo */
+    .cursor-retro-blink {
+      display: inline-block;
+      animation: retroBlink 0.8s steps(2, start) infinite;
+    }
+    @keyframes retroBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
     /* =====================================================================
        SISTEMA VISUAL "LEGO FANTASY DIORAMA"
        Solo presentación: no hay lógica de juego en esta hoja de estilos.
@@ -847,33 +916,47 @@
   </div>
 
   <!-- BARRA SUPERIOR: CARTEL DE MADERA COMPACTO Y ALEGRE -->
-  <nav class="w-full max-w-6xl mb-1.5 flex flex-wrap items-center justify-between gap-1.5 dio-plank rounded-2xl px-3 py-1.5" style="box-shadow: inset 0 2px 0 rgba(255,220,160,0.3), 0 4px 0 #2e1b0e, 0 8px 16px rgba(0,0,0,0.25);">
+  <nav class="w-full max-w-6xl mb-1.5 flex flex-wrap items-center justify-between gap-1.5 pixel-frame rounded-xl px-3 py-1.5" style="background: linear-gradient(180deg,#f8eed8,#deb887);">
     <div class="flex items-center gap-2">
       <div class="lego-logo-brick mt-0.5 shrink-0" aria-hidden="true"></div>
-      <h1 class="text-sm sm:text-base font-black lego-font leading-none" style="color:#3b2a1a; text-shadow:none">
-        La Casa de los Números <span class="text-red-600">LEGO</span>
-      </h1>
+      <div>
+        <span class="text-[8px] font-black uppercase text-amber-950 pixel-font block leading-none">RPG · Crónicas de Numbrópolis</span>
+        <h1 class="text-xs sm:text-sm font-black retro-title leading-tight text-amber-950">
+          CASA LEGO <span class="text-red-600">RPG</span>
+        </h1>
+      </div>
     </div>
 
-    <!-- SELECTOR DE MODO COMPACTO PARA NIÑOS -->
-    <div class="flex items-center gap-1 p-0.5 rounded-xl" style="background: rgba(30,18,8,0.45); border: 2px solid #2e1b0e; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);">
-      <button id="btnModeAdventure" onclick="switchGameMode('adventure')" class="dio-tab dio-tab-active text-xs py-1 px-2.5">
-        <span>🗺️</span> Aventura
+    <!-- SELECTOR DE MODO PIXEL ART -->
+    <div class="flex items-center gap-1 p-0.5 rounded-lg bg-[#2e1b0e] border-2 border-[#1b120c]">
+      <button id="btnModeAdventure" onclick="switchGameMode('adventure')" class="dio-tab dio-tab-active text-[11px] py-1 px-2.5 pixel-font">
+        <span>🗺️</span> Misiones
       </button>
-      <button id="btnModeChallenge" onclick="switchGameMode('challenge')" class="dio-tab text-xs py-1 px-2.5">
-        <span>🧩</span> Desafíos
+      <button id="btnModeChallenge" onclick="switchGameMode('challenge')" class="dio-tab text-[11px] py-1 px-2.5 pixel-font">
+        <span>⚔️</span> Retos
       </button>
-      <button id="btnModeFree" onclick="switchGameMode('free')" class="dio-tab text-xs py-1 px-2.5">
-        <span>✏️</span> Taller Libre
+      <button id="btnModeFree" onclick="switchGameMode('free')" class="dio-tab text-[11px] py-1 px-2.5 pixel-font">
+        <span>🧱</span> Taller
       </button>
     </div>
 
-    <!-- ACCIONES RÁPIDAS -->
-    <div class="flex items-center gap-1.5">
-      <button onclick="openCityMapModal()" class="dio-btn dio-btn-violet text-[11px] py-1 px-2.5 flex items-center gap-1" title="Ver Isla Numbrópolis">
-        <span>🏝️</span> Isla (<span id="cityCountBadge">0</span>/8)
+    <!-- NIVEL DE ARQUITECTO + HERRAMIENTAS -->
+    <div class="flex items-center gap-2">
+      <!-- Medidor XP del jugador -->
+      <div class="hidden sm:flex flex-col items-end gap-0.5" title="¡Gana experiencia completando encargos de los habitantes!">
+        <div class="flex items-center gap-1 text-[9px] font-black pixel-font text-amber-950">
+          <span id="playerRankBadge">⚡ Nv. 1 Aprendiz</span>
+          <span class="text-amber-800">(<span id="playerXpBadge">0</span> XP)</span>
+        </div>
+        <div class="w-24 xp-meter-track">
+          <div id="playerXpBar" class="xp-meter-fill" style="width: 8%;"></div>
+        </div>
+      </div>
+
+      <button onclick="openCityMapModal()" class="pixel-btn-retro bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] py-1 px-2 flex items-center gap-1 rounded-md" title="Ver Reino de Numbrópolis">
+        <span>🏝️</span> Mapa (<span id="cityCountBadge">0</span>/8)
       </button>
-      <button id="btnSoundToggle" onclick="toggleMute()" class="dio-btn dio-btn-stone text-xs px-2.5 py-1" title="Activar o silenciar sonidos y voz">
+      <button id="btnSoundToggle" onclick="toggleMute()" class="pixel-btn-retro bg-[#d8d4c8] text-amber-950 text-xs px-2 py-1 rounded-md" title="Sonido y voz">
         🔊
       </button>
       <!-- Elemento de compatibilidad oculto -->
@@ -882,140 +965,106 @@
   </nav>
 
   <!-- HUB DE MISIÓN Y COMPAÑERO LEO (COMPACTO, AMIGABLE Y ENFOCADO PARA NIÑOS) -->
-  <header id="targetControlBox" class="w-full max-w-6xl mb-1.5 dio-panel p-2 sm:p-2.5 flex flex-col gap-1.5">
+    <!-- HUB DE MISIÓN Y COMPAÑERO LEO (ESTILO RPG PIXEL ART) -->
+  <header id="targetControlBox" class="w-full max-w-6xl mb-1.5 pixel-frame rounded-xl p-2 sm:p-2.5 flex flex-col gap-1.5 bg-[#fefae0]">
     
-    <!-- FILA PRINCIPAL: LEO AMIGABLE (IZQUIERDA) + OBJETIVO GIGANTE (CENTRO) + ACCIONES (DERECHA) -->
+    <!-- FILA PRINCIPAL: DIÁLOGO RPG (IZQUIERDA) + NÚMERO MÁGICO (CENTRO) + ACCIONES (DERECHA) -->
     <div class="flex flex-wrap items-center justify-between gap-2">
       
-      <!-- 1. COMPAÑERO LEO: AVATAR 3D + GLOBO DE MENSAJE -->
+      <!-- 1. COMPAÑERO LEO: AVATAR PIXEL ART + CAJA DE DIÁLOGO RPG -->
       <div class="flex items-center gap-2 min-w-0 flex-1 sm:flex-initial">
-        <div class="leo-avatar-frame cursor-pointer" onclick="triggerLeoSpeech()" title="¡Hola! Haz clic en Leo para escucharlo">
-          <canvas id="leoWebcam3DCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-          <button onclick="event.stopPropagation(); triggerLeoSpeech()" class="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-full bg-amber-400 border border-amber-900 text-[10px] flex items-center justify-center shadow" title="Escuchar a Leo">
+        <div class="leo-avatar-frame cursor-pointer pixel-frame rounded-lg" onclick="triggerLeoSpeech()" title="¡Leo el Maestro Constructor! Clic para escuchar">
+          <canvas id="leoWebcam3DCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing" style="image-rendering:pixelated;"></canvas>
+          <button onclick="event.stopPropagation(); triggerLeoSpeech()" class="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-md bg-amber-400 border border-amber-950 text-[10px] flex items-center justify-center shadow" title="Escuchar">
             🗣️
           </button>
         </div>
 
-        <!-- Globo de diálogo de Leo -->
-        <div class="relative bg-[#fffaf0] border-2 border-[#b48a55] rounded-xl px-2.5 py-1.5 shadow-sm max-w-[270px] sm:max-w-xs">
-          <span class="absolute top-1/2 -left-1.5 -translate-y-1/2 w-2.5 h-2.5 rotate-45 bg-[#fffaf0] border-l-2 border-b-2 border-[#b48a55]"></span>
-          <p id="leoSpeechBubble" class="text-[11px] font-bold leading-tight" style="color:#3b2a1a">
-            ¡Hola arquitecto! Vamos a construir juntos con bloques LEGO.
+        <!-- Caja de texto RPG de la aventura -->
+        <div class="relative bg-[#fffdf5] border-2 border-[#1b120c] rounded-lg px-2.5 py-1.5 shadow max-w-[280px] sm:max-w-xs">
+          <div class="flex items-center justify-between gap-1 mb-0.5">
+            <span id="rpgSpeakerLabel" class="text-[9px] font-black uppercase text-amber-900 pixel-font flex items-center gap-1">
+              <span>👷‍♂️ Leo Maestro:</span>
+            </span>
+            <span class="text-[9px] text-amber-700 cursor-retro-blink">▼</span>
+          </div>
+          <p id="leoSpeechBubble" class="text-[11px] font-bold leading-tight" style="color:#2e1b0e">
+            ¡Hola arquitecto! El Reino de Numbrópolis te necesita. ¡Construyamos juntos!
           </p>
         </div>
       </div>
 
-      <!-- 2. NÚMERO / ENCARGO CENTRAL: EL PROTAGONISTA QUE EL NIÑO DEBE FORMAR -->
+      <!-- 2. NÚMERO / ENCARGO CENTRAL: EL OBJETIVO MÁGICO -->
       <div class="flex flex-col items-center justify-center flex-1 min-w-[200px]">
-        <span id="targetHeaderLabel" class="text-[9px] font-black uppercase tracking-wider text-amber-900/70 block leading-none mb-0.5">OBJETIVO DE LA OBRA</span>
+        <span id="targetHeaderLabel" class="text-[9px] font-black uppercase tracking-wider text-amber-950/80 pixel-font block leading-none mb-0.5">OBJETIVO DE LA OBRA</span>
         <div class="flex items-center gap-2">
           <div id="targetNumberDisplay" class="text-2xl sm:text-3xl font-black lego-font tracking-wide flex items-center justify-center flex-wrap" style="text-shadow: 0 1px 0 rgba(255,255,255,0.8)"></div>
-          <button onclick="speakTargetNumber()" class="w-7 h-7 rounded-full dio-btn dio-btn-wood flex items-center justify-center text-xs shrink-0" title="Escuchar objetivo en voz alta">
+          <button onclick="speakTargetNumber()" class="w-7 h-7 rounded-md pixel-btn-retro bg-amber-400 text-amber-950 flex items-center justify-center text-xs shrink-0" title="Escuchar objetivo en voz alta">
             📢
           </button>
         </div>
       </div>
 
-      <!-- 3. BOTONES DE ACCIÓN PARA EL NIÑO -->
+      <!-- 3. BOTONES DE ACCIÓN RPG -->
       <div class="flex items-center gap-1.5 shrink-0">
-        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden dio-btn dio-btn-moss text-xs sm:text-sm py-1.5 px-3.5 flex items-center gap-1 shadow-md">
-          <span>✅</span> ¡Comprobar!
+        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden pixel-btn-retro bg-emerald-600 text-white text-xs sm:text-sm py-1.5 px-3.5 flex items-center gap-1 rounded-lg">
+          <span>⚔️</span> ¡Comprobar!
         </button>
 
-        <button onclick="resetHouseBlocks()" class="dio-btn dio-btn-stone text-xs py-1.5 px-2.5 flex items-center gap-1" title="Poner en cero todos los números">
+        <button onclick="resetHouseBlocks()" class="pixel-btn-retro bg-[#e2e8f0] text-slate-900 text-xs py-1.5 px-2.5 flex items-center gap-1 rounded-lg" title="Poner en cero todos los números">
           <span>🧹</span> Borrar
         </button>
 
-        <div class="dio-card px-2 py-1 flex items-center gap-1.5">
+        <div class="pixel-frame px-2 py-1 flex items-center gap-1.5 rounded-lg bg-white/90">
           <div id="statusDot" class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></div>
-          <span id="badgeHouseStatus" class="text-[10px] font-black text-amber-700 uppercase">En obra 🔨</span>
+          <span id="badgeHouseStatus" class="text-[10px] font-black text-amber-800 uppercase pixel-font">En obra 🔨</span>
         </div>
       </div>
 
     </div>
 
-    <!-- SUB-BARRA DE MODO: CONTROLES ESPECÍFICOS SEGÚN EL MODO -->
-    
-    <!-- A. MODO AVENTURA: MISIÓN Y PASOS -->
-    <div id="adventureMissionBar" class="dio-cork rounded-xl px-2.5 py-1 flex flex-wrap items-center justify-between gap-1.5 text-xs">
+    <!-- SUB-BARRA: ESTADO DE AVENTURA / DESAFÍO EN MODO PIXEL ART -->
+    <div id="missionDetailBar" class="flex flex-wrap items-center justify-between gap-1 text-[11px] pt-1 border-t border-[#1b120c]/15">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span id="missionIcon" class="text-sm">🥖</span>
+        <span id="missionStepBadge" class="bg-amber-100 text-amber-950 border border-amber-900 px-1.5 py-0.5 rounded font-black text-[10px] pixel-font">Misión 1 de 8</span>
+        <span id="missionTitle" class="font-bold text-amber-950">La Panadería de Don Pancho</span>
+        <span id="missionLevelBadge" class="hidden sm:inline bg-white/80 text-amber-900 px-1.5 py-0.5 rounded border border-amber-800/20 text-[10px]">Unidades y Decenas</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div id="missionStarsContainer" class="flex items-center gap-0.5 text-xs"></div>
+        <button id="btnNextMission" onclick="advanceToNextMission()" class="hidden pixel-btn-retro bg-emerald-600 text-white text-xs py-0.5 px-2.5 rounded flex items-center gap-1 animate-bounce">
+          <span>➡️</span> ¡Siguiente!
+        </button>
+      </div>
+    </div>
+
+    <!-- PANEL DEL MODO DESAFÍOS (OCULTO EN MODO AVENTURA) -->
+    <div id="challengeControlBar" class="hidden flex flex-wrap items-center justify-between gap-1.5 pt-1 border-t border-[#1b120c]/15">
+      <div class="flex items-center gap-1 flex-wrap">
+        <select id="selChallengeType" onchange="handleChallengeTypeChange()" class="text-xs rounded border border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
+          <option value="scrambled">🧩 Reto Posicional Mixto</option>
+          <option value="dictation">🎙️ Dictado del Maestro</option>
+          <option value="worded">📖 Acertijo de los Sabios</option>
+          <option value="exchange">🔄 Canje Mágico de Bloques</option>
+        </select>
+        <select id="selChallengeLevel" onchange="handleChallengeLevelChange()" class="text-xs rounded border border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
+          <option value="1">Nivel 1 · Hasta 99 (D y U)</option>
+          <option value="2" selected>Nivel 2 · Hasta 999 (Centenas)</option>
+          <option value="3">Nivel 3 · Hasta 9.999 (Unid. de Mil)</option>
+          <option value="4">Nivel 4 · Hasta 99.999 (Dec. de Mil)</option>
+        </select>
+        <button onclick="generateNewChallenge()" class="pixel-btn-retro bg-amber-400 text-amber-950 text-xs py-1 px-2.5 rounded flex items-center gap-1">
+          <span>🎲</span> Nuevo Reto
+        </button>
+      </div>
       <div class="flex items-center gap-2">
-        <span id="missionIcon" class="text-lg">🥖</span>
-        <div>
-          <span id="missionStepBadge" class="text-[9px] font-black uppercase tracking-wide px-1.5 py-0.2 rounded" style="background:#7a1f1f; color:#fde7c7">Misión 1 de 8</span>
-          <span id="missionTitle" class="font-black text-xs ml-1" style="color:#3b2a1a">La Panadería de la Plaza</span>
-          <span id="missionLevelBadge" class="hidden text-[10px] text-slate-500">Paso 1</span>
+        <div class="text-[11px] font-black pixel-font text-amber-950">
+          🔥 Racha: <span id="challengeStreakBadge" class="text-amber-800">0</span>
+          · ⭐ Puntos: <span id="challengeScoreBadge" class="text-amber-800">0</span>
         </div>
       </div>
-      <div class="flex items-center gap-1.5">
-        <div id="missionStarsRow" class="flex items-center gap-0.5 px-1.5 py-0.5 rounded-lg bg-black/30"></div>
-        <button onclick="givePedagogicalHint()" class="dio-btn dio-btn-gold text-[11px] py-1 px-2 flex items-center gap-1" title="Ver pista">
-          <span>💡</span> Pista
-        </button>
-        <button id="btnNextMission" onclick="advanceNextMission()" class="dio-btn dio-btn-moss hidden text-[11px] py-1 px-2.5 flex items-center gap-1 animate-bounce">
-          Siguiente ⏩
-        </button>
-      </div>
     </div>
-
-    <!-- B. MODO DESAFÍOS: ACERTIJOS Y NIVELES -->
-    <div id="challengeControlsRow" class="hidden dio-cork rounded-xl px-2.5 py-1 flex-wrap items-center justify-between gap-1.5 text-xs">
-      <div class="flex flex-wrap items-center gap-1.5">
-        <select id="challengeTypeSelect" onchange="generateNewChallenge()" class="dio-card px-2 py-0.5 text-xs font-black outline-none cursor-pointer">
-          <option value="mixed">🎲 Reto Sorpresa</option>
-          <option value="scrambled">📐 Planos Desordenados</option>
-          <option value="dictation">🎧 Dictado en Letras</option>
-          <option value="additive">🧮 Suma de Bloques</option>
-        </select>
-        <select id="challengeLevelSelect" onchange="generateNewChallenge()" class="dio-card px-2 py-0.5 text-xs font-black outline-none cursor-pointer">
-          <option value="2">Nivel 1 (Hasta 99)</option>
-          <option value="3" selected>Nivel 2 (Hasta 999)</option>
-          <option value="4">Nivel 3 (Hasta 9.999)</option>
-          <option value="5">Nivel 4 (Hasta 99.999)</option>
-        </select>
-        <button onclick="generateNewChallenge()" class="dio-btn dio-btn-wood text-[11px] py-1 px-2">
-          🔄 Nuevo
-        </button>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="dio-card px-2 py-0.5 text-xs font-black" style="color:#9a3412">🔥 Racha: <span id="challengeStreakBadge">0</span></span>
-        <span class="dio-card px-2 py-0.5 text-xs font-black" style="color:#3d6b22">🏆 Puntos: <span id="challengeScoreBadge">0</span></span>
-      </div>
-    </div>
-
-    <!-- C. MODO TALLER LIBRE -->
-    <div id="freeControlsRow" class="hidden dio-cork rounded-xl px-2.5 py-1 flex-wrap items-center justify-between gap-1.5 text-xs">
-      <div class="flex flex-wrap items-center gap-1.5">
-        <span class="text-xs font-black px-1.5 py-0.5 rounded dio-card">Fijar número:</span>
-        <input
-          type="number"
-          id="inputCustomNumber"
-          min="0"
-          max="99999"
-          placeholder="Ej: 405"
-          class="w-20 dio-stone py-0.5 px-1.5 font-black text-center text-xs outline-none"
-          onkeydown="if(event.key === 'Enter') applyCustomNumber()"
-        >
-        <button onclick="applyCustomNumber()" class="dio-btn dio-btn-wood text-[11px] py-1 px-2">
-          Fijar 🎯
-        </button>
-        <button onclick="generateRandomTarget()" class="dio-btn dio-btn-gold text-[11px] py-1 px-2 flex items-center gap-1">
-          <span>🎲</span> Azar
-        </button>
-        <button onclick="autoBuildDemo()" class="dio-btn dio-btn-moss text-[11px] py-1 px-2 flex items-center gap-1">
-          <span>🪄</span> Auto
-        </button>
-      </div>
-      <div class="flex items-center gap-1 p-0.5 rounded-lg dio-card">
-        <span class="text-[9px] font-black px-1 uppercase">Sumar/Restar:</span>
-        <button onclick="stepTotalBy(-1)" class="btn-tactile bg-rose-100 text-rose-900 font-black text-xs px-1.5 py-0.5 rounded border border-rose-300">−1</button>
-        <button onclick="stepTotalBy(1)" class="btn-tactile bg-red-600 text-white font-black text-xs px-1.5 py-0.5 rounded">+1</button>
-        <button onclick="stepTotalBy(10)" class="btn-tactile bg-blue-600 text-white font-black text-xs px-1.5 py-0.5 rounded">+10</button>
-        <button onclick="stepTotalBy(100)" class="btn-tactile bg-emerald-600 text-white font-black text-xs px-1.5 py-0.5 rounded">+100</button>
-      </div>
-    </div>
-
-    <!-- Skyline de Numbrópolis (para conservar compatibilidad con el script) -->
-    <div id="citySkylineRow" class="hidden"></div>
 
   </header>
 
@@ -1536,6 +1585,29 @@
     La Casa de los Números LEGO · Laboratorio Interactivo de Valor Posicional (U · D · C · UM · DM) para Primaria
   </footer>
 
+    <!-- CONTENEDOR DE COMPATIBILIDAD LEGACY (PRESERVA CONTRATO DOM) -->
+  <div class="hidden" aria-hidden="true" style="display:none!important;">
+    <div id="adventureMissionBar"></div>
+    <div id="challengeControlsRow">
+      <select id="challengeTypeSelect" onchange="generateNewChallenge()"></select>
+      <select id="challengeLevelSelect" onchange="generateNewChallenge()"></select>
+    </div>
+    <div id="citySkylineRow"></div>
+    <div id="freeControlsRow">
+      <input type="number" id="inputCustomNumber" onkeydown="if(event.key === 'Enter') applyCustomNumber()">
+      <button onclick="applyCustomNumber()"></button>
+      <button onclick="generateRandomTarget()"></button>
+      <button onclick="stepTotalBy(-1)"></button>
+      <button onclick="stepTotalBy(1)"></button>
+      <button onclick="stepTotalBy(10)"></button>
+      <button onclick="stepTotalBy(100)"></button>
+    </div>
+    <div id="missionStarsRow"></div>
+    <button onclick="advanceNextMission()"></button>
+    <button onclick="autoBuildDemo()"></button>
+    <button onclick="givePedagogicalHint()"></button>
+  </div>
+
   <!-- LÓGICA DE JUEGO, BLOQUES BASE-10, MODOS PEDAGÓGICOS Y ESCENAS 3D -->
   <script>
     // 8 DISTRITOS OFICIALES DE LA ISLA DE NUMBRÓPOLIS
@@ -1555,104 +1627,128 @@
       {
         id: 1,
         districtId: 1,
-        title: "La Panadería de la Plaza",
+        title: "La Panadería de Don Pancho",
         icon: "🥖",
+        characterName: "Don Pancho",
+        characterTitle: "Panadero Mayor",
+        characterIcon: "🥖",
         number: 35,
         district: "Plaza Mayor",
         step: "Misión 1 de 8",
         phaseLabel: "Paso 1: Unidades y Decenas",
-        leoIntro: "¡Bienvenido arquitecto! Fundemos la Panadería en la Plaza Mayor con el número 35: coloca 3 barras de Decenas y 5 ladrillos de Unidades.",
-        hint: "Para formar 35: pon 3 barras azules en Decenas (D) y 5 ladrillos rojos en Unidades (U). Las Centenas quedan en 0.",
+        storyIntro: "¡Buenos días, pequeño arquitecto! Necesitamos hornear exactamente 35 panes dorados para la fiesta del pueblo. Pon 3 barras de Decenas y 5 ladrillos de Unidades. ¡El reino cuenta contigo!",
+        hint: "Para formar 35: pon 3 en Decenas (D) y 5 en Unidades (U). Deja Centenas, UM y DM en 0.",
         palette: { bg: "from-amber-400 to-amber-600", roof: "bg-red-600" }
       },
       {
         id: 2,
         districtId: 2,
-        title: "La Cabaña del Lago",
+        title: "El Refugio de Luna",
         icon: "🏕️",
+        characterName: "Luna",
+        characterTitle: "Guardabosques",
+        characterIcon: "🏕️",
         number: 78,
         district: "Mirador del Lago",
         step: "Misión 2 de 8",
         phaseLabel: "Paso 1: Agrupación en Decenas",
-        leoIntro: "¡Genial! En el Mirador del Lago nos encargaron la Cabaña #78. ¡Mira cómo se agrupan los bloques de 10 en 10!",
-        hint: "El número 78 se forma con 7 Decenas (70) y 8 Unidades (8). ¡También puedes juntar 10 unidades para ver cómo se transforman!",
+        storyIntro: "¡La marea del lago está subiendo! Para asegurar el refugio necesitamos apilar 78 troncos mágicos: 7 Decenas en azul y 8 Unidades en rojo. ¡Demuestra tu destreza!",
+        hint: "El número 78 se forma con 7 Decenas (70) y 8 Unidades (8). ¡Las habitaciones de C, UM y DM van en 0!",
         palette: { bg: "from-sky-400 to-blue-600", roof: "bg-indigo-700" }
       },
       {
         id: 3,
         districtId: 3,
-        title: "La Escuela Primaria",
+        title: "La Escuela de la Maestra Clara",
         icon: "🏫",
+        characterName: "Maestra Clara",
+        characterTitle: "Directora Escolar",
+        characterIcon: "🏫",
         number: 246,
         district: "Paseo de la Ribera",
         step: "Misión 3 de 8",
         phaseLabel: "Paso 2: ¡Llegaron las Centenas!",
-        leoIntro: "¡La isla crece! La Escuela del Paseo de la Ribera lleva el número 246. ¡Estrenamos las placas verdes de 100 en Centenas!",
-        hint: "Para 246: coloca 2 placas en Centenas (200), 4 barras en Decenas (40) y 6 ladrillos en Unidades (6).",
+        storyIntro: "¡Bienvenidos a la nueva escuela! Necesitamos 246 pupitres para los nuevos alumnos. Estrenamos la habitación verde de Centenas: ¡coloca 2 en Centenas, 4 en Decenas y 6 en Unidades!",
+        hint: "Para 246: coloca 2 en Centenas (200), 4 en Decenas (40) y 6 en Unidades (6).",
         palette: { bg: "from-emerald-400 to-emerald-600", roof: "bg-amber-600" }
       },
       {
         id: 4,
         districtId: 4,
-        title: "El Parque del Cero Mágico",
+        title: "El Reloj de Milo el Mago",
         icon: "🎡",
+        characterName: "Milo",
+        characterTitle: "Mago del Tiempo",
+        characterIcon: "🎡",
         number: 508,
         district: "Valle Esmeralda",
         step: "Misión 4 de 8",
-        phaseLabel: "Paso 2: El Cero Intermedio",
-        leoIntro: "¡Atención al plano del Parque Central (#508)! Hay un 0 en la mitad. ¿Qué habitación debe quedar vacía pero guardando su lugar?",
+        phaseLabel: "Paso 2: El Enigma del Cero Intermedio",
+        storyIntro: "¡Abracadabra! El Gran Reloj del Parque necesita la combinación mágica 508. ¡Cuidado con el Cero mágico! Pon 5 en Centenas, 0 en Decenas y 8 en Unidades. ¡El cero guarda su lugar!",
         hint: "508 tiene 5 Centenas (500), 0 Decenas (¡deja las Decenas en 0!) y 8 Unidades (8).",
         palette: { bg: "from-rose-400 to-rose-600", roof: "bg-blue-700" }
       },
       {
         id: 5,
         districtId: 5,
-        title: "Estación de Bomberos de los Miles",
+        title: "Estación del Capitán Timón",
         icon: "🚒",
+        characterName: "Capitán Timón",
+        characterTitle: "Jefe de Bomberos",
+        characterIcon: "🚒",
         number: 1340,
         district: "Bahía del Faro",
         step: "Misión 5 de 8",
         phaseLabel: "Paso 3: Unidades de Mil (UM) y el Punto de Mil",
-        leoIntro: "¡Superamos el 999! Usa la habitación amarilla de Unidades de Mil (UM) a la izquierda del Punto de Mil para construir la Estación #1.340.",
+        storyIntro: "¡Alarma en la bahía! La sirena del faro requiere 1.340 galones de agua. ¡Crucemos el Punto de Mil dorado! Pon 1 en Unidades de Mil, 3 en Centenas, 4 en Decenas y 0 en Unidades.",
         hint: "Coloca 0 en DM, 1 en UM (1.000), 3 en C (300), 4 en D (40) y 0 en U.",
         palette: { bg: "from-amber-400 to-amber-600", roof: "bg-rose-600" }
       },
       {
         id: 6,
         districtId: 6,
-        title: "Observatorio del Bosque",
+        title: "Observatorio de la Dra. Vega",
         icon: "🔭",
+        characterName: "Dra. Vega",
+        characterTitle: "Astrónoma Real",
+        characterIcon: "🔭",
         number: 4029,
         district: "Jardines del Bosque",
         step: "Misión 6 de 8",
         phaseLabel: "Paso 3: Miles con Cero en Centenas",
-        leoIntro: "En los Jardines del Bosque levantaremos el Observatorio #4.029. ¡Fíjate bien qué habitaciones llevan el dígito 0!",
+        storyIntro: "¡Una lluvia de estrellas fugaces se acerca! Para calibrar el Gran Telescopio necesitamos el lente 4.029: pon 4 en UM, 0 en Centenas, 2 en Decenas y 9 en Unidades. ¡Fíjate bien en el cielo!",
         hint: "Deja DM en 0, pon 4 en UM (4.000), deja 0 en Centenas (C), pon 2 en Decenas (20) y 9 en Unidades (U).",
         palette: { bg: "from-teal-400 to-emerald-700", roof: "bg-indigo-800" }
       },
       {
         id: 7,
         districtId: 7,
-        title: "Estación del Tren Occidental",
+        title: "Expreso Real de Bruno",
         icon: "🚂",
+        characterName: "Bruno",
+        characterTitle: "Maquinista Mayor",
+        characterIcon: "🚂",
         number: 23615,
         district: "Colina Occidental",
         step: "Misión 7 de 8",
         phaseLabel: "Paso 4: ¡Habitación de Decenas de Mil (DM)!",
-        leoIntro: "¡Obra colosal de 5 cifras! Estrenamos la habitación morada de Decenas de Mil (DM) para inaugurar la Estación #23.615.",
+        storyIntro: "¡Chuu-chuu! El Expreso de Numbrópolis necesita 23.615 piezas de carbón mágico para cruzar la montaña. ¡Desbloqueamos las Decenas de Mil moradas! Pon 2 en DM, 3 en UM, 6 en C, 1 en D y 5 en U.",
         hint: "Completa las 5 habitaciones: 2 en DM (20.000), 3 en UM (3.000), 6 en C (600), 1 en D (10) y 5 en U (5).",
         palette: { bg: "from-purple-400 to-purple-700", roof: "bg-amber-500" }
       },
       {
         id: 8,
         districtId: 8,
-        title: "Gran Palacio de la Cumbre Real",
+        title: "Palacio Dorado del Rey Bloque IV",
         icon: "🏛️",
+        characterName: "Rey Bloque IV",
+        characterTitle: "Rey de Numbrópolis",
+        characterIcon: "👑",
         number: 50402,
         district: "Cumbre Real",
         step: "Misión 8 de 8",
-        phaseLabel: "Paso 4: Graduación de Maestro Arquitecto",
-        leoIntro: "¡La joya final en la Cumbre Nevada! Construye el Palacio #50.402 dominando los ceros posicionales en UM y D.",
+        phaseLabel: "Paso 4: Graduación de Gran Arquitecto Real",
+        storyIntro: "¡Salve, Maestro Constructor! Por decreto de la corona, inauguramos el Gran Palacio con la cifra 50.402. Demuestra tu maestría con los ceros: ¡5 en DM, 0 en UM, 4 en C, 0 en D y 2 en U!",
         hint: "Pon 5 en DM (50.000), 0 en UM, 4 en C (400), 0 en D y 2 en U. ¡50.000 + 400 + 2!",
         palette: { bg: "from-amber-400 to-yellow-600", roof: "bg-purple-800" }
       }
@@ -1680,6 +1776,7 @@
       currentMissionIdx: 0,
       maxUnlockedMissionIdx: 0,
       completedMissionIds: [],
+      xp: 0,
       isAutoBuilding: false,
       isInaugurated: false,
       builtBuildings: [],
@@ -1694,6 +1791,57 @@
     };
 
     // PERSISTENCIA LOCAL
+    
+    // =========================================================================
+    // SISTEMA DE PROGRESIÓN RPG: EXPERIENCIA (XP) Y RANGOS DE CONSTRUCTOR
+    // =========================================================================
+    function addPlayerXP(amount, reason) {
+      state.xp = (state.xp || 0) + amount;
+      updatePlayerRankUI();
+      saveProgress();
+      
+      // Feedback flotante en diálogo
+      const leoBubble = document.getElementById("leoSpeechBubble");
+      if (leoBubble && reason) {
+        const prevText = leoBubble.innerText;
+        leoBubble.innerText = `⭐ +${amount} XP: ¡${reason}!`;
+        setTimeout(() => {
+          if (leoBubble.innerText.includes('XP:')) {
+            leoBubble.innerText = prevText;
+          }
+        }, 3500);
+      }
+    }
+
+    function updatePlayerRankUI() {
+      const xp = state.xp || 0;
+      let rank = "⚡ Nv. 1 Aprendiz";
+      let pct = 10;
+      
+      if (xp >= 500) {
+        rank = "👑 Nv. 5 Gran Arquitecto";
+        pct = 100;
+      } else if (xp >= 300) {
+        rank = "🏰 Nv. 4 Maestro Real";
+        pct = 20 + ((xp - 300) / 200) * 80;
+      } else if (xp >= 150) {
+        rank = "🔨 Nv. 3 Albañil Experto";
+        pct = 20 + ((xp - 150) / 150) * 80;
+      } else if (xp >= 50) {
+        rank = "🧱 Nv. 2 Constructor";
+        pct = 20 + ((xp - 50) / 100) * 80;
+      } else {
+        pct = Math.max(10, (xp / 50) * 100);
+      }
+      
+      const rankEl = document.getElementById("playerRankBadge");
+      const xpBadgeEl = document.getElementById("playerXpBadge");
+      const xpBarEl = document.getElementById("playerXpBar");
+      if (rankEl) rankEl.innerText = rank;
+      if (xpBadgeEl) xpBadgeEl.innerText = xp;
+      if (xpBarEl) xpBarEl.style.width = Math.min(100, Math.max(8, pct)) + "%";
+    }
+
     function saveProgress() {
       try {
         const data = {
@@ -1701,7 +1849,8 @@
           maxUnlockedMissionIdx: state.maxUnlockedMissionIdx,
           completedMissionIds: state.completedMissionIds,
           builtBuildings: state.builtBuildings,
-          challengeScore: state.challenge.score
+          challengeScore: state.challenge.score,
+          xp: state.xp
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       } catch (e) {}
@@ -1723,6 +1872,9 @@
         }
         if (Array.isArray(data.builtBuildings)) {
           state.builtBuildings = data.builtBuildings;
+        }
+        if (typeof data.xp === "number") {
+          state.xp = data.xp;
         }
         if (typeof data.challengeScore === "number") {
           state.challenge.score = data.challengeScore;
@@ -2380,11 +2532,16 @@
       const barAdv = document.getElementById("adventureMissionBar");
       const barCha = document.getElementById("challengeControlsRow");
       const barFree = document.getElementById("freeControlsRow");
+
+      const missionBar = document.getElementById("missionDetailBar");
+      const chalBar = document.getElementById("challengeControlBar");
+
       const btnVerify = document.getElementById("btnVerifyChallenge");
       const headerLbl = document.getElementById("targetHeaderLabel");
+      const speakerEl = document.getElementById("rpgSpeakerLabel");
 
-      const activeClass = "dio-tab dio-tab-active";
-      const idleClass = "dio-tab";
+      const activeClass = "dio-tab dio-tab-active text-[11px] py-1 px-2.5 pixel-font";
+      const idleClass = "dio-tab text-[11px] py-1 px-2.5 pixel-font";
 
       if (btnAdv) btnAdv.className = mode === "adventure" ? activeClass : idleClass;
       if (btnCha) btnCha.className = mode === "challenge" ? activeClass : idleClass;
@@ -2395,6 +2552,12 @@
       barCha?.classList.toggle("flex", mode === "challenge");
       barFree?.classList.toggle("hidden", mode !== "free");
       barFree?.classList.toggle("flex", mode === "free");
+
+      missionBar?.classList.toggle("hidden", mode !== "adventure");
+      missionBar?.classList.toggle("flex", mode === "adventure");
+      chalBar?.classList.toggle("hidden", mode !== "challenge");
+      chalBar?.classList.toggle("flex", mode === "challenge");
+
       btnVerify?.classList.toggle("hidden", mode !== "challenge");
 
       if (mode === "adventure") {
@@ -2402,14 +2565,16 @@
         loadCurrentMission();
       } else if (mode === "challenge") {
         if (headerLbl) headerLbl.innerText = "ACERTIJO DEL ARQUITECTO (CONSTRUYE Y COMPRUEBA)";
+        if (speakerEl) speakerEl.innerHTML = '<span>🏆 Leo Maestro:</span>';
         updateChallengeScoreUI();
         generateNewChallenge();
       } else {
         if (headerLbl) headerLbl.innerText = "NÚMERO OBJETIVO DEL TALLER LIBRE";
+        if (speakerEl) speakerEl.innerHTML = '<span>🧱 Taller Creativo:</span>';
         setTargetNumber(state.target || 245);
         const leoBubble = document.getElementById("leoSpeechBubble");
         if (leoBubble) {
-          leoBubble.innerText = "¡Estás en el Taller Libre! Escribe cualquier número, usa +1/−1 para ver canjes en vivo o cambia la vista a Solo Bloques.";
+          leoBubble.innerText = "¡Bienvenido al Taller Libre! Experimenta con cualquier combinación de dígitos o canjes sin límite.";
         }
       }
     }
@@ -2428,9 +2593,14 @@
       renderMissionStars();
       setTargetNumber(mission.number);
 
+      // Actualizar diálogo RPG del habitante
+      const speakerEl = document.getElementById("rpgSpeakerLabel");
+      if (speakerEl) {
+        speakerEl.innerHTML = `<span>${mission.characterIcon} ${mission.characterName} (${mission.characterTitle}):</span>`;
+      }
       const leoBubble = document.getElementById("leoSpeechBubble");
-      if (leoBubble) leoBubble.innerText = mission.leoIntro;
-      speakText(mission.leoIntro);
+      if (leoBubble) leoBubble.innerText = mission.storyIntro;
+      speakText(mission.storyIntro);
     }
 
     function jumpToMission(idx) {
@@ -2539,6 +2709,20 @@
       const d = Math.random() < 0.4 ? 0 : Math.floor(Math.random() * 9) + 1;
       const u = Math.floor(Math.random() * 9) + 1;
       return dm * 10000 + um * 1000 + c * 100 + d * 10 + u;
+    }
+
+    
+    function handleChallengeTypeChange() {
+      const val = document.getElementById('selChallengeType')?.value;
+      const legacy = document.getElementById('challengeTypeSelect');
+      if (legacy && val) legacy.value = val;
+      generateNewChallenge();
+    }
+    function handleChallengeLevelChange() {
+      const val = document.getElementById('selChallengeLevel')?.value;
+      const legacy = document.getElementById('challengeLevelSelect');
+      if (legacy && val) legacy.value = val;
+      generateNewChallenge();
     }
 
     function generateNewChallenge() {
@@ -3568,5 +3752,6 @@
       }, 80);
     });
   </script>
-</body>
+
+  </body>
 </html>
