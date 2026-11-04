@@ -2018,13 +2018,68 @@
       return result.trim();
     }
 
+    // =========================================================================
+    // SÍNTESIS DE VOZ AMIGABLE INFANTIL (SELECCIÓN INTELIGENTE + PITCH CÁLIDO)
+    // =========================================================================
+    let cachedFriendlyVoice = null;
+
+    function getFriendlySpanishVoice() {
+      if (cachedFriendlyVoice) return cachedFriendlyVoice;
+      if (!("speechSynthesis" in window)) return null;
+
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return null;
+
+      // Filtrar todas las voces en español disponibles
+      const esVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("es"));
+      if (esVoices.length === 0) return null;
+
+      // Ranking de voces más naturales, cálidas y amigables para niños
+      const scored = esVoices.map(v => {
+        let score = 0;
+        const name = v.name.toLowerCase();
+        // 1. Voces neuronales / naturales de última generación
+        if (/natural|neural|online/i.test(name)) score += 60;
+        // 2. Voces suaves, claras y expresivas muy usadas en educación primaria
+        if (/laura/i.test(name)) score += 45; // Especialmente dulce y clara en Windows
+        if (/dalia|paloma|paulina|mónica|monica|sabina/i.test(name)) score += 40;
+        if (/google español/i.test(name)) score += 35;
+        if (/pablo|jorge/i.test(name)) score += 20;
+        if (/helena/i.test(name)) score += 10;
+        return { voice: v, score };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      cachedFriendlyVoice = scored[0].voice;
+      return cachedFriendlyVoice;
+    }
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        cachedFriendlyVoice = null;
+        getFriendlySpanishVoice();
+      };
+    }
+
     function speakText(text) {
       if (state.muted) return;
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "es-ES";
-        utterance.rate = 0.96;
+        const friendlyVoice = getFriendlySpanishVoice();
+
+        if (friendlyVoice) {
+          utterance.voice = friendlyVoice;
+          utterance.lang = friendlyVoice.lang;
+        } else {
+          utterance.lang = "es-ES";
+        }
+
+        // Tono más cálido, alegre y juvenil para niños (pitch ligeramente elevado y cadencia clara)
+        utterance.pitch = 1.18;
+        utterance.rate = 0.98;
+        utterance.volume = 1.0;
+
         if (window.threeLeo) window.threeLeo.talkTimer = Math.min(4.2, Math.max(1.5, text.length * 0.045));
         window.speechSynthesis.speak(utterance);
       }
