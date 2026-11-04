@@ -1213,6 +1213,20 @@
     .room-btn-touch:active {
       transform: translateY(2px);
     }
+    .decomp-term-card {
+      min-width: 130px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease;
+    }
+    .decomp-term-card:hover {
+      transform: translateY(-2px);
+    }
 
     /* Tapete/alfombrilla en la entrada de cada habitación */
     .room-entry-doormat {
@@ -1272,112 +1286,440 @@
     }
     
     /* Contenedor central de la casa que se proyecta sobre el modelo 3D */
-    .house-stage-center {
+    
+    /* =========================================================================
+       ARQUITECTURA DE LA CASA LEGO (FIDELIDAD EXACTA A LA IMAGEN DE REFERENCIA)
+       ========================================================================= */
+    .lego-house-wrapper {
       width: 100%;
       max-width: 1050px;
-      height: 420px;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
-      padding-bottom: 6px;
-      margin-top: 22px;
-      box-sizing: border-box;
       z-index: 20;
+      margin: 2px auto;
     }
 
-    /* Placa tallada en el tejado */
-    .house-carved-sign-ui {
-      background: linear-gradient(180deg, #fdf7eb 0%, #f4dfb5 100%);
-      border: 3px solid #5a2e10;
-      border-radius: 14px;
-      padding: 4px 22px;
+    /* Tejado a dos aguas rojo con tejas y studs LEGO */
+    .lego-stepped-roof {
+      position: relative;
+      width: calc(100% + 44px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 15;
+      margin-bottom: -8px;
+    }
+
+    /* Chimenea de piedra a la derecha del tejado */
+    .roof-chimney {
+      position: absolute;
+      top: -14px;
+      right: 70px;
+      width: 28px;
+      height: 38px;
+      background: linear-gradient(180deg, #78716c 0%, #57534e 100%);
+      border: 2px solid #292524;
+      border-radius: 4px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      z-index: 12;
+    }
+    .roof-chimney-cap {
+      position: absolute;
+      top: -6px;
+      left: -4px;
+      width: 36px;
+      height: 7px;
+      background: #a8a29e;
+      border: 2px solid #292524;
+      border-radius: 3px;
+    }
+
+    .roof-ridge {
+      width: 84%;
+      height: 16px;
+      background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+      border: 2px solid #991b1b;
+      border-bottom: none;
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.45);
+    }
+    .roof-slope-1 {
+      width: 93%;
+      height: 20px;
+      background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+      border: 2px solid #7f1d1d;
+      border-bottom: none;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.35);
+    }
+    .roof-eaves {
+      width: 100%;
+      height: 24px;
+      background: linear-gradient(180deg, #b91c1c 0%, #991b1b 100%);
+      border: 2.5px solid #7f1d1d;
+      border-radius: 0 0 6px 6px;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.25);
+    }
+
+    .roof-stud-dot {
+      width: 13px;
+      height: 5.5px;
+      border-radius: 3px 3px 0 0;
+      background: #f87171;
+      border: 1.2px solid #991b1b;
+      border-bottom: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    /* Cartel central "La Casa de los Números" */
+    .roof-carved-sign {
+      background: linear-gradient(180deg, #fffdf7 0%, #faedd0 100%);
+      border: 3.5px solid #5a2e10;
+      border-radius: 16px;
+      padding: 5px 28px;
       box-shadow:
         inset 0 1.5px 0 #ffffff,
         0 4px 0 #3a1c09,
-        0 8px 18px rgba(0, 0, 0, 0.35);
+        0 10px 20px rgba(0, 0, 0, 0.4);
       color: #3c1e0b;
       font-weight: 900;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       position: absolute;
-      top: 18px;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 25;
-      font-size: 14px;
+      font-size: 16px;
       letter-spacing: 0.5px;
     }
 
-    /* Fila de las 5 habitaciones superpuestas en los huecos de la casa 3D */
-    .rooms-flex-row {
+    .house-main-facade {
       width: 100%;
+      background: linear-gradient(180deg, #965328 0%, #7c411a 60%, #5d2e11 100%);
+      border: 4px solid #3d1b08;
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+      padding: 12px 12px 14px 12px;
+      position: relative;
       display: flex;
       align-items: stretch;
-      justify-content: center;
-      gap: 16px;
-      z-index: 20;
+      justify-content: space-between;
+      gap: 6px;
     }
-    .room-ui-alcove {
+
+    .house-main-facade::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 14px;
+      background: linear-gradient(180deg, #6c3715, #421e09);
+      border-bottom: 2px solid #230d02;
+      z-index: 10;
+    }
+
+    .carriage-lantern-left {
+      position: absolute;
+      top: 48%;
+      left: -22px;
+      transform: translateY(-50%);
+      width: 26px;
+      height: 48px;
+      background: #231206;
+      border: 2px solid #0f0702;
+      border-radius: 6px;
+      box-shadow: 0 0 24px rgba(251, 191, 36, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+    .carriage-lantern-right {
+      position: absolute;
+      top: 48%;
+      right: -22px;
+      transform: translateY(-50%);
+      width: 26px;
+      height: 48px;
+      background: #231206;
+      border: 2px solid #0f0702;
+      border-radius: 6px;
+      box-shadow: 0 0 24px rgba(251, 191, 36, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+    .lantern-glass-pane {
+      width: 16px;
+      height: 32px;
+      background: radial-gradient(circle, #fef08a 25%, #f59e0b 80%);
+      border-radius: 3px;
+    }
+
+    .timber-column {
+      width: 16px;
+      align-self: stretch;
+      background: linear-gradient(90deg, #9b582a 0%, #6f3714 50%, #462009 100%);
+      border: 2px solid #2e1405;
+      border-radius: 6px;
+      position: relative;
+      flex-shrink: 0;
+      z-index: 15;
+    }
+    .corbel-left {
+      position: absolute;
+      top: 4px;
+      left: -9px;
+      width: 10px;
+      height: 12px;
+      background: #7a3e18;
+      border: 1.5px solid #2e1405;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+    .corbel-right {
+      position: absolute;
+      top: 4px;
+      right: -9px;
+      width: 10px;
+      height: 12px;
+      background: #7a3e18;
+      border: 1.5px solid #2e1405;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+    .column-flowerpot {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 16px;
+      background: #c2592d;
+      border: 1.5px solid #7c3112;
+      border-radius: 2px 2px 4px 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .column-flowerpot::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      width: 14px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+
+    .side-planter-box-left {
+      position: absolute;
+      bottom: -6px;
+      left: -58px;
+      width: 44px;
+      height: 28px;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 2px;
+    }
+    .side-planter-box-right {
+      position: absolute;
+      bottom: -6px;
+      right: -58px;
+      width: 44px;
+      height: 28px;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 2px;
+    }
+    .flower-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .arched-room-unit {
       flex: 1;
-      max-width: 176px;
-      height: 296px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(4px);
-      box-shadow:
-        inset 0 2px 0 #ffffff,
-        0 8px 20px rgba(0, 0, 0, 0.18);
+      height: 298px;
+      border-radius: 38px 38px 16px 16px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      overflow: hidden;
-      border-width: 4px;
+      position: relative;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.7),
+        0 8px 18px rgba(0,0,0,0.22);
+      border-width: 5px;
       border-style: solid;
-      transition: transform 0.12s ease;
+      background: #fdfbf7;
     }
-    .room-ui-alcove:hover {
-      transform: translateY(-2px);
+
+    .arch-header {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      text-align: center;
+      border-radius: 30px 30px 0 0;
+      position: relative;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), 0 3px 6px rgba(0,0,0,0.2);
     }
-    .room-giant-digit {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 3.6rem;
-      line-height: 1;
+    .arch-header-title {
+      font-size: 13px;
       font-weight: 900;
-      padding: 6px 0 2px 0;
-      text-shadow: 0 2px 0 rgba(255,255,255,0.9);
+      line-height: 1.1;
+      letter-spacing: 0.2px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
     }
-    .room-equiv-badge {
+    .arch-header-sub {
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      opacity: 0.95;
+    }
+
+    .hanging-bell-lamp {
+      position: absolute;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 14px;
+      border-radius: 12px 12px 2px 2px;
+      border: 1.5px solid rgba(0,0,0,0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 10;
+    }
+    .hanging-bell-bulb {
+      width: 8px;
+      height: 5px;
+      background: #fef08a;
+      border-radius: 0 0 4px 4px;
+      box-shadow: 0 0 12px #fde047;
+      margin-bottom: -2px;
+    }
+
+    .room-interior-alcove {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 15%, rgba(255, 245, 200, 0.45) 0%, rgba(255, 255, 255, 0) 70%), #fdfbf7;
+      padding-top: 8px;
+    }
+
+    .giant-digit-3d {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 4.1rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-top: 2px;
+      filter: drop-shadow(0 3px 0 rgba(0,0,0,0.12));
+    }
+
+    .equiv-val-tag {
       font-family: 'Fredoka', sans-serif;
       font-weight: 800;
-      font-size: 13px;
-      padding: 2px 10px;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      font-size: 14px;
+      color: #334155;
+      margin-top: 2px;
+      margin-bottom: 6px;
     }
-    .room-btn-touch {
-      height: 36px;
-      border-radius: 10px;
-      font-family: 'Fredoka', sans-serif;
+
+    .touch-btn-bar {
+      width: 100%;
+      padding: 0 8px 8px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .touch-btn-minus {
+      flex: 1;
+      height: 35px;
+      border-radius: 12px;
       font-weight: 900;
-      font-size: 20px;
+      font-size: 22px;
       line-height: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-width: 2px;
+      border-style: solid;
       cursor: pointer;
       user-select: none;
       transition: all 0.1s ease;
     }
-    .room-btn-touch:hover {
-      filter: brightness(1.08);
-      transform: translateY(-1px);
+    .touch-btn-plus {
+      flex: 1;
+      height: 35px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 22px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      border-width: 2px;
+      border-style: solid;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.25);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s ease;
     }
-    .room-btn-touch:active {
-      transform: translateY(2px);
+    .touch-btn-plus:active, .touch-btn-minus:active { transform: translateY(2px); }
+
+    .doorstep-rug {
+      width: 78%;
+      height: 8px;
+      border-radius: 6px;
+      margin-top: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+
+    .house-stone-patio {
+      width: 100%;
+      height: 12px;
+      background: linear-gradient(180deg, #e5e0d4, #c4beaf);
+      border: 2px solid #8e8879;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
     }
 
 </style>
@@ -1434,8 +1776,8 @@
       </div>
     </div>
 
-    <!-- CENTRO: SELECTOR DE MODO (MISIONES · RETOS · TALLER) -->
-    <div class="flex items-center gap-1.5 p-1 rounded-full bg-[#271004] border-2 border-[#1a0902] shadow-inner">
+    <!-- CENTRO: SELECTOR DE MODO (MISIONES · DESCOMPOSICIÓN · RETOS · TALLER) -->
+    <div class="flex items-center gap-2">
       <button id="btnModeAdventure" onclick="switchGameMode('adventure')" class="mode-pill-btn mode-pill-active font-extrabold lego-font">
         <span>🚩</span> Misiones
       </button>
@@ -1445,6 +1787,7 @@
       <button id="btnModeFree" onclick="switchGameMode('free')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
         <span>💼</span> Taller
       </button>
+      <button id="btnModeDecompose" onclick="switchGameMode('decompose')" class="hidden" aria-hidden="true"></button>
     </div>
 
     <!-- DERECHA: NIVEL + XP + MAPA + AJUSTES -->
@@ -1464,14 +1807,15 @@
       </div>
 
       <!-- Botón Morado de Mapa -->
-      <button onclick="openCityMapModal()" class="flex items-center gap-1.5 bg-gradient-to-b from-purple-500 to-indigo-700 hover:from-purple-400 hover:to-indigo-600 border-2 border-indigo-950 text-white font-black text-xs py-1.5 px-3 rounded-full shadow-md transition-all active:translate-y-0.5" title="Ver Isla Numbrópolis">
-        <span>📍</span> Mapa 📖 (<span id="cityCountBadge">0</span>/8)
+      <button onclick="openCityMapModal()" class="flex items-center gap-1.5 bg-gradient-to-b from-purple-500 to-indigo-700 hover:from-purple-400 hover:to-indigo-600 border-2 border-indigo-950 text-white font-black text-xs py-1.5 px-3 rounded-full shadow-md transition-all active:translate-y-0.5" title="Mapa del Reino e Isla Numbrópolis">
+        <span>📍</span> Mapa <span>📖</span>
       </button>
 
-      <!-- Botón de Sonido / Ajustes -->
-      <button id="btnSoundToggle" onclick="toggleMute()" class="w-8 h-8 rounded-full bg-gradient-to-b from-stone-200 to-stone-400 hover:from-white hover:to-stone-300 border-2 border-stone-800 text-stone-900 text-sm flex items-center justify-center shadow-md transition-all active:translate-y-0.5" title="Sonido y voz">
-        🔊
+      <!-- Botón de Ajustes y Sonido -->
+      <button id="btnSoundToggle" onclick="toggleMute()" class="w-8 h-8 rounded-full bg-gradient-to-b from-stone-200 to-stone-400 hover:from-white hover:to-stone-300 border-2 border-stone-800 text-stone-900 text-sm flex items-center justify-center shadow-md transition-all active:translate-y-0.5" title="Ajustes y sonido">
+        ⚙️
       </button>
+      <span id="cityCountBadge" class="hidden">0</span>
       
       <!-- Compatibilidad oculta -->
       <button id="btnViewMode" onclick="cycleRoomViewMode()" class="hidden" aria-hidden="true"><span id="viewModeLabel">Bandeja</span></button>
@@ -1503,24 +1847,67 @@
       
       <!-- ZONA IZQUIERDA: PERSONAJE LEGO + GLOBO DE DIÁLOGO -->
       <div class="flex items-center gap-2.5 min-w-0 flex-1 sm:flex-initial">
-        <!-- Retrato del personaje aventurero -->
-        <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-amber-300 to-amber-500 border-2.5 border-amber-900 p-0.5 shadow-md shrink-0 cursor-pointer overflow-hidden" onclick="triggerLeoSpeech()" title="¡Haz clic para escuchar el diálogo!">
-          <canvas id="leoWebcam3DCanvas" class="w-full h-full block rounded-xl cursor-grab active:cursor-grabbing"></canvas>
-          <span class="absolute bottom-0 right-0 w-5 h-5 bg-amber-400 border border-amber-900 rounded-full flex items-center justify-center text-[10px] shadow">
-            🗣️
-          </span>
+        <!-- Retrato auténtico del aventurero LEGO (chico con sudadera roja y mochila) -->
+        <div class="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95" onclick="triggerLeoSpeech()" title="¡Haz clic para escuchar el diálogo!">
+          <!-- Destellos de entusiasmo en la parte superior derecha -->
+          <div class="absolute -top-1 right-1 text-amber-500 font-black text-sm select-none animate-pulse">✨</div>
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md overflow-visible">
+            <!-- Rayos de entusiasmo -->
+            <path d="M72 18 L82 12 M76 25 L88 24 M78 32 L89 36" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+            <!-- Mochila marrón detrás -->
+            <rect x="22" y="52" width="56" height="36" rx="8" fill="#78350f" stroke="#451a03" stroke-width="2"/>
+            <!-- Tirantes de la mochila -->
+            <path d="M30 52 C30 46 36 42 42 44" stroke="#92400e" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path d="M70 52 C70 46 64 42 58 44" stroke="#92400e" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <!-- Torso: Sudadera con capucha roja -->
+            <path d="M26 62 C26 50 40 46 50 46 C60 46 74 50 74 62 L78 96 L22 96 Z" fill="#dc2626" stroke="#991b1b" stroke-width="2.5"/>
+            <!-- Cuello y camiseta gris -->
+            <path d="M44 46 L50 62 L56 46 Z" fill="#94a3b8"/>
+            <path d="M50 62 L50 96" stroke="#cbd5e1" stroke-width="2.5" stroke-dasharray="2,2"/>
+            <!-- Capucha caída sobre los hombros -->
+            <path d="M36 46 C34 54 40 58 50 58 C60 58 66 54 64 46" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+            <!-- Cuello LEGO cilíndrico -->
+            <rect x="44" y="38" width="12" height="10" rx="3" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+            <!-- Cabeza LEGO amarilla -->
+            <rect x="32" y="16" width="36" height="28" rx="8" fill="#fbbf24" stroke="#d97706" stroke-width="2.5"/>
+            <ellipse cx="50" cy="16" rx="10" ry="3.5" fill="#fef08a"/>
+            <!-- Cejas marrones amigables -->
+            <path d="M38 23 Q42 20 46 22" stroke="#78350f" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M54 22 Q58 20 62 23" stroke="#78350f" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <!-- Ojos LEGO grandes y expresivos -->
+            <circle cx="42" cy="27" r="3" fill="#1e293b"/>
+            <circle cx="41" cy="26" r="1" fill="#ffffff"/>
+            <circle cx="58" cy="27" r="3" fill="#1e293b"/>
+            <circle cx="57" cy="26" r="1" fill="#ffffff"/>
+            <!-- Mejillas rosadas -->
+            <circle cx="37" cy="31" r="2.5" fill="#f87171" opacity="0.6"/>
+            <circle cx="63" cy="31" r="2.5" fill="#f87171" opacity="0.6"/>
+            <!-- Sonrisa simpática con lengua -->
+            <path d="M44 32 Q50 38 56 32" stroke="#78350f" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M46 33 Q50 37 54 33" fill="#fb7185"/>
+            <!-- Pelo castaño ondulado peinado hacia un lado -->
+            <path d="M30 20 C28 8 44 4 52 4 C64 4 72 10 70 20 C68 22 64 22 62 18 C58 14 50 14 44 18 C40 21 34 22 30 20 Z" fill="#78350f" stroke="#451a03" stroke-width="2.5"/>
+            <path d="M34 14 C42 8 52 8 60 12" stroke="#92400e" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <!-- Mano LEGO amarilla con pulgar arriba (👍) -->
+            <g transform="translate(68, 60)">
+              <circle cx="10" cy="10" r="8" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+              <rect x="6" y="-2" width="7" height="10" rx="3.5" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+              <ellipse cx="9" cy="9" rx="3" ry="4" fill="#d97706" opacity="0.3"/>
+            </g>
+          </svg>
+          <canvas id="leoWebcam3DCanvas" class="hidden"></canvas>
         </div>
 
         <!-- Globo de diálogo estilo cómic/RPG con flecha -->
-        <div class="relative bg-white border-2 border-amber-300 rounded-2xl px-3 py-2 shadow-sm max-w-[280px] sm:max-w-xs">
+        <div class="relative bg-white/95 border-2 border-amber-300 rounded-2xl px-3.5 py-2 shadow-sm max-w-[300px] sm:max-w-sm">
           <!-- Pico del bocadillo hacia el avatar -->
-          <span class="absolute top-1/2 -left-2 -translate-y-1/2 w-3 h-3 rotate-45 bg-white border-l-2 border-b-2 border-amber-300"></span>
-          <div class="flex items-center justify-between gap-1 mb-0.5">
-            <span id="rpgSpeakerLabel" class="text-[11px] font-black text-amber-950 flex items-center gap-1">
-              <span>¡Buenos días, pequeño arquitecto!</span>
+          <span class="absolute top-1/2 -left-2 -translate-y-1/2 w-3.5 h-3.5 rotate-45 bg-white border-l-2 border-b-2 border-amber-300"></span>
+          <div class="mb-0.5">
+            <span id="rpgSpeakerLabel" class="text-xs sm:text-[13px] font-black text-amber-950 block leading-tight">
+              ¡Buenos días, pequeño arquitecto!
             </span>
           </div>
-          <p id="leoSpeechBubble" class="text-xs font-bold leading-snug text-slate-700">
+          <p id="leoSpeechBubble" class="text-xs font-medium leading-snug text-slate-700">
             Necesitamos construir el número 35. Usa la Casa de los Números para lograrlo.
           </p>
         </div>
@@ -1555,22 +1942,13 @@
 
       <!-- ZONA DERECHA: BOTÓN PRINCIPAL DE ACCIÓN (¡A CONSTRUIR! / ¡COMPROBAR!) -->
       <div class="flex items-center gap-2 shrink-0">
-        <button id="btnActionPrimary" onclick="handlePrimaryAction()" class="btn-gold-cta text-sm sm:text-base py-2 px-5 flex items-center gap-2">
+        <button id="btnActionPrimary" onclick="handlePrimaryAction()" class="btn-gold-cta text-sm sm:text-base py-2.5 px-6 flex items-center gap-2">
           <span id="btnActionPrimaryIcon">▶</span> <span id="btnActionPrimaryText">¡A construir!</span>
         </button>
 
         <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden btn-gold-cta text-sm sm:text-base py-2 px-5 flex items-center gap-2">
           <span>⚔️</span> ¡Comprobar!
         </button>
-
-        <button onclick="resetHouseBlocks()" class="bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold text-xs py-2 px-3 rounded-xl border-2 border-stone-300 shadow-sm transition-all active:translate-y-0.5 flex items-center gap-1" title="Poner en cero todas las posiciones">
-          <span>🧹</span> Borrar
-        </button>
-
-        <div class="bg-amber-100/90 border border-amber-400 px-2 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm">
-          <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></div>
-          <span id="badgeHouseStatus" class="text-[10px] font-black text-amber-900 uppercase">En obra 🔨</span>
-        </div>
       </div>
 
     </div>
@@ -1585,7 +1963,14 @@
         </span>
         <span id="missionLevelBadge" class="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full border border-amber-300 font-bold text-[10px]">Paso 1: Unidades y Decenas</span>
       </div>
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-2">
+        <button onclick="resetHouseBlocks()" class="bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold text-xs py-1.5 px-3 rounded-xl border border-stone-300 shadow-sm transition-all active:translate-y-0.5 flex items-center gap-1" title="Poner en cero todas las posiciones">
+          <span>🧹</span> Borrar
+        </button>
+        <div class="bg-amber-100/90 border border-amber-400 px-2 py-1 rounded-xl flex items-center gap-1.5 shadow-sm">
+          <div id="statusDot" class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></div>
+          <span id="badgeHouseStatus" class="text-[10px] font-black text-amber-900 uppercase">En obra 🔨</span>
+        </div>
         <div id="missionStarsContainer" class="flex items-center gap-0.5 text-xs"></div>
         <button id="btnNextMission" onclick="advanceToNextMission()" class="hidden btn-gold-cta text-xs py-1 px-3 rounded-lg flex items-center gap-1 animate-bounce">
           <span>➡️</span> ¡Siguiente!
@@ -1639,6 +2024,106 @@
       </button>
     </div>
 
+    <!-- =================================================================== -->
+    <!-- MODO INDEPENDIENTE: «EL PODER DE LOS NÚMEROS» (DESCOMPOSICIÓN ADITIVA)-->
+    <!-- =================================================================== -->
+    <div id="decompositionWorkspace" class="hidden w-full max-w-5xl flex-col items-center gap-4 z-20 my-2">
+      <div class="parchment-card-premium w-full p-4 sm:p-6 flex flex-col items-center gap-4 text-center">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl animate-bounce">⚡</span>
+          <h2 class="text-lg sm:text-2xl font-black text-amber-950 lego-font tracking-wide">
+            EL PODER DE LOS NÚMEROS · DESCOMPOSICIÓN ADITIVA
+          </h2>
+          <span class="text-2xl animate-bounce">⚡</span>
+        </div>
+        <p class="text-xs sm:text-sm font-bold text-slate-700 max-w-xl">
+          Cada número esconde una suma mágica. Descubre y organiza el valor real de cada cifra según su posición en Numbrópolis:
+        </p>
+
+        <!-- Número objetivo en descomposición -->
+        <div class="bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 border-2 border-amber-900/60 rounded-3xl px-6 sm:px-8 py-3 shadow-md flex items-center gap-4">
+          <span class="text-xs sm:text-sm font-black text-amber-950 uppercase tracking-wider">Número a descomponer:</span>
+          <span id="decomposeTargetNum" class="text-3xl sm:text-5xl font-black text-blue-600 lego-font drop-shadow">30.035</span>
+          <button onclick="speakDecompositionTarget()" class="w-8 h-8 rounded-full bg-amber-200 hover:bg-amber-300 border border-amber-900 text-amber-950 flex items-center justify-center text-sm shadow">
+            📢
+          </button>
+        </div>
+
+        <!-- Fila interactiva de los 5 sumandos posicionales -->
+        <div class="w-full flex flex-wrap items-center justify-center gap-2 sm:gap-3 my-2">
+          <!-- DM -->
+          <div class="flex flex-col items-center">
+            <span class="text-[11px] font-black text-purple-900 mb-1">Decenas de Mil</span>
+            <div id="decompCardDM" class="decomp-term-card bg-purple-100 border-2 border-purple-600 text-purple-900">
+              <span id="decompValDM" class="text-lg sm:text-2xl font-black">30.000</span>
+              <span id="decompSubDM" class="text-[9px] font-bold text-purple-700">(3 × 10.000)</span>
+            </div>
+          </div>
+          <span class="text-2xl font-black text-amber-900 self-center mt-4">+</span>
+
+          <!-- UM -->
+          <div class="flex flex-col items-center">
+            <span class="text-[11px] font-black text-orange-950 mb-1">Unidades de Mil</span>
+            <div id="decompCardUM" class="decomp-term-card bg-orange-100 border-2 border-orange-500 text-orange-950">
+              <span id="decompValUM" class="text-lg sm:text-2xl font-black">0</span>
+              <span id="decompSubUM" class="text-[9px] font-bold text-orange-700">(0 × 1.000)</span>
+            </div>
+          </div>
+          <span class="text-2xl font-black text-amber-900 self-center mt-4">+</span>
+
+          <!-- C -->
+          <div class="flex flex-col items-center">
+            <span class="text-[11px] font-black text-emerald-950 mb-1">Centenas</span>
+            <div id="decompCardC" class="decomp-term-card bg-emerald-100 border-2 border-emerald-600 text-emerald-950">
+              <span id="decompValC" class="text-lg sm:text-2xl font-black">0</span>
+              <span id="decompSubC" class="text-[9px] font-bold text-emerald-700">(0 × 100)</span>
+            </div>
+          </div>
+          <span class="text-2xl font-black text-amber-900 self-center mt-4">+</span>
+
+          <!-- D -->
+          <div class="flex flex-col items-center">
+            <span class="text-[11px] font-black text-sky-950 mb-1">Decenas</span>
+            <div id="decompCardD" class="decomp-term-card bg-sky-100 border-2 border-sky-500 text-sky-950">
+              <span id="decompValD" class="text-lg sm:text-2xl font-black">30</span>
+              <span id="decompSubD" class="text-[9px] font-bold text-sky-700">(3 × 10)</span>
+            </div>
+          </div>
+          <span class="text-2xl font-black text-amber-900 self-center mt-4">+</span>
+
+          <!-- U -->
+          <div class="flex flex-col items-center">
+            <span class="text-[11px] font-black text-rose-950 mb-1">Unidades</span>
+            <div id="decompCardU" class="decomp-term-card bg-rose-100 border-2 border-rose-500 text-rose-950">
+              <span id="decompValU" class="text-lg sm:text-2xl font-black">5</span>
+              <span id="decompSubU" class="text-[9px] font-bold text-rose-700">(5 × 1)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Igualdad comprobada -->
+        <div class="flex items-center gap-3 bg-white/90 border-2 border-amber-300 rounded-2xl px-6 py-2.5 shadow-inner flex-wrap justify-center">
+          <span class="text-sm sm:text-base font-black text-slate-800">
+            Suma total:
+          </span>
+          <span id="decompSumFormula" class="text-sm sm:text-base font-extrabold text-amber-950">
+            30.000 + 0 + 0 + 30 + 5 = 30.035 unidades
+          </span>
+          <span class="text-emerald-600 font-black text-lg">✅</span>
+        </div>
+
+        <!-- Botones de acción del Modo Descomposición -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mt-2">
+          <button onclick="checkDecompositionActivity()" class="btn-gold-cta text-sm sm:text-base py-2.5 px-6 flex items-center gap-2">
+            <span>✨</span> ¡Comprobar Descomposición!
+          </button>
+          <button onclick="proceedFromDecompositionToHouse()" class="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-black text-sm sm:text-base py-2.5 px-6 rounded-2xl border-2 border-green-800 shadow-md transition-all active:translate-y-0.5 flex items-center gap-2">
+            <span>🏗️</span> ▶ ¡A Construir la Casa con estos Números!
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- DIORAMA: ESCENARIO CON LAS 5 HABITACIONES PERMANENTES EN UN MISMO EDIFICIO LEGO -->
     
     <!-- =================================================================== -->
@@ -1648,14 +2133,43 @@
     <!-- =================================================================== -->
     <!-- LA CASA DE LOS NÚMEROS (ESPACIO CENTRAL ALINEADO CON EL MODELO 3D)  -->
     <!-- =================================================================== -->
+    
     <div id="houseStageScroller" class="w-full overflow-x-auto p-1 pb-1 custom-scroll z-20 flex justify-center">
-      
-      <!-- Contenedor central que encuadra con la casa tridimensional -->
-      <div class="house-stage-center">
+      <div class="lego-house-wrapper">
 
-        <!-- Cartel tallado en el tejado -->
-        <div id="houseRoofBadge" class="house-carved-sign-ui">
-          <span>🧱</span> <span id="houseTitleText">La Casa de los Números</span> <span>🧱</span>
+        <!-- TEJADO A DOS AGUAS CON STUDS, CHIMENEA Y CARTEL -->
+        <div class="lego-stepped-roof">
+          <!-- Chimenea de piedra -->
+          <div class="roof-chimney">
+            <div class="roof-chimney-cap"></div>
+          </div>
+
+          <div id="houseRoofBadge" class="roof-carved-sign">
+            <!-- Bloque marrón LEGO -->
+            <div class="w-4 h-4 bg-amber-800 rounded-[3px] border border-amber-950 flex items-center justify-center relative shadow-sm">
+              <div class="w-2 h-1 bg-amber-700 rounded-t-sm -mt-2"></div>
+            </div>
+            <span id="houseTitleText">La Casa de los Números</span>
+            <!-- Bloque verde LEGO -->
+            <div class="w-4 h-4 bg-emerald-600 rounded-[3px] border border-emerald-950 flex items-center justify-center relative shadow-sm">
+              <div class="w-2 h-1 bg-emerald-500 rounded-t-sm -mt-2"></div>
+            </div>
+          </div>
+
+          <div class="roof-ridge">
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+          </div>
+          <div class="roof-slope-1">
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+          </div>
+          <div class="roof-eaves">
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+            <div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div><div class="roof-stud-dot"></div>
+          </div>
         </div>
 
         <!-- Compatibilidad de slots heredados (ocultos) -->
@@ -1668,110 +2182,196 @@
           <button onclick="detachRoom('UM')">x</button>
         </div>
 
-        <!-- FILA DE LAS 5 HABITACIONES SUPERPUESTAS EN LAS ALCOBAS 3D -->
-        <div class="rooms-flex-row">
+        <!-- FACHADA PRINCIPAL: 6 PILARES Y 5 ALCOBAS ARQUEADAS -->
+        <div class="house-main-facade">
           
+          <!-- Faroles laterales en los bordes de la fachada -->
+          <div class="carriage-lantern-left">
+            <div class="lantern-glass-pane"></div>
+          </div>
+          <div class="carriage-lantern-right">
+            <div class="lantern-glass-pane"></div>
+          </div>
+
+          <!-- Jardineras con flores a los lados -->
+          <div class="side-planter-box-left">
+            <div class="flower-dot bg-pink-500"></div>
+            <div class="flower-dot bg-red-500"></div>
+            <div class="flower-dot bg-yellow-400"></div>
+          </div>
+          <div class="side-planter-box-right">
+            <div class="flower-dot bg-pink-500"></div>
+            <div class="flower-dot bg-red-500"></div>
+            <div class="flower-dot bg-yellow-400"></div>
+          </div>
+
+          <!-- PILAR 0 -->
+          <div class="timber-column">
+            <div class="corbel-right"></div>
+          </div>
+
           <!-- 1. HABITACIÓN DECENAS DE MIL (DM) — MORADO -->
-          <div id="slotDM" class="room-ui-alcove border-purple-600">
-            <div id="roomDM" class="w-full flex flex-col items-center h-full justify-between">
-              <div class="w-full bg-gradient-to-b from-purple-500 to-purple-600 text-white text-center py-1 font-black text-xs">
-                Decenas de Mil (DM)
-              </div>
-              <div onclick="changeBlocks('DM', 1)" id="chamberDM" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Decenas de Mil (DM) · Clic para sumar +1">
-                <span class="hidden" id="digitCardDM"></span>
-                <span id="digitDM" class="room-giant-digit text-purple-600">0</span>
-                <div class="room-equiv-badge bg-purple-100 text-purple-900 border border-purple-300">
-                  = <span id="valBadgeDM">0</span>
+          <div class="flex flex-col items-center flex-1">
+            <div id="slotDM" class="arched-room-unit w-full" style="border-color: #7c3aed;">
+              <div id="roomDM" class="w-full flex flex-col items-center h-full justify-between">
+                <div class="arch-header" style="background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);">
+                  <span class="arch-header-title">Decenas de Mil</span>
+                  <span class="arch-header-sub">(DM)</span>
+                  <div class="hanging-bell-lamp" style="background: #7c3aed;">
+                    <div class="hanging-bell-bulb"></div>
+                  </div>
+                </div>
+                <div onclick="changeBlocks('DM', 1)" id="chamberDM" class="room-interior-alcove cursor-pointer" title="Decenas de Mil (DM) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardDM"></span>
+                  <span id="digitDM" class="giant-digit-3d" style="color: #6d28d9;">0</span>
+                  <span class="equiv-val-tag">= <span id="valBadgeDM">0</span></span>
+                </div>
+                <div class="touch-btn-bar">
+                  <button onclick="changeBlocks('DM', -1)" class="touch-btn-minus" style="background: #ede9fe; color: #6d28d9; border-color: #ddd6fe;">−</button>
+                  <button onclick="changeBlocks('DM', 1)" class="touch-btn-plus" style="background: #7c3aed; border-color: #5b21b6;">+</button>
                 </div>
               </div>
-              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-purple-50/80 border-t border-purple-200">
-                <button onclick="changeBlocks('DM', -1)" class="room-btn-touch bg-purple-100 hover:bg-purple-200 text-purple-950 border-2 border-purple-300">−</button>
-                <button onclick="changeBlocks('DM', 1)" class="room-btn-touch bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-800 shadow">+</button>
-              </div>
             </div>
+            <div class="doorstep-rug" style="background: #7c3aed;"></div>
+          </div>
+
+          <!-- PILAR 1 -->
+          <div class="timber-column">
+            <div class="corbel-left"></div>
+            <div class="corbel-right"></div>
+            <div class="column-flowerpot"></div>
           </div>
 
           <!-- 2. HABITACIÓN UNIDADES DE MIL (UM) — NARANJA -->
-          <div id="slotUM" class="room-ui-alcove border-orange-500">
-            <div id="roomUM" class="w-full flex flex-col items-center h-full justify-between">
-              <div class="w-full bg-gradient-to-b from-orange-500 to-orange-600 text-white text-center py-1 font-black text-xs">
-                Unidades de Mil (UM)
-              </div>
-              <div onclick="changeBlocks('UM', 1)" id="chamberUM" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Unidades de Mil (UM) · Clic para sumar +1">
-                <span class="hidden" id="digitCardUM"></span>
-                <span id="digitUM" class="room-giant-digit text-orange-500">0</span>
-                <div class="room-equiv-badge bg-orange-100 text-orange-950 border border-orange-300">
-                  = <span id="valBadgeUM">0</span>
+          <div class="flex flex-col items-center flex-1">
+            <div id="slotUM" class="arched-room-unit w-full" style="border-color: #f97316;">
+              <div id="roomUM" class="w-full flex flex-col items-center h-full justify-between">
+                <div class="arch-header" style="background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%);">
+                  <span class="arch-header-title">Unidades de Mil</span>
+                  <span class="arch-header-sub">(UM)</span>
+                  <div class="hanging-bell-lamp" style="background: #f97316;">
+                    <div class="hanging-bell-bulb"></div>
+                  </div>
+                </div>
+                <div onclick="changeBlocks('UM', 1)" id="chamberUM" class="room-interior-alcove cursor-pointer" title="Unidades de Mil (UM) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardUM"></span>
+                  <span id="digitUM" class="giant-digit-3d" style="color: #ea580c;">0</span>
+                  <span class="equiv-val-tag">= <span id="valBadgeUM">0</span></span>
+                </div>
+                <div class="touch-btn-bar">
+                  <button onclick="changeBlocks('UM', -1)" class="touch-btn-minus" style="background: #ffedd5; color: #c2410c; border-color: #fed7aa;">−</button>
+                  <button onclick="changeBlocks('UM', 1)" class="touch-btn-plus" style="background: #f97316; border-color: #c2410c;">+</button>
                 </div>
               </div>
-              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-orange-50/80 border-t border-orange-200">
-                <button onclick="changeBlocks('UM', -1)" class="room-btn-touch bg-orange-100 hover:bg-orange-200 text-orange-950 border-2 border-orange-300">−</button>
-                <button onclick="changeBlocks('UM', 1)" class="room-btn-touch bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-700 shadow">+</button>
-              </div>
             </div>
+            <div class="doorstep-rug" style="background: #f97316;"></div>
+          </div>
+
+          <!-- PILAR 2 -->
+          <div class="timber-column">
+            <div class="corbel-left"></div>
+            <div class="corbel-right"></div>
+            <div class="column-flowerpot"></div>
           </div>
 
           <!-- 3. HABITACIÓN CENTENAS (C) — VERDE -->
-          <div id="slotC" class="room-ui-alcove border-emerald-600">
-            <div id="chamberWrapC" class="w-full flex flex-col items-center h-full justify-between">
-              <div class="w-full bg-gradient-to-b from-emerald-500 to-emerald-600 text-white text-center py-1 font-black text-xs">
-                Centenas (C)
-              </div>
-              <div onclick="changeBlocks('C', 1)" id="chamberC" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Centenas (C) · Clic para sumar +1">
-                <span class="hidden" id="digitCardC"></span>
-                <span id="digitC" class="room-giant-digit text-emerald-600">0</span>
-                <div class="room-equiv-badge bg-emerald-100 text-emerald-950 border border-emerald-300">
-                  = <span id="valBadgeC">0</span>
+          <div class="flex flex-col items-center flex-1">
+            <div id="slotC" class="arched-room-unit w-full" style="border-color: #10b981;">
+              <div id="chamberWrapC" class="w-full flex flex-col items-center h-full justify-between">
+                <div class="arch-header" style="background: linear-gradient(180deg, #34d399 0%, #059669 100%);">
+                  <span class="arch-header-title">Centenas</span>
+                  <span class="arch-header-sub">(C)</span>
+                  <div class="hanging-bell-lamp" style="background: #10b981;">
+                    <div class="hanging-bell-bulb"></div>
+                  </div>
+                </div>
+                <div onclick="changeBlocks('C', 1)" id="chamberC" class="room-interior-alcove cursor-pointer" title="Centenas (C) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardC"></span>
+                  <span id="digitC" class="giant-digit-3d" style="color: #059669;">0</span>
+                  <span class="equiv-val-tag">= <span id="valBadgeC">0</span></span>
+                </div>
+                <div class="touch-btn-bar">
+                  <button onclick="changeBlocks('C', -1)" class="touch-btn-minus" style="background: #dcfce7; color: #047857; border-color: #bbf7d0;">−</button>
+                  <button onclick="changeBlocks('C', 1)" class="touch-btn-plus" style="background: #10b981; border-color: #047857;">+</button>
                 </div>
               </div>
-              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-emerald-50/80 border-t border-emerald-200">
-                <button onclick="changeBlocks('C', -1)" class="room-btn-touch bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border-2 border-emerald-300">−</button>
-                <button onclick="changeBlocks('C', 1)" class="room-btn-touch bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-800 shadow">+</button>
-              </div>
             </div>
+            <div class="doorstep-rug" style="background: #10b981;"></div>
+          </div>
+
+          <!-- PILAR 3 -->
+          <div class="timber-column">
+            <div class="corbel-left"></div>
+            <div class="corbel-right"></div>
+            <div class="column-flowerpot"></div>
           </div>
 
           <!-- 4. HABITACIÓN DECENAS (D) — AZUL -->
-          <div id="slotD" class="room-ui-alcove border-sky-500">
-            <div id="chamberWrapD" class="w-full flex flex-col items-center h-full justify-between">
-              <div class="w-full bg-gradient-to-b from-sky-500 to-sky-600 text-white text-center py-1 font-black text-xs">
-                Decenas (D)
-              </div>
-              <div onclick="changeBlocks('D', 1)" id="chamberD" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Decenas (D) · Clic para sumar +1">
-                <span class="hidden" id="digitCardD"></span>
-                <span id="digitD" class="room-giant-digit text-sky-600">0</span>
-                <div class="room-equiv-badge bg-sky-100 text-sky-950 border border-sky-300">
-                  = <span id="valBadgeD">0</span>
+          <div class="flex flex-col items-center flex-1">
+            <div id="slotD" class="arched-room-unit w-full" style="border-color: #0284c7;">
+              <div id="chamberWrapD" class="w-full flex flex-col items-center h-full justify-between">
+                <div class="arch-header" style="background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);">
+                  <span class="arch-header-title">Decenas</span>
+                  <span class="arch-header-sub">(D)</span>
+                  <div class="hanging-bell-lamp" style="background: #0284c7;">
+                    <div class="hanging-bell-bulb"></div>
+                  </div>
+                </div>
+                <div onclick="changeBlocks('D', 1)" id="chamberD" class="room-interior-alcove cursor-pointer" title="Decenas (D) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardD"></span>
+                  <span id="digitD" class="giant-digit-3d" style="color: #0284c7;">0</span>
+                  <span class="equiv-val-tag">= <span id="valBadgeD">0</span></span>
+                </div>
+                <div class="touch-btn-bar">
+                  <button onclick="changeBlocks('D', -1)" class="touch-btn-minus" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">−</button>
+                  <button onclick="changeBlocks('D', 1)" class="touch-btn-plus" style="background: #0284c7; border-color: #0369a1;">+</button>
                 </div>
               </div>
-              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-sky-50/80 border-t border-sky-200">
-                <button onclick="changeBlocks('D', -1)" class="room-btn-touch bg-sky-100 hover:bg-sky-200 text-sky-950 border-2 border-sky-300">−</button>
-                <button onclick="changeBlocks('D', 1)" class="room-btn-touch bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-700 shadow">+</button>
-              </div>
             </div>
+            <div class="doorstep-rug" style="background: #0284c7;"></div>
+          </div>
+
+          <!-- PILAR 4 -->
+          <div class="timber-column">
+            <div class="corbel-left"></div>
+            <div class="corbel-right"></div>
+            <div class="column-flowerpot"></div>
           </div>
 
           <!-- 5. HABITACIÓN UNIDADES (U) — ROJO -->
-          <div id="slotU" class="room-ui-alcove border-rose-500">
-            <div id="chamberWrapU" class="w-full flex flex-col items-center h-full justify-between">
-              <div class="w-full bg-gradient-to-b from-rose-500 to-rose-600 text-white text-center py-1 font-black text-xs">
-                Unidades (U)
-              </div>
-              <div onclick="changeBlocks('U', 1)" id="chamberU" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Unidades (U) · Clic para sumar +1">
-                <span class="hidden" id="digitCardU"></span>
-                <span id="digitU" class="room-giant-digit text-rose-600">0</span>
-                <div class="room-equiv-badge bg-rose-100 text-rose-950 border border-rose-300">
-                  = <span id="valBadgeU">0</span>
+          <div class="flex flex-col items-center flex-1">
+            <div id="slotU" class="arched-room-unit w-full" style="border-color: #ef4444;">
+              <div id="chamberWrapU" class="w-full flex flex-col items-center h-full justify-between">
+                <div class="arch-header" style="background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);">
+                  <span class="arch-header-title">Unidades</span>
+                  <span class="arch-header-sub">(U)</span>
+                  <div class="hanging-bell-lamp" style="background: #ef4444;">
+                    <div class="hanging-bell-bulb"></div>
+                  </div>
+                </div>
+                <div onclick="changeBlocks('U', 1)" id="chamberU" class="room-interior-alcove cursor-pointer" title="Unidades (U) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardU"></span>
+                  <span id="digitU" class="giant-digit-3d" style="color: #dc2626;">0</span>
+                  <span class="equiv-val-tag">= <span id="valBadgeU">0</span></span>
+                </div>
+                <div class="touch-btn-bar">
+                  <button onclick="changeBlocks('U', -1)" class="touch-btn-minus" style="background: #ffe4e6; color: #be123c; border-color: #fecdd3;">−</button>
+                  <button onclick="changeBlocks('U', 1)" class="touch-btn-plus" style="background: #ef4444; border-color: #b91c1c;">+</button>
                 </div>
               </div>
-              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-rose-50/80 border-t border-rose-200">
-                <button onclick="changeBlocks('U', -1)" class="room-btn-touch bg-rose-100 hover:bg-rose-200 text-rose-950 border-2 border-rose-300">−</button>
-                <button onclick="changeBlocks('U', 1)" class="room-btn-touch bg-rose-600 hover:bg-rose-500 text-white border-2 border-rose-800 shadow">+</button>
-              </div>
             </div>
+            <div class="doorstep-rug" style="background: #ef4444;"></div>
+          </div>
+
+          <!-- PILAR 5 -->
+          <div class="timber-column">
+            <div class="corbel-left"></div>
           </div>
 
         </div>
+
+        <!-- PELDAÑO DE PIEDRA DEL PORCHE -->
+        <div class="house-stone-patio"></div>
 
       </div>
     </div>
@@ -2065,6 +2665,61 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- MODAL: NUMBRÓPOLIS 3D CIUDAD EXPLORABLE (CON MOVIMIENTO WASD / TÁCTIL Y VISITA A LAS CASAS) -->
+  <div id="modalNumbrópolis3D" class="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden" style="background: rgba(15, 23, 42, 0.85)">
+    <div class="relative w-full max-w-6xl h-[92vh] bg-slate-900 border-4 border-amber-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+      <!-- Barra superior de Numbrópolis 3D -->
+      <div class="bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 px-4 py-2.5 flex items-center justify-between border-b-2 border-amber-800 z-10 shrink-0">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🗺️</span>
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-amber-200 lego-font leading-none">
+              Numbrópolis 3D · Ciudad de los Números
+            </h2>
+            <p class="text-[11px] font-bold text-amber-300/80">
+              Usa WASD o Flechas para recorrer las calles y acércate a las casas para explorar su interior.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openCityMapModal()" class="dio-btn dio-btn-gold text-xs py-1 px-3">
+            🗺️ Maqueta 2D
+          </button>
+          <button onclick="close3DExplorationMode()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-black text-sm flex items-center justify-center border-2 border-rose-900 shadow">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Lienzo WebGL 3D de la Ciudad -->
+      <div class="relative flex-1 w-full h-full overflow-hidden bg-sky-300">
+        <canvas id="numbropolis3DCanvas" class="w-full h-full block"></canvas>
+
+        <!-- Cartel flotante de interacción al acercarse a un edificio -->
+        <div id="numbropolisPromptBox" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-amber-100/95 border-3 border-amber-900 rounded-2xl px-6 py-3 shadow-2xl flex items-center gap-3 z-20 hidden transition-all">
+          <span class="text-3xl">🏠</span>
+          <div class="text-left">
+            <h3 id="numbropolisPromptTitle" class="text-sm font-black text-amber-950 leading-tight">La Panadería de Don Pancho</h3>
+            <p id="numbropolisPromptSub" class="text-xs font-bold text-slate-700">Número: 35 (3 D + 5 U = 30 + 5)</p>
+          </div>
+          <button id="btnEnterBuilding3D" onclick="enterBuildingIn3D()" class="btn-gold-cta text-xs py-2 px-4 shadow">
+            🚪 Entrar a la Casa [E]
+          </button>
+        </div>
+
+        <!-- Controles virtuales D-Pad para pantallas táctiles -->
+        <div class="absolute bottom-4 right-4 z-20 flex flex-col items-center gap-1 sm:hidden opacity-80 hover:opacity-100">
+          <button onpointerdown="startMovePlayer('up')" onpointerup="stopMovePlayer()" class="w-11 h-11 bg-amber-900/90 text-white rounded-xl font-black text-lg border-2 border-amber-600 active:scale-95">▲</button>
+          <div class="flex gap-1">
+            <button onpointerdown="startMovePlayer('left')" onpointerup="stopMovePlayer()" class="w-11 h-11 bg-amber-900/90 text-white rounded-xl font-black text-lg border-2 border-amber-600 active:scale-95">◀</button>
+            <button onpointerdown="startMovePlayer('down')" onpointerup="stopMovePlayer()" class="w-11 h-11 bg-amber-900/90 text-white rounded-xl font-black text-lg border-2 border-amber-600 active:scale-95">▼</button>
+            <button onpointerdown="startMovePlayer('right')" onpointerup="stopMovePlayer()" class="w-11 h-11 bg-amber-900/90 text-white rounded-xl font-black text-lg border-2 border-amber-600 active:scale-95">▶</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3051,8 +3706,12 @@
     function switchGameMode(mode) {
       state.mode = mode;
       const btnAdv = document.getElementById("btnModeAdventure");
+      const btnDec = document.getElementById("btnModeDecompose");
       const btnCha = document.getElementById("btnModeChallenge");
       const btnFree = document.getElementById("btnModeFree");
+
+      const houseScroller = document.getElementById("houseStageScroller");
+      const decompWorkspace = document.getElementById("decompositionWorkspace");
 
       const barAdv = document.getElementById("adventureMissionBar");
       const barCha = document.getElementById("challengeControlsRow");
@@ -3065,10 +3724,11 @@
       const headerLbl = document.getElementById("targetHeaderLabel");
       const speakerEl = document.getElementById("rpgSpeakerLabel");
 
-      const activeClass = "dio-tab dio-tab-active text-[11px] py-1 px-2.5 pixel-font";
-      const idleClass = "dio-tab text-[11px] py-1 px-2.5 pixel-font";
+      const activeClass = "mode-pill-btn mode-pill-active font-extrabold lego-font";
+      const idleClass = "mode-pill-btn mode-pill-inactive font-extrabold lego-font";
 
       if (btnAdv) btnAdv.className = mode === "adventure" ? activeClass : idleClass;
+      if (btnDec) btnDec.className = mode === "decompose" ? activeClass : idleClass;
       if (btnCha) btnCha.className = mode === "challenge" ? activeClass : idleClass;
       if (btnFree) btnFree.className = mode === "free" ? activeClass : idleClass;
 
@@ -3078,30 +3738,123 @@
       barFree?.classList.toggle("hidden", mode !== "free");
       barFree?.classList.toggle("flex", mode === "free");
 
-      missionBar?.classList.toggle("hidden", mode !== "adventure");
-      missionBar?.classList.toggle("flex", mode === "adventure");
+      // Mostrar u ocultar la casa o el taller de descomposición
+      if (mode === "decompose") {
+        houseScroller?.classList.add("hidden");
+        decompWorkspace?.classList.remove("hidden");
+        decompWorkspace?.classList.add("flex");
+        updateDecompositionView();
+      } else {
+        houseScroller?.classList.remove("hidden");
+        decompWorkspace?.classList.add("hidden");
+        decompWorkspace?.classList.remove("flex");
+      }
+
+      missionBar?.classList.toggle("hidden", mode !== "adventure" && mode !== "decompose");
+      missionBar?.classList.toggle("flex", mode === "adventure" || mode === "decompose");
       chalBar?.classList.toggle("hidden", mode !== "challenge");
       chalBar?.classList.toggle("flex", mode === "challenge");
 
       btnVerify?.classList.toggle("hidden", mode !== "challenge");
 
       if (mode === "adventure") {
-        if (headerLbl) headerLbl.innerText = "NÚMERO OBJETIVO DE LA OBRA";
+        if (headerLbl) headerLbl.innerText = "Número objetivo:";
         loadCurrentMission();
+      } else if (mode === "decompose") {
+        if (headerLbl) headerLbl.innerText = "Número a descomponer:";
+        if (speakerEl) speakerEl.innerHTML = '¡El Poder de los Números!';
+        const leoBubble = document.getElementById("leoSpeechBubble");
+        if (leoBubble) {
+          leoBubble.innerText = "¡Separa las cifras en sumandos posicionales! Comprueba cómo la suma forma el número completo.";
+        }
       } else if (mode === "challenge") {
-        if (headerLbl) headerLbl.innerText = "ACERTIJO DEL ARQUITECTO (CONSTRUYE Y COMPRUEBA)";
-        if (speakerEl) speakerEl.innerHTML = '<span>🏆 Leo Maestro:</span>';
+        if (headerLbl) headerLbl.innerText = "Acertijo del Arquitecto:";
+        if (speakerEl) speakerEl.innerHTML = '¡Reto Posicional!';
         updateChallengeScoreUI();
         generateNewChallenge();
       } else {
-        if (headerLbl) headerLbl.innerText = "NÚMERO OBJETIVO DEL TALLER LIBRE";
-        if (speakerEl) speakerEl.innerHTML = '<span>🧱 Taller Creativo:</span>';
+        if (headerLbl) headerLbl.innerText = "Número libre:";
+        if (speakerEl) speakerEl.innerHTML = 'Taller Creativo:';
         setTargetNumber(state.target || 245);
         const leoBubble = document.getElementById("leoSpeechBubble");
         if (leoBubble) {
           leoBubble.innerText = "¡Bienvenido al Taller Libre! Experimenta con cualquier combinación de dígitos o canjes sin límite.";
         }
       }
+    }
+
+    function updateDecompositionView() {
+      const target = state.target || getCurrentTotal() || 30035;
+      const dm = Math.floor(target / 10000);
+      const um = Math.floor((target % 10000) / 1000);
+      const c = Math.floor((target % 1000) / 100);
+      const d = Math.floor((target % 100) / 10);
+      const u = target % 10;
+
+      const vDM = dm * 10000;
+      const vUM = um * 1000;
+      const vC = c * 100;
+      const vD = d * 10;
+      const vU = u;
+
+      const targetEl = document.getElementById("decomposeTargetNum");
+      if (targetEl) targetEl.innerText = target.toLocaleString("es-CO");
+
+      const elDM = document.getElementById("decompValDM");
+      const elUM = document.getElementById("decompValUM");
+      const elC = document.getElementById("decompValC");
+      const elD = document.getElementById("decompValD");
+      const elU = document.getElementById("decompValU");
+
+      if (elDM) elDM.innerText = vDM.toLocaleString("es-CO");
+      if (elUM) elUM.innerText = vUM.toLocaleString("es-CO");
+      if (elC) elC.innerText = vC.toLocaleString("es-CO");
+      if (elD) elD.innerText = vD.toLocaleString("es-CO");
+      if (elU) elU.innerText = vU.toLocaleString("es-CO");
+
+      const subDM = document.getElementById("decompSubDM");
+      const subUM = document.getElementById("decompSubUM");
+      const subC = document.getElementById("decompSubC");
+      const subD = document.getElementById("decompSubD");
+      const subU = document.getElementById("decompSubU");
+
+      if (subDM) subDM.innerText = `(${dm} × 10.000)`;
+      if (subUM) subUM.innerText = `(${um} × 1.000)`;
+      if (subC) subC.innerText = `(${c} × 100)`;
+      if (subD) subD.innerText = `(${d} × 10)`;
+      if (subU) subU.innerText = `(${u} × 1)`;
+
+      const formulaEl = document.getElementById("decompSumFormula");
+      if (formulaEl) {
+        formulaEl.innerText = `${vDM.toLocaleString("es-CO")} + ${vUM.toLocaleString("es-CO")} + ${vC.toLocaleString("es-CO")} + ${vD.toLocaleString("es-CO")} + ${vU.toLocaleString("es-CO")} = ${target.toLocaleString("es-CO")} unidades`;
+      }
+    }
+
+    function checkDecompositionActivity() {
+      initAudio();
+      playSound("complete");
+      const target = state.target || 30035;
+      showToast(`¡Excelente descomposición! La suma equivale a ${target.toLocaleString("es-CO")}.`, "⚡");
+      speakText(`¡Excelente! La suma de las posiciones equivale exactamente a ${numberToWordsEs(target)}.`);
+    }
+
+    function proceedFromDecompositionToHouse() {
+      initAudio();
+      playSound("snap");
+      showToast("¡Trasladando sumandos a la construcción de la Casa!", "🏗️");
+      const target = state.target || 30035;
+      state.DM = Math.floor(target / 10000);
+      state.UM = Math.floor((target % 10000) / 1000);
+      state.C = Math.floor((target % 1000) / 100);
+      state.D = Math.floor((target % 100) / 10);
+      state.U = target % 10;
+      updateUI();
+      switchGameMode("adventure");
+    }
+
+    function speakDecompositionTarget() {
+      const target = state.target || 30035;
+      speakText(`Número a descomponer: ${numberToWordsEs(target)}.`);
     }
 
     // CAMPAÑA MODO AVENTURA (8 MISIONES)
@@ -3613,7 +4366,7 @@
         banner?.classList.add("hidden");
         btnNext?.classList.add("hidden");
 
-        if (roofTitle) roofTitle.innerText = "La Casa de los Números · 5 Posiciones";
+        if (roofTitle) roofTitle.innerText = "La Casa de los Números";
         if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping";
 
         if (badgeStatus) {
@@ -3912,6 +4665,264 @@
 
     function closeCityMapModal() {
       document.getElementById("modalCityMap")?.classList.add("hidden");
+    }
+
+    // =========================================================================
+    // FASE 3 Y 4: NUMBRÓPOLIS 3D CIUDAD EXPLORABLE (CON MOVIMIENTO Y VISITA)
+    // =========================================================================
+    let numbropolisScene, numbropolisCamera, numbropolisRenderer, numbropolisPlayer;
+    let numbropolisBuildings = [];
+    let nearbyBuilding = null;
+    let numbropolisKeys = { up: false, down: false, left: false, right: false };
+
+    function open3DExplorationMode() {
+      initAudio();
+      playSound("snap");
+      closeCityMapModal();
+      const modal = document.getElementById("modalNumbrópolis3D");
+      if (!modal) return;
+      modal.classList.remove("hidden");
+      if (!numbropolisRenderer) {
+        init3DNumbropolisCity();
+      } else {
+        refreshNumbropolisHouses();
+      }
+      speakText("¡Bienvenido a Numbrópolis 3D! Recorre las calles y acércate a las casas para explorar sus habitaciones.");
+    }
+
+    function close3DExplorationMode() {
+      document.getElementById("modalNumbrópolis3D")?.classList.add("hidden");
+    }
+
+    function startMovePlayer(dir) {
+      if (dir === 'up') numbropolisKeys.up = true;
+      if (dir === 'down') numbropolisKeys.down = true;
+      if (dir === 'left') numbropolisKeys.left = true;
+      if (dir === 'right') numbropolisKeys.right = true;
+    }
+
+    function stopMovePlayer() {
+      numbropolisKeys.up = false;
+      numbropolisKeys.down = false;
+      numbropolisKeys.left = false;
+      numbropolisKeys.right = false;
+    }
+
+    function enterBuildingIn3D() {
+      if (!nearbyBuilding) return;
+      initAudio();
+      playSound("snap");
+      close3DExplorationMode();
+      const num = nearbyBuilding.number;
+      state.target = num;
+      state.DM = Math.floor(num / 10000);
+      state.UM = Math.floor((num % 10000) / 1000);
+      state.C = Math.floor((num % 1000) / 100);
+      state.D = Math.floor((num % 100) / 10);
+      state.U = num % 10;
+      updateUI();
+      switchGameMode("adventure");
+      showToast(`¡Entraste a ${nearbyBuilding.name}!`, "🚪");
+      speakText(`Estás dentro de ${nearbyBuilding.name}. Observa sus habitaciones decimales para el número ${numberToWordsEs(num)}.`);
+    }
+
+    function init3DNumbropolisCity() {
+      const canvas = document.getElementById("numbropolis3DCanvas");
+      if (!canvas) return;
+
+      numbropolisScene = new THREE.Scene();
+      numbropolisScene.background = new THREE.Color(0x87ceeb);
+      numbropolisScene.fog = new THREE.Fog(0xcce7ff, 15, 60);
+
+      const w = canvas.clientWidth || 800;
+      const h = canvas.clientHeight || 500;
+      numbropolisCamera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+      numbropolisCamera.position.set(0, 11, 15);
+
+      numbropolisRenderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      numbropolisRenderer.setSize(w, h);
+      numbropolisRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      numbropolisRenderer.shadowMap.enabled = true;
+
+      const ambient = new THREE.HemisphereLight(0xffffff, 0x447733, 0.9);
+      numbropolisScene.add(ambient);
+      const sun = new THREE.DirectionalLight(0xfffae0, 1.2);
+      sun.position.set(15, 30, 20);
+      sun.castShadow = true;
+      numbropolisScene.add(sun);
+
+      const ground = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ color: 0x5fa832, roughness: 0.9 }));
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      numbropolisScene.add(ground);
+
+      const roadMat = new THREE.MeshStandardMaterial({ color: 0x6e7681, roughness: 0.8 });
+      const roadX = new THREE.Mesh(new THREE.BoxGeometry(50, 0.05, 5), roadMat);
+      roadX.position.set(0, 0.02, 0);
+      roadX.receiveShadow = true;
+      numbropolisScene.add(roadX);
+
+      const roadZ = new THREE.Mesh(new THREE.BoxGeometry(5, 0.05, 50), roadMat);
+      roadZ.position.set(0, 0.02, 0);
+      roadZ.receiveShadow = true;
+      numbropolisScene.add(roadZ);
+
+      const plaza = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 5.5, 0.15, 24), new THREE.MeshStandardMaterial({ color: 0xd8cca8 }));
+      plaza.position.set(0, 0.08, 0);
+      numbropolisScene.add(plaza);
+
+      const water = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 0.22, 16), new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.2 }));
+      water.position.set(0, 0.16, 0);
+      numbropolisScene.add(water);
+
+      numbropolisPlayer = new THREE.Group();
+      numbropolisPlayer.position.set(0, 0, 4);
+
+      const pLegs = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.3), new THREE.MeshStandardMaterial({ color: 0x1e3a8a }));
+      pLegs.position.y = 0.3;
+      numbropolisPlayer.add(pLegs);
+
+      const pTorso = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.7, 0.35), new THREE.MeshStandardMaterial({ color: 0xdc2626 }));
+      pTorso.position.y = 0.95;
+      numbropolisPlayer.add(pTorso);
+
+      const pHead = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.35, 12), new THREE.MeshStandardMaterial({ color: 0xfbbf24 }));
+      pHead.position.y = 1.45;
+      numbropolisPlayer.add(pHead);
+
+      const pHair = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), new THREE.MeshStandardMaterial({ color: 0x78350f }));
+      pHair.position.set(0, 1.62, 0);
+      numbropolisPlayer.add(pHair);
+
+      numbropolisScene.add(numbropolisPlayer);
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "w" || e.key === "W" || e.key === "ArrowUp") numbropolisKeys.up = true;
+        if (e.key === "s" || e.key === "S" || e.key === "ArrowDown") numbropolisKeys.down = true;
+        if (e.key === "a" || e.key === "A" || e.key === "ArrowLeft") numbropolisKeys.left = true;
+        if (e.key === "d" || e.key === "D" || e.key === "ArrowRight") numbropolisKeys.right = true;
+        if ((e.key === "e" || e.key === "E") && nearbyBuilding) {
+          enterBuildingIn3D();
+        }
+      });
+
+      window.addEventListener("keyup", (e) => {
+        if (e.key === "w" || e.key === "W" || e.key === "ArrowUp") numbropolisKeys.up = false;
+        if (e.key === "s" || e.key === "S" || e.key === "ArrowDown") numbropolisKeys.down = false;
+        if (e.key === "a" || e.key === "A" || e.key === "ArrowLeft") numbropolisKeys.left = false;
+        if (e.key === "d" || e.key === "D" || e.key === "ArrowRight") numbropolisKeys.right = false;
+      });
+
+      refreshNumbropolisHouses();
+
+      function animateNumbropolis() {
+        requestAnimationFrame(animateNumbropolis);
+        if (document.getElementById("modalNumbrópolis3D")?.classList.contains("hidden")) return;
+
+        const speed = 0.12;
+        if (numbropolisKeys.up) { numbropolisPlayer.position.z -= speed; numbropolisPlayer.rotation.y = Math.PI; }
+        if (numbropolisKeys.down) { numbropolisPlayer.position.z += speed; numbropolisPlayer.rotation.y = 0; }
+        if (numbropolisKeys.left) { numbropolisPlayer.position.x -= speed; numbropolisPlayer.rotation.y = -Math.PI / 2; }
+        if (numbropolisKeys.right) { numbropolisPlayer.position.x += speed; numbropolisPlayer.rotation.y = Math.PI / 2; }
+
+        numbropolisPlayer.position.x = Math.max(-24, Math.min(24, numbropolisPlayer.position.x));
+        numbropolisPlayer.position.z = Math.max(-24, Math.min(24, numbropolisPlayer.position.z));
+
+        numbropolisCamera.position.x = numbropolisPlayer.position.x;
+        numbropolisCamera.position.z = numbropolisPlayer.position.z + 12;
+        numbropolisCamera.lookAt(numbropolisPlayer.position.x, 1, numbropolisPlayer.position.z);
+
+        let found = null;
+        for (const b of numbropolisBuildings) {
+          const dx = numbropolisPlayer.position.x - b.x;
+          const dz = numbropolisPlayer.position.z - b.z;
+          const dist = Math.sqrt(dx * dx + dz * dz);
+          if (dist < 4.2) {
+            found = b;
+            break;
+          }
+        }
+
+        const promptBox = document.getElementById("numbropolisPromptBox");
+        if (found) {
+          nearbyBuilding = found;
+          if (promptBox) {
+            promptBox.classList.remove("hidden");
+            const tEl = document.getElementById("numbropolisPromptTitle");
+            const sEl = document.getElementById("numbropolisPromptSub");
+            if (tEl) tEl.innerText = `${found.name} (${found.districtName})`;
+            if (sEl) sEl.innerText = `Número: ${found.number.toLocaleString("es-CO")} · Cifra: ${found.words}`;
+          }
+        } else {
+          nearbyBuilding = null;
+          promptBox?.classList.add("hidden");
+        }
+
+        numbropolisRenderer.render(numbropolisScene, numbropolisCamera);
+      }
+      animateNumbropolis();
+    }
+
+    function refreshNumbropolisHouses() {
+      if (!numbropolisScene) return;
+
+      for (const b of numbropolisBuildings) {
+        if (b.mesh) numbropolisScene.remove(b.mesh);
+      }
+      numbropolisBuildings = [];
+
+      const plotCoords = [
+        { x: -7, z: -7 }, { x: 7, z: -7 }, { x: -14, z: 0 }, { x: 14, z: 0 },
+        { x: -7, z: 7 }, { x: 7, z: 7 }, { x: -14, z: -14 }, { x: 14, z: 14 }
+      ];
+
+      const roofColors = [0xdc2626, 0x2563eb, 0x16a34a, 0x9333ea, 0xea580c, 0x0891b2, 0xd97706, 0x4f46e5];
+
+      CITY_DISTRICTS.forEach((district, idx) => {
+        const mission = MISSIONS.find(m => m.districtId === district.id);
+        const built = state.builtBuildings.find(b => b.districtId === district.id);
+        const pos = plotCoords[idx] || { x: idx * 3, z: 10 };
+        const isUnlocked = idx <= state.maxUnlockedMissionIdx;
+
+        const houseGroup = new THREE.Group();
+        houseGroup.position.set(pos.x, 0, pos.z);
+
+        const wallColor = built ? 0xfef08a : (isUnlocked ? 0xe2e8f0 : 0x94a3b8);
+        const walls = new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.8, 3.2), new THREE.MeshStandardMaterial({ color: wallColor, roughness: 0.6 }));
+        walls.position.y = 1.4;
+        walls.castShadow = true;
+        walls.receiveShadow = true;
+        houseGroup.add(walls);
+
+        const rColor = built ? roofColors[idx % roofColors.length] : 0x78350f;
+        const roof = new THREE.Mesh(new THREE.ConeGeometry(2.8, 1.6, 4), new THREE.MeshStandardMaterial({ color: rColor, roughness: 0.4 }));
+        roof.position.y = 3.6;
+        roof.rotation.y = Math.PI / 4;
+        roof.castShadow = true;
+        houseGroup.add(roof);
+
+        const door = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.4, 0.1), new THREE.MeshStandardMaterial({ color: 0x451a03 }));
+        door.position.set(0, 0.7, 1.65);
+        houseGroup.add(door);
+
+        numbropolisScene.add(houseGroup);
+
+        const num = built ? built.number : (mission ? mission.number : 100);
+        const name = built ? built.name : (mission ? mission.title : `Distrito ${district.name}`);
+        const words = built ? built.words : (mission ? numberToWordsEs(mission.number) : "");
+
+        numbropolisBuildings.push({
+          x: pos.x,
+          z: pos.z,
+          mesh: houseGroup,
+          number: num,
+          name: name,
+          words: words,
+          districtName: district.name,
+          districtId: district.id,
+          isBuilt: !!built
+        });
+      });
     }
 
     // =========================================================================
@@ -4308,8 +5319,8 @@
       scene.fog = new THREE.FogExp2(0xbbe4ff, 0.012);
 
       const camera = new THREE.PerspectiveCamera(34, window.innerWidth / window.innerHeight, 0.1, 500);
-      camera.position.set(0, 0.05, 15.6);
-      camera.lookAt(0, -1.2, 0);
+      camera.position.set(0, 0.05, 16.2);
+      camera.lookAt(0, -0.6, 0);
 
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -4393,7 +5404,7 @@
 
       // CASTILLO MEDIEVAL DE FANTASÍA EN LA COLINA DERECHA
       const castleGroup = new THREE.Group();
-      castleGroup.position.set(8.8, 0.9, -6.5);
+      castleGroup.position.set(7.5, 0.4, -4.8); castleGroup.scale.set(0.68, 0.68, 0.68);
       castleGroup.scale.set(0.72, 0.72, 0.72);
       const cWall = new THREE.Mesh(new THREE.BoxGeometry(4.6, 4.2, 2.6), mats.stone);
       cWall.castShadow = true;
@@ -4492,138 +5503,7 @@
       addCarriageLantern(-7.2, 1.5);
       addCarriageLantern(7.2, 1.5);
 
-      // LA CASA LEGO EN 3D REAL (CON VOLUMEN Y MATERIALES FÍSICOS)
-      const houseGroup = new THREE.Group();
-      houseGroup.position.set(0, -1.55, 0);
-
-      const houseW = 12.8;
-      const houseH = 3.8;
-      const houseD = 2.4;
-
-      // Cimientos de piedra
-      const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(houseW + 0.8, 0.45, houseD + 0.6), mats.stoneDark);
-      baseMesh.position.set(0, -2.1, 0);
-      baseMesh.castShadow = true;
-      baseMesh.receiveShadow = true;
-      houseGroup.add(baseMesh);
-
-      // Viga superior de roble
-      const architrave = new THREE.Mesh(new THREE.BoxGeometry(houseW + 0.5, 0.48, houseD + 0.3), mats.woodDark);
-      architrave.position.set(0, houseH / 2, 0);
-      architrave.castShadow = true;
-      houseGroup.add(architrave);
-
-      // 6 Columnas divisoras con ménsulas y macetitas
-      const roomWidth = (houseW - 0.2) / 5;
-      const postW = 0.34;
-      for (let i = 0; i <= 5; i++) {
-        const x = -houseW / 2 + i * roomWidth;
-        const postMesh = new THREE.Mesh(new THREE.BoxGeometry(postW, houseH, postW * 1.5), mats.woodDark);
-        postMesh.position.set(x, 0, houseD / 2 - postW / 2);
-        postMesh.castShadow = true;
-        postMesh.receiveShadow = true;
-        houseGroup.add(postMesh);
-
-        // Ménsulas diagonales de madera bajo la viga
-        if (i > 0) {
-          const corbelL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.44, 0.18), mats.woodTrim);
-          corbelL.position.set(x - 0.2, houseH / 2 - 0.3, houseD / 2 - postW / 2);
-          corbelL.rotation.z = Math.PI / 4;
-          corbelL.castShadow = true;
-          houseGroup.add(corbelL);
-        }
-        if (i < 5) {
-          const corbelR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.44, 0.18), mats.woodTrim);
-          corbelR.position.set(x + 0.2, houseH / 2 - 0.3, houseD / 2 - postW / 2);
-          corbelR.rotation.z = -Math.PI / 4;
-          corbelR.castShadow = true;
-          houseGroup.add(corbelR);
-        }
-
-        // Macetitas en las bases de las columnas
-        if (i > 0 && i < 5) {
-          const miniPot = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.09, 0.22, 10), mats.pot);
-          miniPot.position.set(x, -houseH / 2 + 0.25, houseD / 2 + 0.12);
-          miniPot.castShadow = true;
-          houseGroup.add(miniPot);
-          const miniPlant = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), mats.foliage2);
-          miniPlant.position.set(x, -houseH / 2 + 0.38, houseD / 2 + 0.12);
-          houseGroup.add(miniPlant);
-        }
-      }
-
-      // Tejado LEGO 3D con studs y chimenea
-      const roofGroup = new THREE.Group();
-      roofGroup.position.set(0, houseH / 2 + 0.24, 0);
-      const roofLayers = 6;
-      for (let l = 0; l < roofLayers; l++) {
-        const prog = l / roofLayers;
-        const lw = (houseW + 0.8) * (1 - prog * 0.48);
-        const ly = prog * 1.35;
-        const lz = (1 - prog) * (houseD / 2 + 0.6);
-
-        const stepMesh = new THREE.Mesh(new THREE.BoxGeometry(lw, 0.34, 0.65), mats.roofRed);
-        stepMesh.position.set(0, ly, lz);
-        stepMesh.rotation.x = -0.42;
-        stepMesh.castShadow = true;
-        stepMesh.receiveShadow = true;
-        roofGroup.add(stepMesh);
-
-        // Studs LEGO (cilindros reales)
-        const studSpacing = 0.55;
-        const numStuds = Math.floor(lw / studSpacing);
-        for (let s = -numStuds / 2; s <= numStuds / 2; s++) {
-          const stud = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.16, 12), mats.roofStud);
-          stud.position.set(s * studSpacing, ly + 0.12, lz);
-          stud.rotation.x = -0.42;
-          stud.castShadow = true;
-          roofGroup.add(stud);
-        }
-      }
-
-      // Chimenea de piedra en el tejado
-      const chimney = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.9, 0.85), mats.stoneDark);
-      chimney.position.set(houseW / 2 - 1.8, houseH / 2 + 1.25, -0.2);
-      chimney.castShadow = true;
-      houseGroup.add(chimney);
-      const chimneyCap = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.2, 1.05), mats.stone);
-      chimneyCap.position.set(houseW / 2 - 1.8, houseH / 2 + 2.2, -0.2);
-      chimneyCap.castShadow = true;
-      houseGroup.add(chimneyCap);
-
-      houseGroup.add(roofGroup);
-
-      // Lámparas colgantes y tapetes de las 5 habitaciones
-      const roomMats = [mats.dm, mats.um, mats.c, mats.d, mats.u];
-      for (let r = 0; r < 5; r++) {
-        const rx = -houseW / 2 + (r + 0.5) * roomWidth;
-        const rMat = roomMats[r];
-
-        const lampCord = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.35), mats.woodDark);
-        lampCord.position.set(rx, houseH / 2 + 0.12, houseD / 2 + 0.35);
-        houseGroup.add(lampCord);
-
-        const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.2, 12), rMat);
-        lampShade.position.set(rx, houseH / 2 - 0.05, houseD / 2 + 0.35);
-        lampShade.castShadow = true;
-        houseGroup.add(lampShade);
-
-        const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), mats.lanternGlow);
-        bulb.position.set(rx, houseH / 2 - 0.16, houseD / 2 + 0.35);
-        houseGroup.add(bulb);
-
-        const rLight = new THREE.PointLight(rMat.color, 0.55, 3.5);
-        rLight.position.set(rx, houseH / 2 - 0.18, houseD / 2 + 0.4);
-        houseGroup.add(rLight);
-
-        // Tapete de color
-        const matMesh = new THREE.Mesh(new THREE.BoxGeometry(roomWidth - 0.5, 0.05, 0.75), rMat);
-        matMesh.position.set(rx, -1.9, houseD / 2 + 0.4);
-        matMesh.receiveShadow = true;
-        houseGroup.add(matMesh);
-      }
-
-      scene.add(houseGroup);
+      // Escenario de paisaje completado
 
       // REDIMENSIÓN RESPONSIVA
       window.addEventListener('resize', () => {
