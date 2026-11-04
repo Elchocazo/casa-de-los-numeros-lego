@@ -261,6 +261,42 @@
       font-weight: 800;
     }
 
+    
+    /* Animación de puntos flotantes (+150 ⭐) */
+    @keyframes float-up-fade {
+      0% { transform: translate(-50%, 0) scale(0.7); opacity: 0; }
+      20% { transform: translate(-50%, -20px) scale(1.2); opacity: 1; }
+      75% { transform: translate(-50%, -55px) scale(1.05); opacity: 0.95; }
+      100% { transform: translate(-50%, -80px) scale(0.9); opacity: 0; }
+    }
+    .floating-points-pop {
+      animation: float-up-fade 1.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Efectos de racha en llamas y rayo */
+    .streak-on-fire {
+      background: linear-gradient(135deg, #f59e0b, #ea580c, #dc2626) !important;
+      color: #ffffff !important;
+      border: 2px solid #7f1d1d !important;
+      box-shadow: 0 0 12px rgba(234, 88, 12, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.4) !important;
+      animation: pulse 1s infinite;
+    }
+    .streak-lightning {
+      background: linear-gradient(135deg, #7c3aed, #db2777, #f59e0b) !important;
+      color: #ffffff !important;
+      border: 2px solid #fef08a !important;
+      box-shadow: 0 0 16px rgba(219, 39, 119, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5) !important;
+      animation: bounce 0.8s infinite;
+    }
+    .streak-legend {
+      background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6, #ec4899) !important;
+      color: #ffffff !important;
+      border: 2.5px solid #ffffff !important;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), inset 0 2px 0 rgba(255, 255, 255, 0.6) !important;
+    }
+
     /* Losa de piedra (para cifras objetivo y estado) */
     .dio-stone {
       background:
@@ -1880,7 +1916,11 @@
       <div class="flex items-center gap-2 min-w-0 shrink-0">
         <!-- Avatar de personaje chibi sin fondo, estético y nítido -->
         <div class="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95" onclick="triggerLeoSpeech()" title="¡Tócame para escuchar!">
+          <!-- Corona Real equipable por puntos -->
+          <div id="leoEquippedCrown" class="hidden absolute -top-3.5 left-1/2 -translate-x-1/2 text-lg select-none drop-shadow z-20 animate-bounce" title="¡Corona Real de Arquitecto Maestro!">👑</div>
           <img id="leoAvatarImg" src="assets/leo_avatar_talk.png" alt="Compañero Leo" class="w-full h-full object-contain drop-shadow select-none">
+          <!-- Mascota Chispa equipable por puntos -->
+          <div id="leoCompanionPet" class="hidden absolute -bottom-1 -right-2 text-base select-none drop-shadow z-20" title="¡Cachorro LEGO Chispa te acompaña!">🐶</div>
           <canvas id="leoWebcam3DCanvas" class="hidden"></canvas>
         </div>
 
@@ -1942,13 +1982,16 @@
         </button>
 
         <!-- Pastillas organizadas de Racha y Puntos en Retos -->
-        <div id="challengeScoreBadges" class="hidden flex items-center justify-center gap-1.5 text-[11px] font-black w-full">
-          <div class="bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-300 text-amber-950 px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-2xs" title="Racha de aciertos">
-            <span>🔥</span> <span id="challengeStreakBadge" class="text-amber-800">0</span>
-          </div>
-          <div class="bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-300 text-amber-950 px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-2xs" title="Puntos ganados">
+        <div id="challengeScoreBadges" class="hidden flex items-center justify-center gap-1 text-[11px] font-black w-full">
+          <button id="streakBadgeBox" onclick="openRewardsModal()" class="bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-300 text-amber-950 px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-2xs cursor-pointer hover:scale-105 transition-all" title="¡Toca para ver tu racha y trofeos!">
+            <span id="streakBadgeIcon">🔥</span> <span id="challengeStreakBadge" class="text-amber-800">0</span>
+          </button>
+          <button id="scoreBadgeBox" onclick="openRewardsModal()" class="bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-300 text-amber-950 px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-2xs cursor-pointer hover:scale-105 transition-all" title="¡Toca para canjear en la Sala de Trofeos!">
             <span>⭐</span> <span id="challengeScoreBadge" class="text-amber-800">0</span>
-          </div>
+          </button>
+          <button onclick="openRewardsModal()" class="bg-gradient-to-b from-amber-300 to-yellow-400 hover:from-amber-200 hover:to-yellow-300 border border-amber-700 text-amber-950 px-1.5 py-0.5 rounded-lg shadow-2xs cursor-pointer hover:scale-110 active:scale-95 transition-all" title="Abrir Sala de Trofeos y Recompensas">
+            🏆
+          </button>
         </div>
       </div>
 
@@ -2539,6 +2582,66 @@
     </div>
 
   </main>
+
+  
+  <!-- ========================================================================= -->
+  <!-- MODAL DE LA SALA DE TROFEOS Y RECOMPENSAS DE NUMBRÓPOLIS                    -->
+  <!-- ========================================================================= -->
+  <div id="modalRewards" class="fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden" style="background: rgba(20,12,5,0.75)">
+    <div class="dio-panel max-w-2xl w-full p-4 sm:p-5 flex flex-col gap-3 max-h-[92vh] overflow-y-auto custom-scroll anim-dock">
+      
+      <!-- Encabezado de la Sala de Trofeos -->
+      <div class="flex items-center justify-between gap-2 dio-plank rounded-xl px-3 py-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center text-xl bg-gradient-to-b from-yellow-300 to-amber-500 border-2 border-amber-950 shadow-sm">
+            🏆
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-black lego-font leading-none text-white drop-shadow">Sala de Trofeos y Recompensas</h2>
+            <p class="text-[11px] font-bold text-amber-200 leading-tight">¡Canjea tus puntos y presume tus rachas épicas en Numbrópolis!</p>
+          </div>
+        </div>
+        <button onclick="closeRewardsModal()" class="w-8 h-8 dio-btn dio-btn-stone text-sm flex items-center justify-center shrink-0">
+          ✕
+        </button>
+      </div>
+
+      <!-- Resumen del Arquitecto: Puntos y Racha -->
+      <div class="grid grid-cols-2 gap-2 sm:gap-3">
+        <div class="bg-gradient-to-b from-amber-50 to-amber-100 border-2 border-amber-400 rounded-2xl p-2.5 flex items-center gap-3 shadow-sm">
+          <span class="text-3xl">⭐</span>
+          <div>
+            <span class="text-[10px] sm:text-[11px] font-black uppercase text-amber-900 block leading-none">Puntos Acumulados</span>
+            <span id="rewardsTotalPoints" class="text-xl sm:text-2xl font-black text-amber-950 font-fredoka">0</span>
+          </div>
+        </div>
+        <div class="bg-gradient-to-b from-orange-50 to-amber-100 border-2 border-orange-400 rounded-2xl p-2.5 flex items-center gap-3 shadow-sm">
+          <span class="text-3xl">🔥</span>
+          <div>
+            <span class="text-[10px] sm:text-[11px] font-black uppercase text-orange-950 block leading-none">Mejor Racha de Fuego</span>
+            <span id="rewardsBestStreak" class="text-xl sm:text-2xl font-black text-orange-900 font-fredoka">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Recompensas y Desbloqueos -->
+      <div class="flex flex-col gap-2 pt-1">
+        <span class="text-xs font-black uppercase tracking-wider text-amber-950">Catálogo de Trofeos y Objetos Especiales:</span>
+        <div id="rewardsListGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- Renderizado dinámico vía renderRewardsList() -->
+        </div>
+      </div>
+
+      <!-- Pie de página motivador -->
+      <div class="pt-2 border-t border-amber-200/80 flex items-center justify-between text-xs font-bold text-amber-900">
+        <span>💡 Resuelve retos y misiones para ganar más puntos y mantener tu racha viva.</span>
+        <button onclick="closeRewardsModal()" class="btn-gold-cta text-xs py-1.5 px-4 rounded-xl">
+          ¡A jugar!
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- MODAL DE LA ISLA DE NUMBRÓPOLIS: MAQUETA LEGO SOBRE MESA DE MADERA -->
   <div id="modalCityMap" class="fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden" style="background: rgba(20,12,5,0.72)">
@@ -4322,11 +4425,242 @@
       speakText(promptSpeech);
     }
 
+    
+    // =========================================================================
+    // SISTEMA DE RACHA, PUNTOS Y RECOMPENSAS DESBLOQUEABLES
+    // =========================================================================
+
+    const REWARDS_CATALOG = [
+      {
+        id: "medal_bronze",
+        name: "Medalla de Bronce",
+        icon: "🥉",
+        cost: 50,
+        desc: "Premio por tus primeros 50 puntos.",
+        type: "trophy"
+      },
+      {
+        id: "medal_silver",
+        name: "Medalla de Plata",
+        icon: "🥈",
+        cost: 150,
+        desc: "Experto en Decenas y Unidades.",
+        type: "trophy"
+      },
+      {
+        id: "trophy_gold",
+        name: "Trofeo de Oro LEGO",
+        icon: "🥇",
+        cost: 300,
+        desc: "Maestro de Centenas y Miles.",
+        type: "trophy"
+      },
+      {
+        id: "pet_chispa",
+        name: "Cachorro Chispa LEGO",
+        icon: "🐶",
+        cost: 500,
+        desc: "Mascota leal que acompaña a Leo en la pantalla principal.",
+        type: "equip_pet"
+      },
+      {
+        id: "chalice_diamond",
+        name: "Cáliz de Diamante",
+        icon: "💎",
+        cost: 800,
+        desc: "Gran Sabio de los Ceros Intercalados.",
+        type: "trophy"
+      },
+      {
+        id: "crown_royal",
+        name: "Corona Real del Arquitecto",
+        icon: "👑",
+        cost: 1200,
+        desc: "Corona dorada reluciente para la cabeza de Leo.",
+        type: "equip_crown"
+      }
+    ];
+
+    function openRewardsModal() {
+      initAudio();
+      playSound("snap");
+      renderRewardsList();
+      const m = document.getElementById("modalRewards");
+      if (m) m.classList.remove("hidden");
+    }
+
+    function closeRewardsModal() {
+      const m = document.getElementById("modalRewards");
+      if (m) m.classList.add("hidden");
+    }
+
+    function renderRewardsList() {
+      const grid = document.getElementById("rewardsListGrid");
+      const totalPointsEl = document.getElementById("rewardsTotalPoints");
+      const bestStreakEl = document.getElementById("rewardsBestStreak");
+
+      const currentScore = state.challenge.score || 0;
+      const bestStreak = state.challenge.bestStreak || state.challenge.streak || 0;
+
+      if (totalPointsEl) totalPointsEl.innerText = currentScore.toLocaleString("es-CO");
+      if (bestStreakEl) bestStreakEl.innerText = bestStreak;
+
+      if (!state.unlockedRewards) state.unlockedRewards = [];
+
+      // Desbloquear automáticamente trofeos cuyos puntos ya se alcanzaron
+      REWARDS_CATALOG.forEach(item => {
+        if (currentScore >= item.cost && !state.unlockedRewards.includes(item.id)) {
+          state.unlockedRewards.push(item.id);
+        }
+      });
+      saveProgress();
+
+      if (!grid) return;
+      grid.innerHTML = REWARDS_CATALOG.map(item => {
+        const isUnlocked = state.unlockedRewards.includes(item.id) || currentScore >= item.cost;
+        const pct = Math.min(100, Math.round((currentScore / item.cost) * 100));
+
+        let actionBtnHtml = "";
+        if (item.type === "equip_pet") {
+          const isEquipped = state.equippedPet === true;
+          if (isUnlocked) {
+            actionBtnHtml = `<button onclick="toggleEquipPet()" class="text-xs font-black py-1 px-3 rounded-lg border-2 ${isEquipped ? 'bg-emerald-500 text-white border-emerald-800' : 'btn-gold-cta'} shadow-xs">${isEquipped ? '✅ Acompañando' : '🐾 Llevar Mascota'}</button>`;
+          } else {
+            actionBtnHtml = `<span class="text-[11px] font-bold text-amber-900 bg-amber-200/70 px-2 py-0.5 rounded-md border border-amber-300">Te faltan ${item.cost - currentScore} pts</span>`;
+          }
+        } else if (item.type === "equip_crown") {
+          const isEquipped = state.equippedCrown === true;
+          if (isUnlocked) {
+            actionBtnHtml = `<button onclick="toggleEquipCrown()" class="text-xs font-black py-1 px-3 rounded-lg border-2 ${isEquipped ? 'bg-amber-500 text-white border-amber-800 animate-pulse' : 'btn-gold-cta'} shadow-xs">${isEquipped ? '👑 Puesta' : '👑 Poner Corona'}</button>`;
+          } else {
+            actionBtnHtml = `<span class="text-[11px] font-bold text-amber-900 bg-amber-200/70 px-2 py-0.5 rounded-md border border-amber-300">Te faltan ${item.cost - currentScore} pts</span>`;
+          }
+        } else {
+          if (isUnlocked) {
+            actionBtnHtml = `<span class="text-xs font-black text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg">✅ Desbloqueado</span>`;
+          } else {
+            actionBtnHtml = `<span class="text-[11px] font-bold text-amber-900 bg-amber-200/70 px-2 py-0.5 rounded-md border border-amber-300">${pct}% (${item.cost} pts)</span>`;
+          }
+        }
+
+        return `
+          <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl border-2 ${isUnlocked ? 'bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-400 shadow-sm' : 'bg-stone-100/80 border-stone-300 opacity-80'} transition-transform hover:scale-[1.01]">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="text-3xl shrink-0">${item.icon}</span>
+              <div class="min-w-0">
+                <span class="text-xs font-black text-amber-950 block leading-tight truncate">${item.name}</span>
+                <span class="text-[10px] text-amber-900 leading-tight block truncate">${item.desc}</span>
+              </div>
+            </div>
+            <div class="shrink-0 flex items-center">
+              ${actionBtnHtml}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleEquipPet() {
+      state.equippedPet = !state.equippedPet;
+      updateEquippedCosmeticsUI();
+      renderRewardsList();
+      saveProgress();
+      if (state.equippedPet) {
+        playSound("win");
+        showToast("¡Cachorro Chispa ahora acompaña a Leo!", "🐶");
+      }
+    }
+
+    function toggleEquipCrown() {
+      state.equippedCrown = !state.equippedCrown;
+      updateEquippedCosmeticsUI();
+      renderRewardsList();
+      saveProgress();
+      if (state.equippedCrown) {
+        playSound("win");
+        triggerConfetti();
+        showToast("¡Leo se ha puesto la Corona Real de Gran Arquitecto!", "👑");
+      }
+    }
+
+    function updateEquippedCosmeticsUI() {
+      const petEl = document.getElementById("leoCompanionPet");
+      const crownEl = document.getElementById("leoEquippedCrown");
+      if (petEl) petEl.classList.toggle("hidden", !state.equippedPet);
+      if (crownEl) crownEl.classList.toggle("hidden", !state.equippedCrown);
+    }
+
+    function triggerFloatingPointsAnim(points) {
+      try {
+        const btn = document.getElementById("btnVerifyChallenge") || document.getElementById("scoreBadgeBox");
+        const rect = btn ? btn.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2 };
+        const el = document.createElement("div");
+        el.className = "floating-points-pop text-sm sm:text-base font-black text-amber-950 bg-gradient-to-r from-yellow-300 to-amber-400 border-2 border-amber-700 px-3 py-1 rounded-full shadow-lg fixed flex items-center gap-1";
+        el.innerHTML = `+${points} ⭐`;
+        el.style.left = (rect.left + rect.width / 2) + "px";
+        el.style.top = (rect.top) + "px";
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1300);
+
+        // Rebote en el recuadro de puntos
+        const scoreBox = document.getElementById("scoreBadgeBox");
+        if (scoreBox) {
+          scoreBox.classList.add("scale-125");
+          setTimeout(() => scoreBox.classList.remove("scale-125"), 300);
+        }
+      } catch (e) {}
+    }
+
+    function checkStreakMilestone(streak) {
+      if (!streak) return;
+      state.challenge.bestStreak = Math.max(state.challenge.bestStreak || 0, streak);
+
+      if (streak === 3) {
+        playSound("win");
+        triggerConfetti();
+        showToast("🔥 ¡RACHA DE FUEGO ACTIVADA! (3 Aciertos Seguidos)", "🔥");
+        speakText("¡Racha de tres! ¡Estás en fuego!");
+      } else if (streak === 5) {
+        playSound("win");
+        triggerConfetti();
+        showToast("⚡ ¡IMPARABLE! ¡5 SEGUIDAS! ¡Multiplicador Doble!", "⚡");
+        speakText("¡Cinco aciertos seguidos! ¡Eres imparable!");
+      } else if (streak === 10) {
+        playSound("win");
+        triggerConfetti();
+        showToast("👑 ¡MODO LEYENDA! ¡10 Aciertos Consecutivos!", "👑");
+        speakText("¡Diez aciertos seguidos! ¡Eres una leyenda de Numbrópolis!");
+      }
+    }
+
     function updateChallengeScoreUI() {
       const sEl = document.getElementById("challengeStreakBadge");
       const pEl = document.getElementById("challengeScoreBadge");
-      if (sEl) sEl.innerText = state.challenge.streak;
-      if (pEl) pEl.innerText = state.challenge.score;
+      const sBox = document.getElementById("streakBadgeBox");
+      const sIcon = document.getElementById("streakBadgeIcon");
+
+      const streak = state.challenge.streak || 0;
+      const score = state.challenge.score || 0;
+
+      if (sEl) sEl.innerText = streak;
+      if (pEl) pEl.innerText = score.toLocaleString("es-CO");
+
+      // Actualizar estilo visual según la intensidad de la racha
+      if (sBox) {
+        sBox.classList.remove("streak-on-fire", "streak-lightning", "streak-legend");
+        if (streak >= 10) {
+          sBox.classList.add("streak-legend");
+          if (sIcon) sIcon.innerText = "👑";
+        } else if (streak >= 5) {
+          sBox.classList.add("streak-lightning");
+          if (sIcon) sIcon.innerText = "⚡";
+        } else if (streak >= 3) {
+          sBox.classList.add("streak-on-fire");
+          if (sIcon) sIcon.innerText = "🔥";
+        } else {
+          if (sIcon) sIcon.innerText = "🔥";
+        }
+      }
     }
 
     function verifyChallengeAttempt() {
@@ -4373,6 +4707,11 @@
           showToast("⚡ ¡VELOCIDAD RELÁMPAGO! +" + pointsEarned + " pts (Combo x" + u.combo + ")", "🚀");
         }
         state.challenge.score += pointsEarned;
+        
+        // Efecto de puntos flotantes y chequeo de racha
+        triggerFloatingPointsAnim(pointsEarned);
+        checkStreakMilestone(state.challenge.streak);
+        addPlayerXP(pointsEarned, "¡Acierto en Reto!");
         updateChallengeScoreUI();
 
         playSound("win");
