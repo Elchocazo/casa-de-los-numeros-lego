@@ -529,13 +529,10 @@
        ===================================================================== */
     .diorama-stage {
       position: relative;
-      border-radius: 26px;
-      border: 4px solid var(--wood-dark);
-      box-shadow: inset 0 0 0 3px var(--wood-highlight), 0 6px 0 var(--wood-darkest), 0 18px 34px rgba(10, 8, 4, 0.45);
-      background:
-        radial-gradient(ellipse 50% 60% at 50% 0%, rgba(255, 228, 170, 0.75), transparent 70%),
-        linear-gradient(180deg, #bfe0f0 0%, #d9ead2 45%, #a8cf8e 72%, #7fb069 100%);
-      overflow: hidden;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      overflow: visible;
     }
     /* Bosque al fondo del diorama */
     .diorama-stage::before {
@@ -903,9 +900,509 @@
     @media (prefers-reduced-motion: reduce) {
       .smoke-puff, .torch-glow, .slot-needed { animation: none !important; }
     }
-  </style>
+  
+    /* =====================================================================
+       DIRECCIÓN ARTÍSTICA PREMIUM: CASA LEGO RPG (CALIDAD COMERCIAL)
+       ===================================================================== */
+    
+    /* Tipografía 3D de madera y carteles */
+    .wood-title-3d {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow:
+        0 1px 0 #ffd15c,
+        0 2px 0 #d97706,
+        0 3px 0 #92400e,
+        0 4px 0 #451a03,
+        0 6px 8px rgba(0,0,0,0.4);
+    }
+
+    /* Tablón de madera tallada para barra superior */
+    .wood-nav-bar {
+      background: linear-gradient(180deg, #7c411a 0%, #5a2c0f 42%, #3d1b08 100%);
+      border: 3.5px solid #281104;
+      border-radius: 24px;
+      box-shadow:
+        inset 0 2px 0 rgba(255, 230, 180, 0.45),
+        inset 0 -3px 0 rgba(0, 0, 0, 0.5),
+        0 8px 18px rgba(25, 10, 3, 0.35);
+      position: relative;
+    }
+
+    /* Hojas decorativas en las esquinas */
+    .leaf-corner-left {
+      position: absolute;
+      top: -6px;
+      left: -8px;
+      width: 28px;
+      height: 28px;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .leaf-corner-right {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      width: 28px;
+      height: 28px;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* Botones cápsula de modo de juego */
+    .mode-pill-btn {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 800;
+      border-radius: 9999px;
+      padding: 5px 14px;
+      font-size: 13px;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .mode-pill-active {
+      background: linear-gradient(180deg, #ffd43f 0%, #f59e0b 100%);
+      border: 2px solid #b45309;
+      color: #3b1a03;
+      box-shadow: 0 4px 0 #92400e, 0 5px 10px rgba(0,0,0,0.25);
+    }
+    .mode-pill-inactive {
+      background: linear-gradient(180deg, #6c3b17 0%, #46220b 100%);
+      border: 2px solid #2e1405;
+      color: #faeedb;
+      box-shadow: 0 3px 0 #1b0a02;
+    }
+    .mode-pill-inactive:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    /* Tarjeta de pergamino elegante para misiones */
+    .parchment-card-premium {
+      background: linear-gradient(180deg, #fffdf8 0%, #fef7ec 100%);
+      border: 3.5px solid #d4a76a;
+      border-radius: 22px;
+      box-shadow:
+        inset 0 2px 0 #ffffff,
+        inset 0 -2px 0 rgba(212, 167, 106, 0.4),
+        0 8px 24px rgba(45, 20, 6, 0.14);
+      position: relative;
+    }
+
+    /* Botón dorado grande "¡A construir!" */
+    .btn-gold-cta {
+      background: linear-gradient(180deg, #fcd34d 0%, #f59e0b 50%, #d97706 100%);
+      border: 2.5px solid #92400e;
+      border-radius: 16px;
+      color: #381a02;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 900;
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.6),
+        0 4px 0 #78350f,
+        0 6px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.12s ease;
+      cursor: pointer;
+    }
+    .btn-gold-cta:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.6),
+        0 5px 0 #78350f,
+        0 8px 14px rgba(0, 0, 0, 0.22);
+    }
+    .btn-gold-cta:active {
+      transform: translateY(3px);
+      box-shadow:
+        inset 0 1px 0 rgba(0, 0, 0, 0.3),
+        0 1px 0 #78350f;
+    }
+
+    /* Tejado de la Casa con Studs LEGO y placa tallada */
+    .house-lego-roof {
+      position: relative;
+      width: calc(100% + 24px);
+      margin-left: -12px;
+      margin-right: -12px;
+      height: 78px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 15;
+    }
+
+    /* Cartel central "La Casa de los Números" */
+    .house-carved-sign {
+      background: linear-gradient(180deg, #fef8eb 0%, #f4e1ba 100%);
+      border: 2.5px solid #5a2e10;
+      border-radius: 12px;
+      padding: 3px 18px;
+      box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 4px 0 #3a1c09,
+        0 6px 10px rgba(0, 0, 0, 0.35);
+      color: #3c1e0b;
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 20;
+      margin-bottom: -10px;
+    }
+
+    /* Columnas de roble arquitectónicas entre habitaciones */
+    .timber-post {
+      width: 14px;
+      align-self: stretch;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.18), rgba(0,0,0,0.3)),
+        #8a4b22;
+      border: 2.5px solid #4a240c;
+      border-radius: 6px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+      position: relative;
+      flex-shrink: 0;
+    }
+    /* Maceta pequeña al pie de la columna */
+    .pillar-flower-pot {
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 14px;
+      background: #c2592d;
+      border: 1.5px solid #7c3112;
+      border-radius: 3px 3px 5px 5px;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.25);
+    }
+    .pillar-flower-pot::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 2px;
+      width: 10px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+
+    /* Lámpara colgante superior con campana de color */
+    .room-hanging-lamp {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-col: column;
+      align-items: center;
+      z-index: 18;
+      pointer-events: none;
+    }
+    .lamp-cord {
+      width: 2px;
+      height: 10px;
+      background: #3a1d0b;
+    }
+    .lamp-shade {
+      width: 20px;
+      height: 10px;
+      border-radius: 10px 10px 2px 2px;
+      border: 1.5px solid rgba(0,0,0,0.4);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    }
+    .lamp-glow {
+      width: 8px;
+      height: 4px;
+      background: #fef08a;
+      border-radius: 0 0 4px 4px;
+      box-shadow: 0 0 8px #fde047;
+    }
+
+    /* Faroles laterales en los extremos de la casa */
+    .wall-lantern {
+      width: 22px;
+      height: 38px;
+      background: #3b2210;
+      border: 2px solid #221207;
+      border-radius: 4px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(251, 191, 36, 0.8);
+      z-index: 25;
+    }
+    .wall-lantern-glass {
+      width: 14px;
+      height: 24px;
+      background: radial-gradient(circle, #fef08a 20%, #f59e0b 80%);
+      border-radius: 2px;
+    }
+
+    /* Habitación estilo juguete LEGO */
+    .lego-room-card {
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+    .lego-room-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Cifra gigante dentro de la alcoba */
+    .room-giant-digit-premium {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-weight: 900;
+      font-size: 3.2rem;
+      line-height: 1;
+      text-align: center;
+      display: block;
+      filter: drop-shadow(0 2px 0 rgba(255,255,255,0.8));
+    }
+    @media (min-width: 640px) {
+      .room-giant-digit-premium {
+        font-size: 3.8rem;
+      }
+    }
+
+    /* Etiqueta de equivalencia en unidades (= 30.000) */
+    .room-equiv-badge {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.1;
+      text-align: center;
+      padding: 2px 8px;
+      border-radius: 8px;
+      margin-top: 1px;
+    }
+
+    /* Botones táctiles redondos (− y +) */
+    .room-btn-touch {
+      height: 34px;
+      border-radius: 12px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .room-btn-touch:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+    .room-btn-touch:active {
+      transform: translateY(2px);
+    }
+
+    /* Tapete/alfombrilla en la entrada de cada habitación */
+    .room-entry-doormat {
+      width: 76%;
+      height: 7px;
+      border-radius: 6px;
+      margin-top: 4px;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.25);
+    }
+
+    /* Tarjetas del panel inferior "Construcción del número" */
+    .pos-card-pill {
+      border-radius: 14px;
+      padding: 4px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+      border-width: 2px;
+      border-style: solid;
+      transition: transform 0.12s ease;
+    }
+    .pos-card-pill:hover {
+      transform: scale(1.04);
+    }
+
+    /* Recuadro dorado destacado de "Valor Total" */
+    .golden-total-box {
+      background: linear-gradient(180deg, #fef08a 0%, #fde047 30%, #f59e0b 100%);
+      border: 3px solid #b45309;
+      border-radius: 18px;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.8),
+        0 4px 0 #78350f,
+        0 8px 16px rgba(0,0,0,0.22);
+      padding: 6px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+</style>
 </head>
-<body class="min-h-screen p-2 sm:p-3.5 flex flex-col items-center justify-between">
+<body class="min-h-screen p-1.5 sm:p-3 flex flex-col items-center justify-between relative z-10">
+  <!-- ========================================================================= -->
+  <!-- FONDO ESCÉNICO VIBRANTE: REINO FANTASY LEGO (CIELO, CASTILLO, COLINAS)   -->
+  <!-- ========================================================================= -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" style="background: linear-gradient(180deg, #62b6f6 0%, #a2dcfb 50%, #dcf0fe 75%, #f6fbf9 100%);" aria-hidden="true">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" class="w-full h-full opacity-95">
+      <defs>
+        <linearGradient id="hillGradFar" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#9ce662" />
+          <stop offset="100%" stop-color="#64be37" />
+        </linearGradient>
+        <linearGradient id="hillGradNear" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#76cc42" />
+          <stop offset="100%" stop-color="#4a9e25" />
+        </linearGradient>
+        <linearGradient id="castleStone" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#dce0ee" />
+          <stop offset="50%" stop-color="#f2f4fc" />
+          <stop offset="100%" stop-color="#bac0d6" />
+        </linearGradient>
+        <linearGradient id="castlePurpleCone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8b5cf6" />
+          <stop offset="100%" stop-color="#4f46e5" />
+        </linearGradient>
+        <linearGradient id="treeCanopy" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#6ad442" />
+          <stop offset="100%" stop-color="#2d7e18" />
+        </linearGradient>
+      </defs>
+
+      <!-- Nubes suaves -->
+      <g fill="#ffffff" opacity="0.85">
+        <ellipse cx="200" cy="100" rx="95" ry="36" />
+        <ellipse cx="260" cy="85" rx="70" ry="42" />
+        <ellipse cx="150" cy="105" rx="60" ry="32" />
+
+        <ellipse cx="800" cy="75" rx="115" ry="38" />
+        <ellipse cx="865" cy="60" rx="80" ry="45" />
+
+        <ellipse cx="1400" cy="110" rx="105" ry="38" />
+        <ellipse cx="1465" cy="95" rx="70" ry="40" />
+      </g>
+
+      <!-- Castillo de juguete en la colina derecha (como en la imagen de referencia) -->
+      <g transform="translate(1380, 150) scale(0.9)">
+        <!-- Colina del castillo -->
+        <path d="M-90 280 Q-40 180 30 180 Q90 180 140 280 Z" fill="#88bb44" opacity="0.7"/>
+        <!-- Muralla principal -->
+        <rect x="-40" y="80" width="80" height="90" fill="url(#castleStone)" rx="4"/>
+        <rect x="-46" y="70" width="92" height="14" fill="#a4aac2" rx="2"/>
+        <!-- Almenas -->
+        <rect x="-44" y="58" width="14" height="14" fill="#a4aac2" rx="1"/>
+        <rect x="-7" y="58" width="14" height="14" fill="#a4aac2" rx="1"/>
+        <rect x="30" y="58" width="14" height="14" fill="#a4aac2" rx="1"/>
+        <!-- Puerta con arco -->
+        <path d="M-14 170 A14 14 0 0 1 14 170 Z" fill="#382d20"/>
+        <!-- Torre izquierda con cono morado -->
+        <rect x="-72" y="40" width="34" height="130" fill="url(#castleStone)" rx="3"/>
+        <polygon points="-78,40 -55,-45 -32,40" fill="url(#castlePurpleCone)"/>
+        <polygon points="-55,-45 -55,-62 -38,-54" fill="#fbbf24"/>
+        <!-- Torre derecha con cono morado -->
+        <rect x="38" y="40" width="34" height="130" fill="url(#castleStone)" rx="3"/>
+        <polygon points="32,40 55,-45 78,40" fill="url(#castlePurpleCone)"/>
+        <polygon points="55,-45 55,-62 72,-54" fill="#fbbf24"/>
+        <!-- Torreón central alto -->
+        <rect x="-18" y="10" width="36" height="70" fill="url(#castleStone)"/>
+        <polygon points="-25,10 0,-85 25,10" fill="url(#castlePurpleCone)"/>
+        <polygon points="0,-85 0,-105 22,-95" fill="#fbbf24"/>
+        <!-- Ventanas azulejas -->
+        <rect x="-6" y="26" width="12" height="18" rx="6" fill="#1e1b4b"/>
+        <rect x="-60" y="66" width="8" height="14" rx="4" fill="#1e1b4b"/>
+        <rect x="52" y="66" width="8" height="14" rx="4" fill="#1e1b4b"/>
+      </g>
+
+      <!-- Colinas lejanas -->
+      <path d="M-50 430 Q260 290 620 370 T1260 330 T1650 390 L1650 900 L-50 900 Z" fill="url(#hillGradFar)" />
+
+      <!-- Árboles lejanos redondos -->
+      <g>
+        <circle cx="170" cy="340" r="38" fill="url(#treeCanopy)"/>
+        <circle cx="195" cy="320" r="30" fill="#78dd4d"/>
+        <circle cx="225" cy="345" r="35" fill="url(#treeCanopy)"/>
+
+        <circle cx="490" cy="370" r="44" fill="url(#treeCanopy)"/>
+        <circle cx="525" cy="350" r="36" fill="#78dd4d"/>
+
+        <circle cx="1150" cy="340" r="45" fill="url(#treeCanopy)"/>
+        <circle cx="1190" cy="320" r="38" fill="#78dd4d"/>
+      </g>
+
+      <!-- Colinas primer plano -->
+      <path d="M-50 515 Q340 430 820 485 T1650 455 L1650 900 L-50 900 Z" fill="url(#hillGradNear)" />
+
+      <!-- Arboledas de primer plano laterales -->
+      <g transform="translate(-10, 360)">
+        <rect x="70" y="120" width="22" height="65" fill="#6d421e" rx="4"/>
+        <circle cx="81" cy="85" r="62" fill="#3d941c"/>
+        <circle cx="65" cy="65" r="48" fill="#5ec431"/>
+        <circle cx="102" cy="75" r="42" fill="#7ee44b" opacity="0.65"/>
+      </g>
+      <g transform="translate(1430, 360)">
+        <rect x="80" y="120" width="22" height="65" fill="#6d421e" rx="4"/>
+        <circle cx="91" cy="85" r="64" fill="#3d941c"/>
+        <circle cx="75" cy="65" r="50" fill="#5ec431"/>
+        <circle cx="112" cy="75" r="44" fill="#7ee44b" opacity="0.65"/>
+      </g>
+
+      <!-- Vallas de madera laterales estilo granja de juguete -->
+      <g transform="translate(45, 570)">
+        <rect x="10" y="0" width="14" height="68" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
+        <rect x="70" y="5" width="14" height="63" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
+        <rect x="130" y="10" width="14" height="58" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
+        <rect x="5" y="16" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
+        <rect x="5" y="38" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(1375, 570)">
+        <rect x="10" y="10" width="14" height="58" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
+        <rect x="70" y="5" width="14" height="63" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
+        <rect x="130" y="0" width="14" height="68" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
+        <rect x="5" y="16" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
+        <rect x="5" y="38" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
+      </g>
+
+      <!-- Macetas de flores en el suelo -->
+      <g transform="translate(205, 605)">
+        <polygon points="5,42 35,42 31,16 9,16" fill="#d26437" stroke="#7c2f12" stroke-width="1.8"/>
+        <rect x="6" y="11" width="28" height="6" fill="#e07547" rx="2" stroke="#7c2f12" stroke-width="1.5"/>
+        <circle cx="14" cy="2" r="7" fill="#f43f5e"/><circle cx="14" cy="2" r="3" fill="#fef08a"/>
+        <circle cx="26" cy="5" r="6" fill="#fbbf24"/><circle cx="26" cy="5" r="2.5" fill="#ffffff"/>
+        <circle cx="20" cy="-3" r="6.5" fill="#ec4899"/><circle cx="20" cy="-3" r="2.5" fill="#fef08a"/>
+      </g>
+      <g transform="translate(1340, 605)">
+        <polygon points="5,42 35,42 31,16 9,16" fill="#d26437" stroke="#7c2f12" stroke-width="1.8"/>
+        <rect x="6" y="11" width="28" height="6" fill="#e07547" rx="2" stroke="#7c2f12" stroke-width="1.5"/>
+        <circle cx="14" cy="3" r="6.5" fill="#ef4444"/><circle cx="14" cy="3" r="2.5" fill="#fef08a"/>
+        <circle cx="26" cy="1" r="7" fill="#f59e0b"/><circle cx="26" cy="1" r="3" fill="#ffffff"/>
+        <circle cx="20" cy="-4" r="6" fill="#f43f5e"/><circle cx="20" cy="-4" r="2.5" fill="#fef08a"/>
+      </g>
+
+      <!-- Suelo de camino de adoquines en primer plano -->
+      <path d="M-50 710 Q800 680 1650 710 L1650 900 L-50 900 Z" fill="#e8d7bb" stroke="#cca97b" stroke-width="3"/>
+    </svg>
+  </div>
+
 
   <!-- TOAST NO BLOQUEANTE PARA CANJES BASE 10 Y AVISOS RÁPIDOS -->
   <div id="liveToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-3">
@@ -916,153 +1413,221 @@
   </div>
 
   <!-- BARRA SUPERIOR: CARTEL DE MADERA COMPACTO Y ALEGRE -->
-  <nav class="w-full max-w-6xl mb-1.5 flex flex-wrap items-center justify-between gap-1.5 pixel-frame rounded-xl px-3 py-1.5" style="background: linear-gradient(180deg,#f8eed8,#deb887);">
-    <div class="flex items-center gap-2">
-      <div class="lego-logo-brick mt-0.5 shrink-0" aria-hidden="true"></div>
-      <div>
-        <span class="text-[8px] font-black uppercase text-amber-950 pixel-font block leading-none">RPG · Crónicas de Numbrópolis</span>
-        <h1 class="text-xs sm:text-sm font-black retro-title leading-tight text-amber-950">
-          CASA LEGO <span class="text-red-600">RPG</span>
+  <nav class="w-full max-w-6xl mb-2 wood-nav-bar px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 z-20">
+    
+    <!-- Hojas decorativas de las esquinas -->
+    <div class="leaf-corner-left" aria-hidden="true">
+      <svg viewBox="0 0 30 30" class="w-full h-full drop-shadow">
+        <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+        <path d="M0 8 C6 12 14 18 18 24" fill="none" stroke="#86efac" stroke-width="1.2"/>
+      </svg>
+    </div>
+    <div class="leaf-corner-right" aria-hidden="true">
+      <svg viewBox="0 0 30 30" class="w-full h-full drop-shadow scale-x-[-1]">
+        <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+        <path d="M0 8 C6 12 14 18 18 24" fill="none" stroke="#86efac" stroke-width="1.2"/>
+      </svg>
+    </div>
+
+    <!-- IZQUIERDA: LOGO CASA LEGO RPG CON TECHO ROJO -->
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-b from-amber-100 to-amber-200 border-2 border-amber-900 shadow-md flex items-center justify-center relative overflow-hidden shrink-0">
+        <!-- Icono de casita LEGO con tejado rojo y puerta azul -->
+        <svg viewBox="0 0 36 36" class="w-8 h-8">
+          <polygon points="18,4 34,16 2,16" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>
+          <rect x="6" y="16" width="24" height="16" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+          <rect x="14" y="20" width="8" height="12" fill="#2563eb" rx="2" stroke="#1d4ed8" stroke-width="1.2"/>
+          <circle cx="18" cy="11" r="2" fill="#fbbf24"/>
+        </svg>
+      </div>
+      <div class="leading-none">
+        <h1 class="text-lg sm:text-xl font-black wood-title-3d tracking-wide">
+          CASA LEGO <span class="text-rose-400">RPG</span>
         </h1>
       </div>
     </div>
 
-    <!-- SELECTOR DE MODO PIXEL ART -->
-    <div class="flex items-center gap-1 p-0.5 rounded-lg bg-[#2e1b0e] border-2 border-[#1b120c]">
-      <button id="btnModeAdventure" onclick="switchGameMode('adventure')" class="dio-tab dio-tab-active text-[11px] py-1 px-2.5 pixel-font">
-        <span>🗺️</span> Misiones
+    <!-- CENTRO: SELECTOR DE MODO (MISIONES · RETOS · TALLER) -->
+    <div class="flex items-center gap-1.5 p-1 rounded-full bg-[#271004] border-2 border-[#1a0902] shadow-inner">
+      <button id="btnModeAdventure" onclick="switchGameMode('adventure')" class="mode-pill-btn mode-pill-active font-extrabold lego-font">
+        <span>🚩</span> Misiones
       </button>
-      <button id="btnModeChallenge" onclick="switchGameMode('challenge')" class="dio-tab text-[11px] py-1 px-2.5 pixel-font">
+      <button id="btnModeChallenge" onclick="switchGameMode('challenge')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
         <span>⚔️</span> Retos
       </button>
-      <button id="btnModeFree" onclick="switchGameMode('free')" class="dio-tab text-[11px] py-1 px-2.5 pixel-font">
-        <span>🧱</span> Taller
+      <button id="btnModeFree" onclick="switchGameMode('free')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
+        <span>💼</span> Taller
       </button>
     </div>
 
-    <!-- NIVEL DE ARQUITECTO + HERRAMIENTAS -->
+    <!-- DERECHA: NIVEL + XP + MAPA + AJUSTES -->
     <div class="flex items-center gap-2">
-      <!-- Medidor XP del jugador -->
-      <div class="hidden sm:flex flex-col items-end gap-0.5" title="¡Gana experiencia completando encargos de los habitantes!">
-        <div class="flex items-center gap-1 text-[9px] font-black pixel-font text-amber-950">
-          <span id="playerRankBadge">⚡ Nv. 1 Aprendiz</span>
-          <span class="text-amber-800">(<span id="playerXpBadge">0</span> XP)</span>
-        </div>
-        <div class="w-24 xp-meter-track">
-          <div id="playerXpBar" class="xp-meter-fill" style="width: 8%;"></div>
+      <!-- Medidor XP del jugador con estrella dorada -->
+      <div class="flex items-center gap-2 bg-[#271004]/90 border border-amber-900/60 rounded-full px-2.5 py-1" title="Nivel y experiencia del arquitecto">
+        <span class="text-amber-400 text-sm">⭐</span>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex items-center justify-between text-[10px] font-black leading-none text-amber-200">
+            <span id="playerRankBadge">NIV. 1</span>
+            <span class="text-amber-400/90 ml-1"><span id="playerXpBadge">20</span> / 100 XP</span>
+          </div>
+          <div class="w-20 sm:w-24 h-2 bg-[#170802] rounded-full overflow-hidden border border-amber-950">
+            <div id="playerXpBar" class="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full transition-all duration-300" style="width: 20%;"></div>
+          </div>
         </div>
       </div>
 
-      <button onclick="openCityMapModal()" class="pixel-btn-retro bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] py-1 px-2 flex items-center gap-1 rounded-md" title="Ver Reino de Numbrópolis">
-        <span>🏝️</span> Mapa (<span id="cityCountBadge">0</span>/8)
+      <!-- Botón Morado de Mapa -->
+      <button onclick="openCityMapModal()" class="flex items-center gap-1.5 bg-gradient-to-b from-purple-500 to-indigo-700 hover:from-purple-400 hover:to-indigo-600 border-2 border-indigo-950 text-white font-black text-xs py-1.5 px-3 rounded-full shadow-md transition-all active:translate-y-0.5" title="Ver Isla Numbrópolis">
+        <span>📍</span> Mapa 📖 (<span id="cityCountBadge">0</span>/8)
       </button>
-      <button id="btnSoundToggle" onclick="toggleMute()" class="pixel-btn-retro bg-[#d8d4c8] text-amber-950 text-xs px-2 py-1 rounded-md" title="Sonido y voz">
+
+      <!-- Botón de Sonido / Ajustes -->
+      <button id="btnSoundToggle" onclick="toggleMute()" class="w-8 h-8 rounded-full bg-gradient-to-b from-stone-200 to-stone-400 hover:from-white hover:to-stone-300 border-2 border-stone-800 text-stone-900 text-sm flex items-center justify-center shadow-md transition-all active:translate-y-0.5" title="Sonido y voz">
         🔊
       </button>
-      <!-- Elemento de compatibilidad oculto -->
+      
+      <!-- Compatibilidad oculta -->
       <button id="btnViewMode" onclick="cycleRoomViewMode()" class="hidden" aria-hidden="true"><span id="viewModeLabel">Bandeja</span></button>
     </div>
+
   </nav>
 
   <!-- HUB DE MISIÓN Y COMPAÑERO LEO (COMPACTO, AMIGABLE Y ENFOCADO PARA NIÑOS) -->
     <!-- HUB DE MISIÓN Y COMPAÑERO LEO (ESTILO RPG PIXEL ART) -->
-  <header id="targetControlBox" class="w-full max-w-6xl mb-1.5 pixel-frame rounded-xl p-2 sm:p-2.5 flex flex-col gap-1.5 bg-[#fefae0]">
+    <!-- ========================================================================= -->
+  <!-- PANEL DE MISIONES Y DIÁLOGO: TARJETA DE PERGAMINO ELEGANTE                  -->
+  <!-- ========================================================================= -->
+  <header id="targetControlBox" class="w-full max-w-6xl mb-2 parchment-card-premium p-2.5 sm:p-3 flex flex-col gap-2 z-20">
     
-    <!-- FILA PRINCIPAL: DIÁLOGO RPG (IZQUIERDA) + NÚMERO MÁGICO (CENTRO) + ACCIONES (DERECHA) -->
-    <div class="flex flex-wrap items-center justify-between gap-2">
+    <!-- Hojas decorativas de esquina -->
+    <div class="leaf-corner-left" aria-hidden="true">
+      <svg viewBox="0 0 30 30" class="w-6 h-6 drop-shadow">
+        <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="leaf-corner-right" aria-hidden="true">
+      <svg viewBox="0 0 30 30" class="w-6 h-6 drop-shadow scale-x-[-1]">
+        <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <!-- FILA PRINCIPAL: 3 ZONAS (PERSONAJE IZQ + OBJETIVO CENTRO + CTA DERECHA) -->
+    <div class="flex flex-wrap items-center justify-between gap-3">
       
-      <!-- 1. COMPAÑERO LEO: AVATAR PIXEL ART + CAJA DE DIÁLOGO RPG -->
-      <div class="flex items-center gap-2 min-w-0 flex-1 sm:flex-initial">
-        <div class="leo-avatar-frame cursor-pointer pixel-frame rounded-lg" onclick="triggerLeoSpeech()" title="¡Leo el Maestro Constructor! Clic para escuchar">
-          <canvas id="leoWebcam3DCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing" style="image-rendering:pixelated;"></canvas>
-          <button onclick="event.stopPropagation(); triggerLeoSpeech()" class="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-md bg-amber-400 border border-amber-950 text-[10px] flex items-center justify-center shadow" title="Escuchar">
+      <!-- ZONA IZQUIERDA: PERSONAJE LEGO + GLOBO DE DIÁLOGO -->
+      <div class="flex items-center gap-2.5 min-w-0 flex-1 sm:flex-initial">
+        <!-- Retrato del personaje aventurero -->
+        <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-amber-300 to-amber-500 border-2.5 border-amber-900 p-0.5 shadow-md shrink-0 cursor-pointer overflow-hidden" onclick="triggerLeoSpeech()" title="¡Haz clic para escuchar el diálogo!">
+          <canvas id="leoWebcam3DCanvas" class="w-full h-full block rounded-xl cursor-grab active:cursor-grabbing"></canvas>
+          <span class="absolute bottom-0 right-0 w-5 h-5 bg-amber-400 border border-amber-900 rounded-full flex items-center justify-center text-[10px] shadow">
             🗣️
-          </button>
+          </span>
         </div>
 
-        <!-- Caja de texto RPG de la aventura -->
-        <div class="relative bg-[#fffdf5] border-2 border-[#1b120c] rounded-lg px-2.5 py-1.5 shadow max-w-[280px] sm:max-w-xs">
+        <!-- Globo de diálogo estilo cómic/RPG con flecha -->
+        <div class="relative bg-white border-2 border-amber-300 rounded-2xl px-3 py-2 shadow-sm max-w-[280px] sm:max-w-xs">
+          <!-- Pico del bocadillo hacia el avatar -->
+          <span class="absolute top-1/2 -left-2 -translate-y-1/2 w-3 h-3 rotate-45 bg-white border-l-2 border-b-2 border-amber-300"></span>
           <div class="flex items-center justify-between gap-1 mb-0.5">
-            <span id="rpgSpeakerLabel" class="text-[9px] font-black uppercase text-amber-900 pixel-font flex items-center gap-1">
-              <span>👷‍♂️ Leo Maestro:</span>
+            <span id="rpgSpeakerLabel" class="text-[11px] font-black text-amber-950 flex items-center gap-1">
+              <span>¡Buenos días, pequeño arquitecto!</span>
             </span>
-            <span class="text-[9px] text-amber-700 cursor-retro-blink">▼</span>
           </div>
-          <p id="leoSpeechBubble" class="text-[11px] font-bold leading-tight" style="color:#2e1b0e">
-            ¡Hola arquitecto! El Reino de Numbrópolis te necesita. ¡Construyamos juntos!
+          <p id="leoSpeechBubble" class="text-xs font-bold leading-snug text-slate-700">
+            Necesitamos construir el número 35. Usa la Casa de los Números para lograrlo.
           </p>
         </div>
       </div>
 
-      <!-- 2. NÚMERO / ENCARGO CENTRAL: EL OBJETIVO MÁGICO -->
-      <div class="flex flex-col items-center justify-center flex-1 min-w-[200px]">
-        <span id="targetHeaderLabel" class="text-[9px] font-black uppercase tracking-wider text-amber-950/80 pixel-font block leading-none mb-0.5">OBJETIVO DE LA OBRA</span>
-        <div class="flex items-center gap-2">
-          <div id="targetNumberDisplay" class="text-2xl sm:text-3xl font-black lego-font tracking-wide flex items-center justify-center flex-wrap" style="text-shadow: 0 1px 0 rgba(255,255,255,0.8)"></div>
-          <button onclick="speakTargetNumber()" class="w-7 h-7 rounded-md pixel-btn-retro bg-amber-400 text-amber-950 flex items-center justify-center text-xs shrink-0" title="Escuchar objetivo en voz alta">
+      <!-- ZONA CENTRAL: ETIQUETA + NÚMERO OBJETIVO GIGANTE + LADRILLO LEGO 3D -->
+      <div class="flex flex-col items-center justify-center flex-1 min-w-[180px]">
+        <span id="targetHeaderLabel" class="text-[11px] font-black uppercase tracking-wider text-amber-950/80 block leading-none mb-1">
+          Número objetivo:
+        </span>
+        <div class="flex items-center gap-2.5">
+          <div id="targetNumberDisplay" class="text-3xl sm:text-4xl font-black text-blue-600 lego-font tracking-wide flex items-center justify-center flex-wrap" style="text-shadow: 0 2px 0 rgba(255,255,255,0.9), 0 3px 6px rgba(37,99,235,0.2)">
+            35
+          </div>
+          <!-- Bloque LEGO 3D decorativo dorado -->
+          <div class="w-8 h-8 relative shrink-0" title="Pieza LEGO mágica">
+            <svg viewBox="0 0 40 40" class="w-full h-full drop-shadow">
+              <!-- Bloque isométrico amarillo -->
+              <polygon points="20,4 36,12 20,20 4,12" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+              <polygon points="4,12 20,20 20,36 4,28" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+              <polygon points="20,20 36,12 36,28 20,36" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+              <!-- Studs -->
+              <ellipse cx="14" cy="10" rx="4" ry="2.2" fill="#fef08a" stroke="#d97706" stroke-width="1"/>
+              <ellipse cx="26" cy="14" rx="4" ry="2.2" fill="#fef08a" stroke="#d97706" stroke-width="1"/>
+            </svg>
+          </div>
+          <button onclick="speakTargetNumber()" class="w-7 h-7 rounded-full bg-amber-200 hover:bg-amber-300 border border-amber-900 text-amber-950 flex items-center justify-center text-xs shrink-0 shadow transition-all active:translate-y-0.5" title="Escuchar objetivo en voz alta">
             📢
           </button>
         </div>
       </div>
 
-      <!-- 3. BOTONES DE ACCIÓN RPG -->
-      <div class="flex items-center gap-1.5 shrink-0">
-        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden pixel-btn-retro bg-emerald-600 text-white text-xs sm:text-sm py-1.5 px-3.5 flex items-center gap-1 rounded-lg">
+      <!-- ZONA DERECHA: BOTÓN PRINCIPAL DE ACCIÓN (¡A CONSTRUIR! / ¡COMPROBAR!) -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="btnActionPrimary" onclick="handlePrimaryAction()" class="btn-gold-cta text-sm sm:text-base py-2 px-5 flex items-center gap-2">
+          <span id="btnActionPrimaryIcon">▶</span> <span id="btnActionPrimaryText">¡A construir!</span>
+        </button>
+
+        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden btn-gold-cta text-sm sm:text-base py-2 px-5 flex items-center gap-2">
           <span>⚔️</span> ¡Comprobar!
         </button>
 
-        <button onclick="resetHouseBlocks()" class="pixel-btn-retro bg-[#e2e8f0] text-slate-900 text-xs py-1.5 px-2.5 flex items-center gap-1 rounded-lg" title="Poner en cero todos los números">
+        <button onclick="resetHouseBlocks()" class="bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold text-xs py-2 px-3 rounded-xl border-2 border-stone-300 shadow-sm transition-all active:translate-y-0.5 flex items-center gap-1" title="Poner en cero todas las posiciones">
           <span>🧹</span> Borrar
         </button>
 
-        <div class="pixel-frame px-2 py-1 flex items-center gap-1.5 rounded-lg bg-white/90">
-          <div id="statusDot" class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></div>
-          <span id="badgeHouseStatus" class="text-[10px] font-black text-amber-800 uppercase pixel-font">En obra 🔨</span>
+        <div class="bg-amber-100/90 border border-amber-400 px-2 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm">
+          <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></div>
+          <span id="badgeHouseStatus" class="text-[10px] font-black text-amber-900 uppercase">En obra 🔨</span>
         </div>
       </div>
 
     </div>
 
-    <!-- SUB-BARRA: ESTADO DE AVENTURA / DESAFÍO EN MODO PIXEL ART -->
-    <div id="missionDetailBar" class="flex flex-wrap items-center justify-between gap-1 text-[11px] pt-1 border-t border-[#1b120c]/15">
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span id="missionIcon" class="text-sm">🥖</span>
-        <span id="missionStepBadge" class="bg-amber-100 text-amber-950 border border-amber-900 px-1.5 py-0.5 rounded font-black text-[10px] pixel-font">Misión 1 de 8</span>
-        <span id="missionTitle" class="font-bold text-amber-950">La Panadería de Don Pancho</span>
-        <span id="missionLevelBadge" class="hidden sm:inline bg-white/80 text-amber-900 px-1.5 py-0.5 rounded border border-amber-800/20 text-[10px]">Unidades y Decenas</span>
+    <!-- FRANJA INFORMATIVA INFERIOR DE LA MISIÓN -->
+    <div id="missionDetailBar" class="flex flex-wrap items-center justify-between gap-1.5 text-xs pt-2 border-t border-amber-200/80">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-sm">🎯</span>
+        <span id="missionIcon" class="hidden">🥖</span>
+        <span id="missionSubStripText" class="font-extrabold text-amber-950">
+          <span id="missionStepBadge">Misión 1 de 8</span>: <span id="missionTitle">La Panadería de Don Pancho - Plaza Mayor</span>
+        </span>
+        <span id="missionLevelBadge" class="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full border border-amber-300 font-bold text-[10px]">Paso 1: Unidades y Decenas</span>
       </div>
-      <div class="flex items-center gap-1">
+      <div class="flex items-center gap-1.5">
         <div id="missionStarsContainer" class="flex items-center gap-0.5 text-xs"></div>
-        <button id="btnNextMission" onclick="advanceToNextMission()" class="hidden pixel-btn-retro bg-emerald-600 text-white text-xs py-0.5 px-2.5 rounded flex items-center gap-1 animate-bounce">
+        <button id="btnNextMission" onclick="advanceToNextMission()" class="hidden btn-gold-cta text-xs py-1 px-3 rounded-lg flex items-center gap-1 animate-bounce">
           <span>➡️</span> ¡Siguiente!
         </button>
       </div>
     </div>
 
-    <!-- PANEL DEL MODO DESAFÍOS (OCULTO EN MODO AVENTURA) -->
-    <div id="challengeControlBar" class="hidden flex flex-wrap items-center justify-between gap-1.5 pt-1 border-t border-[#1b120c]/15">
-      <div class="flex items-center gap-1 flex-wrap">
-        <select id="selChallengeType" onchange="handleChallengeTypeChange()" class="text-xs rounded border border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
+    <!-- FRANJA PARA MODO DESAFÍOS (OCULTO EN MODO AVENTURA) -->
+    <div id="challengeControlBar" class="hidden flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-amber-200/80">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <select id="selChallengeType" onchange="handleChallengeTypeChange()" class="text-xs rounded-lg border-2 border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
           <option value="scrambled">🧩 Reto Posicional Mixto</option>
           <option value="dictation">🎙️ Dictado del Maestro</option>
           <option value="worded">📖 Acertijo de los Sabios</option>
           <option value="exchange">🔄 Canje Mágico de Bloques</option>
         </select>
-        <select id="selChallengeLevel" onchange="handleChallengeLevelChange()" class="text-xs rounded border border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
+        <select id="selChallengeLevel" onchange="handleChallengeLevelChange()" class="text-xs rounded-lg border-2 border-amber-900 bg-white px-2 py-1 font-bold text-amber-950 shadow-sm">
           <option value="1">Nivel 1 · Hasta 99 (D y U)</option>
           <option value="2" selected>Nivel 2 · Hasta 999 (Centenas)</option>
           <option value="3">Nivel 3 · Hasta 9.999 (Unid. de Mil)</option>
           <option value="4">Nivel 4 · Hasta 99.999 (Dec. de Mil)</option>
         </select>
-        <button onclick="generateNewChallenge()" class="pixel-btn-retro bg-amber-400 text-amber-950 text-xs py-1 px-2.5 rounded flex items-center gap-1">
+        <button onclick="generateNewChallenge()" class="btn-gold-cta text-xs py-1 px-3 rounded-lg flex items-center gap-1">
           <span>🎲</span> Nuevo Reto
         </button>
       </div>
-      <div class="flex items-center gap-2">
-        <div class="text-[11px] font-black pixel-font text-amber-950">
-          🔥 Racha: <span id="challengeStreakBadge" class="text-amber-800">0</span>
-          · ⭐ Puntos: <span id="challengeScoreBadge" class="text-amber-800">0</span>
-        </div>
+      <div class="flex items-center gap-2 text-xs font-black text-amber-950">
+        🔥 Racha: <span id="challengeStreakBadge" class="text-amber-800">0</span>
+        · ⭐ Puntos: <span id="challengeScoreBadge" class="text-amber-800">0</span>
       </div>
     </div>
 
@@ -1088,279 +1653,285 @@
     </div>
 
     <!-- DIORAMA: ESCENARIO CON LAS 5 HABITACIONES PERMANENTES EN UN MISMO EDIFICIO LEGO -->
-    <div id="houseStageScroller" class="w-full overflow-x-auto p-1 sm:p-2 pb-3 custom-scroll">
-      <div class="diorama-stage flex flex-col items-center px-4 sm:px-6 pt-3 pb-6 relative w-fit max-w-full mx-auto">
-        <div class="lego-baseplate"></div>
-        <div class="dirt-path"></div>
-        <div class="torch-glow" style="left:-20px; top:30px;"></div>
-        <div class="torch-glow" style="right:-20px; top:30px; animation-delay:1.2s"></div>
-
-        <!-- Contenedores ocultos de compatibilidad para conservar referencias DOM heredadas -->
+    
+    <!-- =================================================================== -->
+    <!-- LA CASA DE LOS NÚMEROS (5 HABITACIONES LEGO RPG PREMIUM)            -->
+    <!-- =================================================================== -->
+    <div id="houseStageScroller" class="w-full overflow-x-auto p-1 sm:p-2 pb-2 custom-scroll z-20">
+      <div class="diorama-stage flex flex-col items-center px-2 sm:px-4 pt-1 pb-4 relative w-fit max-w-full mx-auto">
+        
+        <!-- Compatibilidad de slots heredados (ocultos) -->
         <div id="emptyDM" class="hidden" aria-hidden="true">
-          <button onclick="attachRoom('DM')">+</button>
           <button onclick="attachRoom('DM')">+</button>
           <button onclick="detachRoom('DM')">x</button>
         </div>
         <div id="emptyUM" class="hidden" aria-hidden="true">
           <button onclick="attachRoom('UM')">+</button>
-          <button onclick="attachRoom('UM')">+</button>
           <button onclick="detachRoom('UM')">x</button>
         </div>
 
-        <!-- =================================================================== -->
-        <!-- EDIFICIO LEGO UNIFICADO DE 5 HABITACIONES (DM · UM · • · C · D · U) -->
-        <!-- =================================================================== -->
+        <!-- ESTRUCTURA PRINCIPAL DE LA CASA -->
         <div class="w-full flex flex-col items-center relative z-10">
 
-          <!-- GRAN TEJADO CONTINUO DE TEJAS LEGO CON CHIMENEA Y ESTANDARTE -->
-          <div class="unified-house-roof">
-            <div class="hidden sm:flex absolute -top-5 right-20 z-10 flex-col items-center pointer-events-none">
+          <!-- FAROLES LATERALES CON LUZ CÁLIDA -->
+          <div class="wall-lantern -left-3 hidden sm:flex" aria-hidden="true">
+            <div class="wall-lantern-glass"></div>
+          </div>
+          <div class="wall-lantern -right-3 hidden sm:flex" aria-hidden="true">
+            <div class="wall-lantern-glass"></div>
+          </div>
+
+          <!-- TEJADO ROJO DE PIEZAS LEGO CON PLACA TALLADA Y CHIMENEA -->
+          <div class="house-lego-roof">
+            <!-- Chimenea clásica de piedra -->
+            <div class="hidden sm:flex absolute -top-4 right-16 z-10 flex-col items-center pointer-events-none">
               <span class="smoke-puff" style="top:-14px; left:6px;"></span>
               <span class="smoke-puff" style="top:-14px; left:10px; animation-delay:1.1s"></span>
-              <span class="smoke-puff" style="top:-14px; left:4px; animation-delay:2.2s"></span>
-              <div class="w-8 h-10 stone-wall rounded-t border-2" style="border-color:#44423c; box-shadow: inset 0 3px 0 rgba(0,0,0,0.25)"></div>
+              <div class="w-7 h-9 stone-wall rounded-t border-2 border-[#381a0b] shadow"></div>
             </div>
 
-            <svg viewBox="0 0 1000 110" preserveAspectRatio="none" class="w-full h-full" style="filter: drop-shadow(0 5px 3px rgba(40,10,5,0.45))">
+            <!-- SVG del Tejado Rojo con Studs LEGO y Tejas -->
+            <svg viewBox="0 0 1000 100" preserveAspectRatio="none" class="w-full h-full" style="filter: drop-shadow(0 6px 4px rgba(45,15,5,0.4))">
               <defs>
-                <linearGradient id="roofGradUnified" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#E5533D" />
-                  <stop offset="100%" stop-color="#9E2418" />
+                <linearGradient id="roofGradUnified" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#991b1b"/></linearGradient>
+              <linearGradient id="legoRoofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#ef4444" />
+                  <stop offset="50%" stop-color="#dc2626" />
+                  <stop offset="100%" stop-color="#991b1b" />
                 </linearGradient>
-                <pattern id="roofShingles" width="24" height="14" patternUnits="userSpaceOnUse">
-                  <path d="M0 14 Q6 2 12 14 Q18 2 24 14" fill="none" stroke="#6E1610" stroke-width="1.8" opacity="0.58"/>
+                <pattern id="legoRoofStudsPattern" width="28" height="14" patternUnits="userSpaceOnUse">
+                  <path d="M0 14 Q7 2 14 14 Q21 2 28 14" fill="none" stroke="#7f1d1d" stroke-width="1.8" opacity="0.6"/>
+                  <ellipse cx="7" cy="6" rx="2.8" ry="1.4" fill="#fca5a5" opacity="0.4"/>
+                  <ellipse cx="21" cy="6" rx="2.8" ry="1.4" fill="#fca5a5" opacity="0.4"/>
                 </pattern>
               </defs>
-              <polygon points="500,6 996,106 4,106" fill="url(#roofGradUnified)" stroke="#5C130D" stroke-width="4" stroke-linejoin="round"/>
-              <polygon points="500,6 996,106 4,106" fill="url(#roofShingles)"/>
-              <polygon points="500,6 996,106 982,106 500,16 18,106 4,106" fill="#ffffff" opacity="0.14"/>
-              <rect x="440" y="2" width="120" height="10" rx="4" fill="#8a5636" stroke="#3b1d0d" stroke-width="2"/>
-              <rect x="0" y="98" width="1000" height="10" fill="#5C130D" opacity="0.7"/>
+              <!-- Faldón principal del tejado triangular -->
+              <polygon points="500,6 996,96 4,96" fill="url(#legoRoofGrad)" stroke="#7f1d1d" stroke-width="3" stroke-linejoin="round"/>
+              <polygon points="500,6 996,96 4,96" fill="url(#legoRoofStudsPattern)"/>
+              <!-- Borde de madera del alero -->
+              <rect x="0" y="88" width="1000" height="10" rx="3" fill="#6d3916" stroke="#3b1d0a" stroke-width="1.8"/>
             </svg>
 
-            <div id="houseRoofBadge" class="absolute bottom-2 font-black text-[10px] sm:text-xs uppercase tracking-widest px-3 sm:px-5 py-0.5 rounded-md flex items-center gap-1.5" style="background:linear-gradient(180deg,#f8eed8,#e7d2a5); color:#3b2a1a; border:2px solid #2e1b0e; box-shadow:0 3px 0 rgba(0,0,0,0.4)">
-              <span>🏰</span> <span id="houseTitleText">La Casa de los Números · 5 Posiciones</span>
+            <!-- Placa central tallada: "La Casa de los Números" -->
+            <div id="houseRoofBadge" class="house-carved-sign absolute left-1/2 -translate-x-1/2 bottom-[-8px] z-30">
+              <span class="text-xs">🧱</span>
+              <span id="houseTitleText" class="text-xs sm:text-sm tracking-wide">La Casa de los Números</span>
+              <span class="text-xs">🧱</span>
             </div>
           </div>
 
-          <!-- CUERPO ARQUITECTÓNICO UNIFICADO DE LA CASA (5 HABITACIONES PERMANENTES) -->
-          <div class="brick-wall unified-house-body w-full justify-center">
-
+          <!-- CUERPO ARQUITECTÓNICO DE MADERA (5 HABITACIONES ALINEADAS) -->
+          <div class="w-full flex items-stretch justify-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-b-2xl border-4 border-[#3b1d09] border-t-0 shadow-2xl relative" style="background: linear-gradient(180deg, #d49862 0%, #b87a45 50%, #995c2e 100%);">
+            
             <!-- 1. HABITACIÓN DECENAS DE MIL (DM) — MORADO -->
-            <div id="slotDM" class="room-col-wrap">
-              <div class="room-studs-bar w-full">
-                <div class="room-stud bg-purple-500"></div>
-                <div class="room-stud bg-purple-500"></div>
-                <div class="room-stud bg-purple-500"></div>
-                <div class="room-stud bg-purple-500"></div>
+            <div id="slotDM" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
+              <!-- Lámpara colgante morada -->
+              <div class="room-hanging-lamp">
+                <div class="lamp-cord"></div>
+                <div class="lamp-shade bg-purple-600"></div>
+                <div class="lamp-glow"></div>
               </div>
-              <div id="roomDM" class="timber-frame house-room-unit bg-purple-50 border-[3px] border-purple-700 w-full">
-                <div class="w-full bg-gradient-to-b from-purple-500 to-purple-700 text-white text-center py-1 px-1 rounded-lg border-2 border-purple-950" style="box-shadow:0 2px 0 rgba(0,0,0,0.3)">
-                  <span class="text-[8px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight" style="text-shadow:0 1px 0 rgba(0,0,0,0.45)">Dec. Mil (DM)</span>
+
+              <div id="roomDM" class="lego-room-card w-full border-[3px] border-purple-700 bg-[#fdfaff] shadow-md">
+                <!-- Arco de Encabezado -->
+                <div class="w-full bg-gradient-to-b from-purple-500 to-purple-700 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-purple-900 shadow">
+                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Decenas de Mil (DM)</span>
                 </div>
 
-                <!-- Ventana arquitectónica LEGO: EXCLUSIVAMENTE LA CIFRA GIGANTE -->
-                <div onclick="changeBlocks('DM', 1)" id="chamberDM" class="room-digit-alcove border-[3px] border-purple-400" title="Habitación Decenas de Mil (DM) · Clic para sumar +1">
-                  <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-purple-800/80 mb-0.5">DM</span>
-                  <div id="digitCardDM" class="flex items-center justify-center">
-                    <span id="digitDM" class="room-giant-digit text-purple-600">0</span>
+                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
+                <div onclick="changeBlocks('DM', 1)" id="chamberDM" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-purple-50/50 transition-colors" title="Decenas de Mil (DM) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardDM"></span>
+                  <span id="digitDM" class="room-giant-digit-premium text-purple-600">0</span>
+                  <div class="room-equiv-badge bg-purple-100 text-purple-900 border border-purple-300">
+                    = <span id="valBadgeDM">0</span>
                   </div>
                 </div>
 
-                <!-- Alféizar con valor y botones (− / +) -->
-                <div class="rounded-xl p-1 sm:p-1.5 border-2 border-purple-300 flex flex-col gap-1" style="background:#fdf3dc">
-                  <div class="flex items-center justify-between px-0.5 sm:px-1">
-                    <span class="hidden sm:inline text-[9px] font-black text-purple-950">×10.000</span>
-                    <span id="valBadgeDM" class="text-[8px] sm:text-[10px] font-black text-purple-900 bg-purple-200/85 px-1 sm:px-1.5 rounded mx-auto sm:mx-0">0</span>
-                  </div>
-                  <div class="grid grid-cols-2 gap-1">
-                    <button onclick="changeBlocks('DM', -1)" class="btn-tactile bg-purple-100 hover:bg-purple-200 text-purple-950 font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-purple-300" aria-label="Restar 1 Decena de Mil">−</button>
-                    <button onclick="changeBlocks('DM', 1)" class="btn-tactile bg-purple-600 hover:bg-purple-700 text-white font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-purple-900" aria-label="Sumar 1 Decena de Mil">+</button>
-                  </div>
+                <!-- Botones táctiles (− y +) -->
+                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-purple-50/80 border-t border-purple-200">
+                  <button onclick="changeBlocks('DM', -1)" class="room-btn-touch bg-purple-100 hover:bg-purple-200 text-purple-950 border-2 border-purple-300" aria-label="Restar 1 Decena de Mil">−</button>
+                  <button onclick="changeBlocks('DM', 1)" class="room-btn-touch bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-800 shadow" aria-label="Sumar 1 Decena de Mil">+</button>
                 </div>
               </div>
+
+              <!-- Tapete morado en la entrada -->
+              <div class="room-entry-doormat bg-purple-500"></div>
             </div>
 
-            <div class="lego-pillar"></div>
-
-            <!-- 2. HABITACIÓN UNIDADES DE MIL (UM) — AMARILLO -->
-            <div id="slotUM" class="room-col-wrap">
-              <div class="room-studs-bar w-full">
-                <div class="room-stud bg-amber-400"></div>
-                <div class="room-stud bg-amber-400"></div>
-                <div class="room-stud bg-amber-400"></div>
-                <div class="room-stud bg-amber-400"></div>
-              </div>
-              <div id="roomUM" class="timber-frame house-room-unit bg-amber-50 border-[3px] border-amber-500 w-full">
-                <div class="w-full bg-gradient-to-b from-amber-400 to-amber-600 text-amber-950 text-center py-1 px-1 rounded-lg border-2 border-amber-800" style="box-shadow:0 2px 0 rgba(0,0,0,0.28)">
-                  <span class="text-[8px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Unid. Mil (UM)</span>
-                </div>
-
-                <!-- Ventana arquitectónica LEGO: EXCLUSIVAMENTE LA CIFRA GIGANTE -->
-                <div onclick="changeBlocks('UM', 1)" id="chamberUM" class="room-digit-alcove border-[3px] border-amber-400" title="Habitación Unidades de Mil (UM) · Clic para sumar +1">
-                  <div class="flex items-center gap-1 mb-0.5">
-                    <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-900/80">UM</span>
-                    <button onclick="event.stopPropagation(); borrowFromLeft('C')" id="btnUnpackUM" class="hidden text-[8px] bg-amber-200 hover:bg-amber-300 text-amber-950 font-black px-1 rounded" title="Desagrupar 1 UM en 10 Centenas">1➡️10C</button>
-                  </div>
-                  <div id="digitCardUM" class="flex items-center justify-center">
-                    <span id="digitUM" class="room-giant-digit text-amber-500" style="text-shadow: 0 2px 0 #78350f;">0</span>
-                  </div>
-                </div>
-
-                <!-- Alféizar con valor y botones (− / +) -->
-                <div class="rounded-xl p-1 sm:p-1.5 border-2 border-amber-400 flex flex-col gap-1" style="background:#fdf3dc">
-                  <div class="flex items-center justify-between px-0.5 sm:px-1">
-                    <span class="hidden sm:inline text-[9px] font-black text-amber-950">×1.000</span>
-                    <span id="valBadgeUM" class="text-[8px] sm:text-[10px] font-black text-amber-950 bg-amber-200/90 px-1 sm:px-1.5 rounded mx-auto sm:mx-0">0</span>
-                  </div>
-                  <div class="grid grid-cols-2 gap-1">
-                    <button onclick="changeBlocks('UM', -1)" class="btn-tactile bg-amber-100 hover:bg-amber-200 text-amber-950 font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-amber-400" aria-label="Restar 1 Unidad de Mil">−</button>
-                    <button onclick="changeBlocks('UM', 1)" class="btn-tactile bg-amber-500 hover:bg-amber-600 text-amber-950 font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-amber-800" aria-label="Sumar 1 Unidad de Mil">+</button>
-                  </div>
-                </div>
-              </div>
+            <!-- COLUMNA DE MADERA -->
+            <div class="timber-post">
+              <div class="pillar-flower-pot"></div>
             </div>
 
-            <!-- COLUMNA ARQUITECTÓNICA DEL PUNTO DE MIL (ENTRE UM Y C) -->
-            <div class="mil-column-wrap relative flex flex-col items-center justify-center z-20 px-0.5 self-stretch">
-              <div class="w-3 sm:w-4 flex-1 stone-wall border-2 border-b-0 rounded-t" style="border-color:#44423c"></div>
-              <button
-                onclick="speakMilPoint()"
-                id="milPointBtn"
-                class="w-6 h-6 sm:w-10 sm:h-10 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition my-1 shrink-0"
-                style="background: radial-gradient(circle at 35% 30%, #fff3b0, #f2c14e 45%, #b8860b); border:2.5px solid #6b4a00; box-shadow: 0 0 14px rgba(255,200,80,0.85), 0 3px 0 rgba(0,0,0,0.45);"
-                title="¡Punto de Mil! Al cruzarlo leemos la palabra MIL"
-              >
-                <span class="text-base sm:text-2xl font-black leading-none" style="color:#4a2c00">•</span>
+            <!-- 2. HABITACIÓN UNIDADES DE MIL (UM) — NARANJA -->
+            <div id="slotUM" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
+              <!-- Lámpara colgante naranja -->
+              <div class="room-hanging-lamp">
+                <div class="lamp-cord"></div>
+                <div class="lamp-shade bg-orange-500"></div>
+                <div class="lamp-glow"></div>
+              </div>
+
+              <div id="roomUM" class="lego-room-card w-full border-[3px] border-orange-600 bg-[#fffbf7] shadow-md">
+                <!-- Arco de Encabezado -->
+                <div class="w-full bg-gradient-to-b from-orange-500 to-orange-600 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-orange-800 shadow">
+                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Unidades de Mil (UM)</span>
+                </div>
+
+                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
+                <div onclick="changeBlocks('UM', 1)" id="chamberUM" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-orange-50/50 transition-colors" title="Unidades de Mil (UM) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardUM"></span>
+                  <span id="digitUM" class="room-giant-digit-premium text-orange-500">0</span>
+                  <div class="room-equiv-badge bg-orange-100 text-orange-950 border border-orange-300">
+                    = <span id="valBadgeUM">0</span>
+                  </div>
+                </div>
+
+                <!-- Botones táctiles (− y +) -->
+                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-orange-50/80 border-t border-orange-200">
+                  <button onclick="changeBlocks('UM', -1)" class="room-btn-touch bg-orange-100 hover:bg-orange-200 text-orange-950 border-2 border-orange-300" aria-label="Restar 1 Unidad de Mil">−</button>
+                  <button onclick="changeBlocks('UM', 1)" class="room-btn-touch bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-700 shadow" aria-label="Sumar 1 Unidad de Mil">+</button>
+                </div>
+              </div>
+
+              <!-- Tapete naranja en la entrada -->
+              <div class="room-entry-doormat bg-orange-500"></div>
+            </div>
+
+            <!-- COLUMNA DE MADERA CON MEDALLÓN PUNTO DE MIL -->
+            <div class="timber-post flex items-center justify-center">
+              <button id="milPointBtn" onclick="speakMilPoint()" class="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 border-2 border-amber-900 shadow-md flex items-center justify-center text-[8px] font-black text-amber-950 transition-transform active:scale-95" title="Punto de Mil: separa los miles de las centenas">
+                •
               </button>
-              <span class="text-[7px] sm:text-[9px] font-black px-1 sm:px-1.5 py-0.5 rounded uppercase mb-1" style="background:#f2c14e; color:#4a2c00; border:1.5px solid #6b4a00">MIL</span>
-              <div class="w-3 sm:w-4 flex-1 stone-wall border-2 border-t-0 rounded-b" style="border-color:#44423c"></div>
+              <div class="pillar-flower-pot"></div>
             </div>
 
             <!-- 3. HABITACIÓN CENTENAS (C) — VERDE -->
-            <div class="room-col-wrap">
-              <div class="room-studs-bar w-full">
-                <div class="room-stud bg-emerald-500"></div>
-                <div class="room-stud bg-emerald-500"></div>
-                <div class="room-stud bg-emerald-500"></div>
-                <div class="room-stud bg-emerald-500"></div>
+            <div id="slotC" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
+              <!-- Lámpara colgante verde -->
+              <div class="room-hanging-lamp">
+                <div class="lamp-cord"></div>
+                <div class="lamp-shade bg-emerald-600"></div>
+                <div class="lamp-glow"></div>
               </div>
-              <div id="chamberWrapC" class="timber-frame house-room-unit bg-emerald-50 border-[3px] border-emerald-600 w-full">
-                <div class="w-full bg-gradient-to-b from-emerald-500 to-emerald-700 text-white text-center py-1 px-1 rounded-lg border-2 border-emerald-900" style="box-shadow:0 2px 0 rgba(0,0,0,0.3)">
-                  <span class="text-[8px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight" style="text-shadow:0 1px 0 rgba(0,0,0,0.4)">Centenas (C)</span>
+
+              <div id="chamberWrapC" class="lego-room-card w-full border-[3px] border-emerald-700 bg-[#f7fdfa] shadow-md">
+                <!-- Arco de Encabezado -->
+                <div class="w-full bg-gradient-to-b from-emerald-500 to-emerald-700 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-emerald-900 shadow">
+                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Centenas (C)</span>
                 </div>
 
-                <!-- Ventana arquitectónica LEGO: EXCLUSIVAMENTE LA CIFRA GIGANTE -->
-                <div onclick="changeBlocks('C', 1)" id="chamberC" class="room-digit-alcove border-[3px] border-emerald-400" title="Habitación Centenas (C) · Clic para sumar +1">
-                  <div class="flex items-center gap-1 mb-0.5">
-                    <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-emerald-800/80">C</span>
-                    <button onclick="event.stopPropagation(); borrowFromLeft('D')" id="btnUnpackC" class="hidden text-[8px] bg-emerald-200 hover:bg-emerald-300 text-emerald-900 font-black px-1 rounded" title="Desagrupar 1 Centena en 10 Decenas">1➡️10D</button>
-                  </div>
-                  <div id="digitCardC" class="flex items-center justify-center">
-                    <span id="digitC" class="room-giant-digit text-emerald-600">0</span>
+                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
+                <div onclick="changeBlocks('C', 1)" id="chamberC" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-50/50 transition-colors" title="Centenas (C) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardC"></span>
+                  <span id="digitC" class="room-giant-digit-premium text-emerald-600">0</span>
+                  <div class="room-equiv-badge bg-emerald-100 text-emerald-950 border border-emerald-300">
+                    = <span id="valBadgeC">0</span>
                   </div>
                 </div>
 
-                <!-- Alféizar con valor y botones (− / +) -->
-                <div class="rounded-xl p-1 sm:p-1.5 border-2 border-emerald-300 flex flex-col gap-1" style="background:#fdf3dc">
-                  <div class="flex items-center justify-between px-0.5 sm:px-1">
-                    <span class="hidden sm:inline text-[9px] font-black text-emerald-900">×100</span>
-                    <span id="valBadgeC" class="text-[8px] sm:text-[10px] font-black text-emerald-800 bg-emerald-200/80 px-1 sm:px-1.5 rounded mx-auto sm:mx-0">0</span>
-                  </div>
-                  <div class="grid grid-cols-2 gap-1">
-                    <button onclick="changeBlocks('C', -1)" class="btn-tactile bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-emerald-300" aria-label="Restar 1 Centena">−</button>
-                    <button onclick="changeBlocks('C', 1)" class="btn-tactile bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-emerald-900" aria-label="Sumar 1 Centena">+</button>
-                  </div>
+                <!-- Botones táctiles (− y +) -->
+                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-emerald-50/80 border-t border-emerald-200">
+                  <button onclick="changeBlocks('C', -1)" class="room-btn-touch bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border-2 border-emerald-300" aria-label="Restar 1 Centena">−</button>
+                  <button onclick="changeBlocks('C', 1)" class="room-btn-touch bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-800 shadow" aria-label="Sumar 1 Centena">+</button>
                 </div>
               </div>
+
+              <!-- Tapete verde en la entrada -->
+              <div class="room-entry-doormat bg-emerald-600"></div>
             </div>
 
-            <div class="lego-pillar"></div>
+            <!-- COLUMNA DE MADERA -->
+            <div class="timber-post">
+              <div class="pillar-flower-pot"></div>
+            </div>
 
             <!-- 4. HABITACIÓN DECENAS (D) — AZUL -->
-            <div class="room-col-wrap">
-              <div class="room-studs-bar w-full">
-                <div class="room-stud bg-blue-500"></div>
-                <div class="room-stud bg-blue-500"></div>
-                <div class="room-stud bg-blue-500"></div>
-                <div class="room-stud bg-blue-500"></div>
+            <div id="slotD" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
+              <!-- Lámpara colgante azul -->
+              <div class="room-hanging-lamp">
+                <div class="lamp-cord"></div>
+                <div class="lamp-shade bg-sky-500"></div>
+                <div class="lamp-glow"></div>
               </div>
-              <div id="chamberWrapD" class="timber-frame house-room-unit bg-blue-50 border-[3px] border-blue-600 w-full">
-                <div class="w-full bg-gradient-to-b from-blue-500 to-blue-700 text-white text-center py-1 px-1 rounded-lg border-2 border-blue-900" style="box-shadow:0 2px 0 rgba(0,0,0,0.3)">
-                  <span class="text-[8px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight" style="text-shadow:0 1px 0 rgba(0,0,0,0.4)">Decenas (D)</span>
+
+              <div id="chamberWrapD" class="lego-room-card w-full border-[3px] border-sky-600 bg-[#f7fbff] shadow-md">
+                <!-- Arco de Encabezado -->
+                <div class="w-full bg-gradient-to-b from-sky-500 to-sky-600 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-sky-800 shadow">
+                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Decenas (D)</span>
                 </div>
 
-                <!-- Ventana arquitectónica LEGO: EXCLUSIVAMENTE LA CIFRA GIGANTE -->
-                <div onclick="changeBlocks('D', 1)" id="chamberD" class="room-digit-alcove border-[3px] border-blue-400" title="Habitación Decenas (D) · Clic para sumar +1">
-                  <div class="flex items-center gap-1 mb-0.5">
-                    <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-blue-800/80">D</span>
-                    <button onclick="event.stopPropagation(); borrowFromLeft('U')" id="btnUnpackD" class="hidden text-[8px] bg-blue-200 hover:bg-blue-300 text-blue-900 font-black px-1 rounded" title="Desagrupar 1 Decena en 10 Unidades">1➡️10U</button>
-                  </div>
-                  <div id="digitCardD" class="flex items-center justify-center">
-                    <span id="digitD" class="room-giant-digit text-blue-600">0</span>
+                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
+                <div onclick="changeBlocks('D', 1)" id="chamberD" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-sky-50/50 transition-colors" title="Decenas (D) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardD"></span>
+                  <span id="digitD" class="room-giant-digit-premium text-sky-600">0</span>
+                  <div class="room-equiv-badge bg-sky-100 text-sky-950 border border-sky-300">
+                    = <span id="valBadgeD">0</span>
                   </div>
                 </div>
 
-                <!-- Alféizar con valor y botones (− / +) -->
-                <div class="rounded-xl p-1 sm:p-1.5 border-2 border-blue-300 flex flex-col gap-1" style="background:#fdf3dc">
-                  <div class="flex items-center justify-between px-0.5 sm:px-1">
-                    <span class="hidden sm:inline text-[9px] font-black text-blue-900">×10</span>
-                    <span id="valBadgeD" class="text-[8px] sm:text-[10px] font-black text-blue-800 bg-blue-200/80 px-1 sm:px-1.5 rounded mx-auto sm:mx-0">0</span>
-                  </div>
-                  <div class="grid grid-cols-2 gap-1">
-                    <button onclick="changeBlocks('D', -1)" class="btn-tactile bg-blue-100 hover:bg-blue-200 text-blue-900 font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-blue-300" aria-label="Restar 1 Decena">−</button>
-                    <button onclick="changeBlocks('D', 1)" class="btn-tactile bg-blue-600 hover:bg-blue-700 text-white font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-blue-900" aria-label="Sumar 1 Decena">+</button>
-                  </div>
+                <!-- Botones táctiles (− y +) -->
+                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-sky-50/80 border-t border-sky-200">
+                  <button onclick="changeBlocks('D', -1)" class="room-btn-touch bg-sky-100 hover:bg-sky-200 text-sky-950 border-2 border-sky-300" aria-label="Restar 1 Decena">−</button>
+                  <button onclick="changeBlocks('D', 1)" class="room-btn-touch bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-700 shadow" aria-label="Sumar 1 Decena">+</button>
                 </div>
               </div>
+
+              <!-- Tapete azul en la entrada -->
+              <div class="room-entry-doormat bg-sky-500"></div>
             </div>
 
-            <div class="lego-pillar"></div>
+            <!-- COLUMNA DE MADERA -->
+            <div class="timber-post">
+              <div class="pillar-flower-pot"></div>
+            </div>
 
             <!-- 5. HABITACIÓN UNIDADES (U) — ROJO -->
-            <div class="room-col-wrap">
-              <div class="room-studs-bar w-full">
-                <div class="room-stud bg-red-500"></div>
-                <div class="room-stud bg-red-500"></div>
-                <div class="room-stud bg-red-500"></div>
-                <div class="room-stud bg-red-500"></div>
+            <div id="slotU" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
+              <!-- Lámpara colgante roja -->
+              <div class="room-hanging-lamp">
+                <div class="lamp-cord"></div>
+                <div class="lamp-shade bg-rose-600"></div>
+                <div class="lamp-glow"></div>
               </div>
-              <div id="chamberWrapU" class="timber-frame house-room-unit bg-red-50 border-[3px] border-red-600 w-full">
-                <div class="w-full bg-gradient-to-b from-red-500 to-red-700 text-white text-center py-1 px-1 rounded-lg border-2 border-red-900" style="box-shadow:0 2px 0 rgba(0,0,0,0.3)">
-                  <span class="text-[8px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight" style="text-shadow:0 1px 0 rgba(0,0,0,0.4)">Unidades (U)</span>
+
+              <div id="chamberWrapU" class="lego-room-card w-full border-[3px] border-rose-600 bg-[#fff8f8] shadow-md">
+                <!-- Arco de Encabezado -->
+                <div class="w-full bg-gradient-to-b from-rose-500 to-rose-600 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-rose-800 shadow">
+                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Unidades (U)</span>
                 </div>
 
-                <!-- Ventana arquitectónica LEGO: EXCLUSIVAMENTE LA CIFRA GIGANTE -->
-                <div onclick="changeBlocks('U', 1)" id="chamberU" class="room-digit-alcove border-[3px] border-red-400" title="Habitación Unidades (U) · Clic para sumar +1">
-                  <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-red-800/80 mb-0.5">U</span>
-                  <div id="digitCardU" class="flex items-center justify-center">
-                    <span id="digitU" class="room-giant-digit text-red-600">0</span>
+                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
+                <div onclick="changeBlocks('U', 1)" id="chamberU" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50/50 transition-colors" title="Unidades (U) · Clic para sumar +1">
+                  <span class="hidden" id="digitCardU"></span>
+                  <span id="digitU" class="room-giant-digit-premium text-rose-600">0</span>
+                  <div class="room-equiv-badge bg-rose-100 text-rose-950 border border-rose-300">
+                    = <span id="valBadgeU">0</span>
                   </div>
                 </div>
 
-                <!-- Alféizar con valor y botones (− / +) -->
-                <div class="rounded-xl p-1 sm:p-1.5 border-2 border-red-300 flex flex-col gap-1" style="background:#fdf3dc">
-                  <div class="flex items-center justify-between px-0.5 sm:px-1">
-                    <span class="hidden sm:inline text-[9px] font-black text-red-900">×1</span>
-                    <span id="valBadgeU" class="text-[8px] sm:text-[10px] font-black text-red-800 bg-red-200/80 px-1 sm:px-1.5 rounded mx-auto sm:mx-0">0</span>
-                  </div>
-                  <div class="grid grid-cols-2 gap-1">
-                    <button onclick="changeBlocks('U', -1)" class="btn-tactile bg-red-100 hover:bg-red-200 text-red-900 font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-red-300" aria-label="Restar 1 Unidad">−</button>
-                    <button onclick="changeBlocks('U', 1)" class="btn-tactile bg-red-600 hover:bg-red-700 text-white font-black text-xs sm:text-base py-0.5 rounded-lg border-2 border-red-900" aria-label="Sumar 1 Unidad">+</button>
-                  </div>
+                <!-- Botones táctiles (− y +) -->
+                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-rose-50/80 border-t border-rose-200">
+                  <button onclick="changeBlocks('U', -1)" class="room-btn-touch bg-rose-100 hover:bg-rose-200 text-rose-950 border-2 border-rose-300" aria-label="Restar 1 Unidad">−</button>
+                  <button onclick="changeBlocks('U', 1)" class="room-btn-touch bg-rose-600 hover:bg-rose-500 text-white border-2 border-rose-800 shadow" aria-label="Sumar 1 Unidad">+</button>
                 </div>
               </div>
+
+              <!-- Tapete rojo en la entrada -->
+              <div class="room-entry-doormat bg-rose-600"></div>
             </div>
 
           </div>
-          <div class="stone-foundation" style="width: calc(100% + 14px)"></div>
+
+          <!-- CIMIENTOS DE PIEDRA DE LA CASA -->
+          <div class="w-full h-3 rounded-b-xl bg-[#595248] border-2 border-[#38332c] shadow"></div>
 
         </div>
 
       </div>
     </div>
 
-    <!-- Elementos manipulativos y cuadrilla conservados ocultos para máxima compatibilidad -->
+    <!-- ELEMENTOS MANIPULATIVOS Y CUADRILLA (PRESERVADOS OCULTOS PARA COMPATIBILIDAD JS) -->
     <div class="hidden" aria-hidden="true">
       <div id="dragSourceDM" draggable="true" ondragstart="onDragStartModule(event, 'DM')" onclick="changeBlocks('DM', 1)" data-room-drag="DM"></div>
       <div id="dragSourceUM" draggable="true" ondragstart="onDragStartModule(event, 'UM')" onclick="changeBlocks('UM', 1)" data-room-drag="UM"></div>
@@ -1378,27 +1949,114 @@
       </div>
     </div>
 
-    <!-- PERGAMINO PEDAGÓGICO: DESCOMPOSICIÓN POSICIONAL + ADITIVA + LECTURA -->
-    <div class="w-full max-w-5xl mt-1.5 dio-panel p-2 flex flex-col gap-1">
-      <div class="flex flex-wrap items-center justify-between gap-2 pb-1" style="border-bottom: 2px dashed #c9a86e">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="text-[10px] font-black uppercase tracking-wider" style="color:#7a4a24">Posicional:</span>
-          <div id="positionalDecompBox" class="flex items-center gap-1.5 text-xs font-black lego-font flex-wrap"></div>
-        </div>
-        <div class="flex items-center gap-2">
-          <span id="numberInWordsLabel" class="text-xs sm:text-sm font-extrabold italic capitalize" style="color:#3b2a1a">
-            "Cero"
+    <!-- =================================================================== -->
+    <!-- PANEL INFERIOR: «CONSTRUCCIÓN DEL NÚMERO» (DISEÑO FIDELIDAD TOTAL)  -->
+    <!-- =================================================================== -->
+    <div class="w-full max-w-5xl mt-2 parchment-card-premium p-2.5 sm:p-3 flex flex-col gap-2 z-20">
+      
+      <!-- Hojas decorativas de esquina -->
+      <div class="leaf-corner-left" aria-hidden="true">
+        <svg viewBox="0 0 30 30" class="w-5 h-5 drop-shadow">
+          <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="leaf-corner-right" aria-hidden="true">
+        <svg viewBox="0 0 30 30" class="w-5 h-5 drop-shadow scale-x-[-1]">
+          <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+        </svg>
+      </div>
+
+      <!-- FILA SUPERIOR: ETIQUETA + 5 TARJETAS DE POSICIÓN + RECUADRO VALOR TOTAL -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        
+        <!-- Etiqueta izquierda: "Construcción del número:" -->
+        <div class="bg-gradient-to-r from-amber-200 to-amber-300 border-2 border-amber-800/80 rounded-2xl px-3 py-1.5 shadow-sm">
+          <span class="text-xs sm:text-sm font-black text-amber-950 block leading-tight">
+            Construcción<br class="hidden sm:inline"> del número:
           </span>
-          <button onclick="speakCurrentNumber()" class="dio-btn dio-btn-wood text-xs px-2 py-0.5 flex items-center gap-1" title="Escuchar cómo se lee el número construido">
+        </div>
+
+        <!-- 5 TARJETAS ALINEADAS POR POSICIÓN (DM · UM · C · D · U) -->
+        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-0.5">
+          
+          <!-- Tarjeta DM (Morado) -->
+          <div class="pos-card-pill bg-purple-50 border-purple-300">
+            <span id="cardDigitDM" class="text-purple-600 font-black text-lg sm:text-xl leading-none">0</span>
+            <span class="text-purple-900 font-black text-[10px] sm:text-xs">DM</span>
+            <span id="cardValDM" class="text-purple-800 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          </div>
+
+          <!-- Tarjeta UM (Naranja) -->
+          <div class="pos-card-pill bg-orange-50 border-orange-300">
+            <span id="cardDigitUM" class="text-orange-500 font-black text-lg sm:text-xl leading-none">0</span>
+            <span class="text-orange-950 font-black text-[10px] sm:text-xs">UM</span>
+            <span id="cardValUM" class="text-orange-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          </div>
+
+          <!-- Tarjeta C (Verde) -->
+          <div class="pos-card-pill bg-emerald-50 border-emerald-300">
+            <span id="cardDigitC" class="text-emerald-600 font-black text-lg sm:text-xl leading-none">0</span>
+            <span class="text-emerald-950 font-black text-[10px] sm:text-xs">C</span>
+            <span id="cardValC" class="text-emerald-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          </div>
+
+          <!-- Tarjeta D (Azul) -->
+          <div class="pos-card-pill bg-sky-50 border-sky-300">
+            <span id="cardDigitD" class="text-sky-600 font-black text-lg sm:text-xl leading-none">0</span>
+            <span class="text-sky-950 font-black text-[10px] sm:text-xs">D</span>
+            <span id="cardValD" class="text-sky-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          </div>
+
+          <!-- Tarjeta U (Rojo) -->
+          <div class="pos-card-pill bg-rose-50 border-rose-300">
+            <span id="cardDigitU" class="text-rose-600 font-black text-lg sm:text-xl leading-none">0</span>
+            <span class="text-rose-950 font-black text-[10px] sm:text-xs">U</span>
+            <span id="cardValU" class="text-rose-900 font-bold text-[9px] sm:text-[10px] leading-tight">0</span>
+          </div>
+
+        </div>
+
+        <!-- DIVISOR VERTICAL SUTIL -->
+        <div class="hidden md:block w-px h-10 bg-amber-300"></div>
+
+        <!-- RECUADRO DESTACADO: VALOR TOTAL -->
+        <div class="golden-total-box">
+          <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-amber-950/80 leading-none mb-0.5">
+            Valor total:
+          </span>
+          <div id="grandTotalDisplay" class="text-2xl sm:text-3xl font-black text-amber-950 lego-font tracking-wide leading-none" style="text-shadow: 0 1px 0 rgba(255,255,255,0.7)">
+            0
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FILA INFERIOR: FÓRMULA MATEMÁTICA ADITIVA + PRONUNCIACIÓN -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-amber-200/80">
+        <!-- Expresión matemática que explica la composición del número -->
+        <div id="additiveFormulaDisplay" class="text-xs sm:text-sm font-extrabold text-slate-800 tracking-wide">
+          0 + 0 + 0 + 0 + 0 = 0 unidades
+        </div>
+
+        <!-- Botón para escuchar la lectura -->
+        <div class="flex items-center gap-2">
+          <span id="numberInWordsLabel" class="text-xs font-bold italic text-amber-950">"Cero"</span>
+          <button onclick="speakCurrentNumber()" class="bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-black px-2.5 py-1 rounded-lg border border-amber-300 shadow-sm flex items-center gap-1 transition-all active:translate-y-0.5" title="Escuchar cómo se lee este número">
             <span>🔊</span> Leer
           </button>
         </div>
       </div>
 
-      <div class="flex items-center gap-2 flex-wrap">
-        <span class="text-[10px] font-black uppercase tracking-wider" style="color:#7a4a24">Valor Aditivo:</span>
-        <div id="additiveDecompBox" class="flex items-center gap-1.5 text-xs sm:text-sm font-black lego-font flex-wrap"></div>
+      <!-- Compatibilidad oculta de elementos del contrato previo -->
+      <div class="hidden" aria-hidden="true">
+        <div id="positionalDecompBox"></div>
+      <button id="btnUnpackUM" onclick="event.stopPropagation(); borrowFromLeft('C')"></button>
+      <button id="btnUnpackC" onclick="event.stopPropagation(); borrowFromLeft('D')"></button>
+      <button id="btnUnpackD" onclick="event.stopPropagation(); borrowFromLeft('U')"></button>
+
+        <div id="additiveDecompBox"></div>
       </div>
+
     </div>
 
   </main>
@@ -2523,6 +3181,24 @@
     }
 
     // MODOS DE JUEGO: AVENTURA, DESAFÍOS Y TALLER LIBRE
+    
+    function handlePrimaryAction() {
+      if (state.mode === 'challenge') {
+        verifyChallengeAttempt();
+        return;
+      }
+      const currentTotal = getCurrentTotal();
+      if (currentTotal === state.target) {
+        if (!state.isInaugurated) {
+          inaugurateCurrentBuilding();
+        } else {
+          advanceToNextMission();
+        }
+      } else {
+        triggerLeoSpeech();
+      }
+    }
+
     function switchGameMode(mode) {
       state.mode = mode;
       const btnAdv = document.getElementById("btnModeAdventure");
@@ -2587,19 +3263,25 @@
       const iconEl = document.getElementById("missionIcon"); if (iconEl) iconEl.innerText = mission.icon;
       const stepEl = document.getElementById("missionStepBadge"); if (stepEl) stepEl.innerText = mission.step;
       const levelEl = document.getElementById("missionLevelBadge"); if (levelEl) levelEl.innerText = mission.phaseLabel;
-      const titleEl = document.getElementById("missionTitle"); if (titleEl) titleEl.innerText = `${mission.title} · ${mission.district}`;
+      const titleEl = document.getElementById("missionTitle"); if (titleEl) titleEl.innerText = `${mission.title} - ${mission.district}`;
+
+      const subStrip = document.getElementById("missionSubStripText");
+      if (subStrip) {
+        subStrip.innerHTML = `<span id="missionStepBadge">${mission.step}</span>: <span id="missionTitle">${mission.title} - ${mission.district}</span>`;
+      }
 
       document.getElementById("btnNextMission")?.classList.add("hidden");
       renderMissionStars();
       setTargetNumber(mission.number);
 
-      // Actualizar diálogo RPG del habitante
+      const leoBubble = document.getElementById("leoSpeechBubble");
+      if (leoBubble) {
+        leoBubble.innerText = mission.storyIntro;
+      }
       const speakerEl = document.getElementById("rpgSpeakerLabel");
       if (speakerEl) {
-        speakerEl.innerHTML = `<span>${mission.characterIcon} ${mission.characterName} (${mission.characterTitle}):</span>`;
+        speakerEl.innerHTML = `<span>¡Buenos días, pequeño arquitecto!</span>`;
       }
-      const leoBubble = document.getElementById("leoSpeechBubble");
-      if (leoBubble) leoBubble.innerText = mission.storyIntro;
       speakText(mission.storyIntro);
     }
 
@@ -2895,6 +3577,12 @@
         const vBadge = document.getElementById(`valBadge${k}`);
         if (vBadge) vBadge.innerText = (state[k] * multipliers[k]).toLocaleString("es-CO");
 
+        // Actualizar tarjetas de posición del panel «Construcción del número»
+        const cDigit = document.getElementById(`cardDigit${k}`);
+        if (cDigit) cDigit.innerText = state[k];
+        const cVal = document.getElementById(`cardVal${k}`);
+        if (cVal) cVal.innerText = (state[k] * multipliers[k]).toLocaleString("es-CO");
+
         renderRoomBlocks(k, state[k]);
       });
 
@@ -2905,6 +3593,23 @@
       document.getElementById("emptyDM")?.classList.toggle("slot-needed", needsDM && !state.attachedDM);
 
       const currentTotal = getCurrentTotal();
+
+      // Recuadro destacado: VALOR TOTAL
+      const grandTotalEl = document.getElementById("grandTotalDisplay");
+      if (grandTotalEl) grandTotalEl.innerText = currentTotal.toLocaleString("es-CO");
+
+      // Expresión matemática que explica la composición del número con todas las posiciones
+      const formulaEl = document.getElementById("additiveFormulaDisplay");
+      if (formulaEl) {
+        const fullParts = [
+          (state.DM * 10000).toLocaleString("es-CO"),
+          (state.UM * 1000).toLocaleString("es-CO"),
+          (state.C * 100).toLocaleString("es-CO"),
+          (state.D * 10).toLocaleString("es-CO"),
+          state.U.toLocaleString("es-CO")
+        ];
+        formulaEl.innerText = `${fullParts.join(" + ")} = ${currentTotal.toLocaleString("es-CO")} unidades`;
+      }
 
       // 1. Descomposición Posicional (Ej: 1 DM + 4 UM + 5 C + 0 D + 2 U)
       const posBox = document.getElementById("positionalDecompBox");
