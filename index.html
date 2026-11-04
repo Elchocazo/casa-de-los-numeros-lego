@@ -1994,13 +1994,30 @@
           <option value="2" selected>Nivel 2 · Hasta 999 (Centenas)</option>
           <option value="3">Nivel 3 · Hasta 9.999 (Unid. de Mil)</option>
           <option value="4">Nivel 4 · Hasta 99.999 (Dec. de Mil)</option>
+          <option value="ultra" class="font-black text-rose-700 bg-rose-50">⚡ Nivel Ultra: Contrarreloj 25s (¡Para Expertos!)</option>
         </select>
         <button onclick="generateNewChallenge()" class="btn-gold-cta text-xs py-1 px-3 rounded-lg flex items-center gap-1">
           <span>🎲</span> Nuevo Reto
         </button>
+        <button id="btnToggleUltra" onclick="toggleUltraMode()" class="bg-gradient-to-r from-red-600 via-amber-600 to-yellow-500 hover:brightness-110 text-white font-black text-xs py-1 px-3 rounded-lg border-2 border-amber-950 shadow-sm flex items-center gap-1 transition-all active:scale-95 animate-pulse" title="Activar / Desactivar Modo Contrarreloj Ultra">
+          <span id="ultraBtnIcon">⚡</span> <span id="ultraBtnText">Modo Ultra</span>
+        </button>
       </div>
       <div class="text-[11px] font-bold text-amber-800">
         <span>🏆 ¡Supera tu mejor racha!</span>
+      </div>
+    </div>
+
+    <!-- BARRA DE TIEMPO CONTRARRELOJ ULTRA (SOLO EN MODO ULTRA) -->
+    <div id="ultraTimerContainer" class="hidden w-full flex items-center gap-2 pt-2 pb-1 border-t border-amber-200/70 mt-1">
+      <div class="flex items-center gap-1 shrink-0 bg-red-600 text-white font-black text-xs px-2.5 py-0.5 rounded-lg shadow-xs animate-pulse">
+        <span>⚡</span> <span id="ultraTimerText">25s</span>
+      </div>
+      <div class="flex-1 h-3 bg-stone-900/80 rounded-full p-0.5 border border-amber-800 shadow-inner overflow-hidden relative">
+        <div id="ultraTimerBar" class="h-full rounded-full transition-all duration-300 ease-linear bg-gradient-to-r from-emerald-500 via-yellow-400 to-red-500" style="width: 100%;"></div>
+      </div>
+      <div id="ultraComboBadge" class="shrink-0 bg-gradient-to-b from-amber-300 to-yellow-400 border border-amber-700 text-amber-950 font-black text-[11px] px-2 py-0.5 rounded-md shadow-2xs">
+        COMBO x1
       </div>
     </div>
 
@@ -2969,7 +2986,14 @@
         subtype: "scrambled",
         solved: false,
         streak: 0,
-        score: 0
+        score: 0,
+        ultra: {
+          active: false,
+          timer: null,
+          timeLeft: 25,
+          maxTime: 25,
+          combo: 1
+        }
       }
     };
 
@@ -3784,6 +3808,14 @@
         btnActionPrimary.classList.toggle("hidden", mode === "challenge");
       }
       btnVerify?.classList.toggle("hidden", mode !== "challenge");
+      if (mode !== "challenge") {
+        stopUltraTimer();
+        const timerContainer = document.getElementById("ultraTimerContainer");
+        if (timerContainer) {
+          timerContainer.classList.add("hidden");
+          timerContainer.classList.remove("flex");
+        }
+      }
 
       const clueSub = document.getElementById("targetClueSubtitle");
       if (clueSub && mode !== "challenge") {
@@ -4008,6 +4040,22 @@
 
     // MODO DESAFÍOS (DETECTIVE POSICIONAL: PLANOS DESORDENADOS, DICTADO EN LETRAS Y SUMA DE BLOQUES)
     function generateSmartChallengeNumber(digitsCount) {
+      if (digitsCount === "ultra" || digitsCount === 5) {
+        // Modo Ultra: números de 5 cifras con ceros internos trampa para retar a niños veloces
+        const dm = Math.floor(Math.random() * 9) + 1;
+        const pattern = Math.floor(Math.random() * 4);
+        let um = 0, c = 0, d = 0, u = 0;
+        if (pattern === 0) {
+          um = 0; c = Math.floor(Math.random() * 9) + 1; d = 0; u = Math.floor(Math.random() * 9) + 1;
+        } else if (pattern === 1) {
+          um = Math.floor(Math.random() * 9) + 1; c = 0; d = Math.floor(Math.random() * 9) + 1; u = Math.floor(Math.random() * 9) + 1;
+        } else if (pattern === 2) {
+          um = 0; c = 0; d = Math.floor(Math.random() * 9) + 1; u = Math.floor(Math.random() * 9) + 1;
+        } else {
+          um = Math.floor(Math.random() * 9) + 1; c = Math.floor(Math.random() * 9) + 1; d = Math.floor(Math.random() * 9) + 1; u = Math.floor(Math.random() * 9) + 1;
+        }
+        return dm * 10000 + um * 1000 + c * 100 + d * 10 + u;
+      }
       if (digitsCount === 2) {
         return Math.floor(Math.random() * 89) + 11;
       }
@@ -4048,11 +4096,120 @@
       generateNewChallenge();
     }
 
+    
+    function toggleUltraMode() {
+      const selLevel = document.getElementById("selChallengeLevel");
+      if (!selLevel) return;
+      if (selLevel.value === "ultra") {
+        selLevel.value = "2";
+      } else {
+        selLevel.value = "ultra";
+      }
+      handleChallengeLevelChange();
+    }
+
+    function stopUltraTimer() {
+      if (state.challenge && state.challenge.ultra && state.challenge.ultra.timer) {
+        clearInterval(state.challenge.ultra.timer);
+        state.challenge.ultra.timer = null;
+      }
+    }
+
+    function startUltraTimer() {
+      stopUltraTimer();
+      const u = state.challenge.ultra;
+      if (!u) return;
+      u.active = true;
+      u.timeLeft = 25;
+      u.maxTime = 25;
+
+      const container = document.getElementById("ultraTimerContainer");
+      if (container) {
+        container.classList.remove("hidden");
+        container.classList.add("flex");
+      }
+      updateUltraTimerUI();
+
+      u.timer = setInterval(() => {
+        u.timeLeft -= 1;
+        updateUltraTimerUI();
+
+        if (u.timeLeft <= 0) {
+          stopUltraTimer();
+          handleUltraTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateUltraTimerUI() {
+      const u = state.challenge.ultra;
+      if (!u) return;
+      const textEl = document.getElementById("ultraTimerText");
+      const barEl = document.getElementById("ultraTimerBar");
+      const comboEl = document.getElementById("ultraComboBadge");
+
+      if (textEl) textEl.innerText = u.timeLeft + "s";
+      if (barEl) {
+        const pct = Math.max(0, Math.min(100, (u.timeLeft / u.maxTime) * 100));
+        barEl.style.width = pct + "%";
+        if (u.timeLeft <= 6) {
+          barEl.className = "h-full rounded-full transition-all duration-300 ease-linear bg-red-600 animate-pulse";
+        } else {
+          barEl.className = "h-full rounded-full transition-all duration-300 ease-linear bg-gradient-to-r from-emerald-500 via-yellow-400 to-red-500";
+        }
+      }
+      if (comboEl) {
+        comboEl.innerText = "COMBO x" + (u.combo || 1);
+      }
+    }
+
+    function handleUltraTimeout() {
+      playSound("error");
+      const u = state.challenge.ultra;
+      if (u) {
+        u.combo = 1;
+      }
+      state.challenge.streak = 0;
+      updateChallengeScoreUI();
+
+      const leoBubble = document.getElementById("leoSpeechBubble");
+      const words = numberToWordsEs(state.target);
+      if (leoBubble) {
+        leoBubble.innerText = "¡Se agotó el tiempo! ⏱️ El número era " + state.target.toLocaleString("es-CO") + ". ¡Vamos a la revancha a toda velocidad!";
+      }
+      speakText("¡Se agotó el tiempo! El número era " + words + ". ¡Tú puedes, inténtalo más rápido!");
+      showToast("⏱️ ¡Tiempo agotado! Reintentando a toda máquina...", "⚡");
+
+      setTimeout(() => {
+        if (state.mode === "challenge" && document.getElementById("selChallengeLevel")?.value === "ultra") {
+          generateNewChallenge();
+        }
+      }, 2200);
+    }
+
     function generateNewChallenge() {
       initAudio();
       const selTypeEl = document.getElementById("selChallengeType");
       let typeSel = selTypeEl?.value || document.getElementById("challengeTypeSelect")?.value || "mixed";
-      const digitsCount = parseInt(document.getElementById("selChallengeLevel")?.value || document.getElementById("challengeLevelSelect")?.value || "3", 10);
+      const rawLevel = document.getElementById("selChallengeLevel")?.value || document.getElementById("challengeLevelSelect")?.value || "3";
+      const isUltra = rawLevel === "ultra";
+      const digitsCount = isUltra ? "ultra" : parseInt(rawLevel, 10);
+
+      // Actualizar estilo visual del botón Toggle Ultra
+      const btnUltra = document.getElementById("btnToggleUltra");
+      const iconUltra = document.getElementById("ultraBtnIcon");
+      const textUltra = document.getElementById("ultraBtnText");
+      if (btnUltra && textUltra && iconUltra) {
+        if (isUltra) {
+          btnUltra.className = "bg-gradient-to-r from-red-600 to-rose-700 text-white font-black text-xs py-1 px-3 rounded-lg border-2 border-red-950 shadow-md flex items-center gap-1 transition-all active:scale-95 animate-pulse";
+          textUltra.innerText = "⚡ Ultra Activo";
+          iconUltra.innerText = "🔥";
+        } else {
+          btnUltra.className = "bg-gradient-to-r from-red-600 via-amber-600 to-yellow-500 hover:brightness-110 text-white font-black text-xs py-1 px-3 rounded-lg border-2 border-amber-950 shadow-sm flex items-center gap-1 transition-all active:scale-95";
+          textUltra.innerText = "Modo Ultra";
+          iconUltra.innerText = "⚡";
+        }
+      }
 
       // Compatibilidad hacia atrás
       if (typeSel === "scrambled") typeSel = "additive";
@@ -4146,6 +4303,22 @@
       if (speakerEl) speakerEl.innerText = "¡Reto de Construcción!";
 
       updateUI();
+
+      if (isUltra) {
+        startUltraTimer();
+        const leoBubble = document.getElementById("leoSpeechBubble");
+        if (leoBubble) {
+          leoBubble.innerText = "⚡ ¡MODO ULTRA! Tienes 25 segundos para construirlo. ¡A toda máquina!";
+        }
+      } else {
+        stopUltraTimer();
+        const container = document.getElementById("ultraTimerContainer");
+        if (container) {
+          container.classList.add("hidden");
+          container.classList.remove("flex");
+        }
+      }
+
       speakText(promptSpeech);
     }
 
@@ -4185,8 +4358,20 @@
           return;
         }
         state.challenge.solved = true;
+        stopUltraTimer();
+        const isUltraAttempt = document.getElementById("selChallengeLevel")?.value === "ultra";
         state.challenge.streak += 1;
-        const pointsEarned = 100 + (state.challenge.streak - 1) * 25;
+
+        let pointsEarned = 100 + (state.challenge.streak - 1) * 25;
+        if (isUltraAttempt && state.challenge.ultra) {
+          const u = state.challenge.ultra;
+          const timeBonus = Math.max(0, u.timeLeft) * 15;
+          if (state.challenge.streak >= 2) {
+            u.combo = Math.min(5, 1 + Math.floor(state.challenge.streak / 2));
+          }
+          pointsEarned = (150 + timeBonus) * u.combo;
+          showToast("⚡ ¡VELOCIDAD RELÁMPAGO! +" + pointsEarned + " pts (Combo x" + u.combo + ")", "🚀");
+        }
         state.challenge.score += pointsEarned;
         updateChallengeScoreUI();
 
