@@ -870,15 +870,14 @@
 
     <!-- ACCIONES RÁPIDAS -->
     <div class="flex items-center gap-1.5">
-      <button onclick="openCityMapModal()" class="dio-btn dio-btn-violet text-[11px] py-1 px-2 flex items-center gap-1" title="Ver Isla Numbrópolis">
+      <button onclick="openCityMapModal()" class="dio-btn dio-btn-violet text-[11px] py-1 px-2.5 flex items-center gap-1" title="Ver Isla Numbrópolis">
         <span>🏝️</span> Isla (<span id="cityCountBadge">0</span>/8)
       </button>
-      <button id="btnViewMode" onclick="cycleRoomViewMode()" class="dio-btn dio-btn-stone text-[11px] px-2 py-1 flex items-center gap-1" title="Mostrar/ocultar mesa de bloques manipulativos">
-        <span>🧱</span> <span id="viewModeLabel">Bandeja LEGO</span>
-      </button>
-      <button id="btnSoundToggle" onclick="toggleMute()" class="dio-btn dio-btn-stone text-xs px-2 py-1" title="Activar o silenciar sonidos y voz">
+      <button id="btnSoundToggle" onclick="toggleMute()" class="dio-btn dio-btn-stone text-xs px-2.5 py-1" title="Activar o silenciar sonidos y voz">
         🔊
       </button>
+      <!-- Elemento de compatibilidad oculto -->
+      <button id="btnViewMode" onclick="cycleRoomViewMode()" class="hidden" aria-hidden="true"><span id="viewModeLabel">Bandeja</span></button>
     </div>
   </nav>
 
@@ -1312,122 +1311,27 @@
       </div>
     </div>
 
-    <!-- TALLER INFERIOR DE ACTIVIDADES CON BLOQUES LEGO BASE-10 (FUERA DE LAS HABITACIONES) + CUADRILLA 3D -->
-    <section class="w-full max-w-6xl mt-2 dio-panel p-3 flex flex-col gap-2.5">
-      <div class="flex flex-wrap items-center justify-between gap-2.5">
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded dio-plank">
-            🧱 Mesa de Bloques LEGO Base-10 · Arrastra a una habitación o pulsa para sumar
-          </span>
-
-          <!-- Pieza arrastrable DM (Morado - 10.000) -->
-          <div
-            id="dragSourceDM"
-            draggable="true"
-            ondragstart="onDragStartModule(event, 'DM')"
-            onclick="changeBlocks('DM', 1)"
-            data-room-drag="DM"
-            class="touch-none flex items-center gap-1.5 rounded-xl py-1 px-2.5 cursor-grab active:cursor-grabbing transition hover:-translate-y-0.5 bg-purple-100 border-2 border-purple-700 shadow-sm"
-            title="Arrastra a la habitación DM o haz clic para sumar +10.000"
-          >
-            <span class="w-3.5 h-3.5 rounded bg-purple-600 border border-purple-900 inline-block"></span>
-            <span class="text-[11px] font-black text-purple-950">+1 DM (10.000)</span>
-          </div>
-
-          <!-- Pieza arrastrable UM (Amarillo - 1.000) -->
-          <div
-            id="dragSourceUM"
-            draggable="true"
-            ondragstart="onDragStartModule(event, 'UM')"
-            onclick="changeBlocks('UM', 1)"
-            data-room-drag="UM"
-            class="touch-none flex items-center gap-1.5 rounded-xl py-1 px-2.5 cursor-grab active:cursor-grabbing transition hover:-translate-y-0.5 bg-amber-100 border-2 border-amber-500 shadow-sm"
-            title="Arrastra a la habitación UM o haz clic para sumar +1.000"
-          >
-            <span class="w-3.5 h-3.5 rounded bg-amber-400 border border-amber-800 inline-block"></span>
-            <span class="text-[11px] font-black text-amber-950">+1 UM (1.000)</span>
-          </div>
-
-          <!-- Pieza arrastrable C (Verde - 100) -->
-          <div
-            draggable="true"
-            ondragstart="onDragStartModule(event, 'C')"
-            onclick="changeBlocks('C', 1)"
-            data-room-drag="C"
-            class="touch-none flex items-center gap-1.5 rounded-xl py-1 px-2.5 cursor-grab active:cursor-grabbing transition hover:-translate-y-0.5 bg-emerald-100 border-2 border-emerald-600 shadow-sm"
-            title="Arrastra a la habitación C o haz clic para sumar +100"
-          >
-            <span class="w-3.5 h-3.5 rounded bg-emerald-500 border border-emerald-900 inline-block"></span>
-            <span class="text-[11px] font-black text-emerald-950">+1 C (100)</span>
-          </div>
-
-          <!-- Pieza arrastrable D (Azul - 10) -->
-          <div
-            draggable="true"
-            ondragstart="onDragStartModule(event, 'D')"
-            onclick="changeBlocks('D', 1)"
-            data-room-drag="D"
-            class="touch-none flex items-center gap-1.5 rounded-xl py-1 px-2.5 cursor-grab active:cursor-grabbing transition hover:-translate-y-0.5 bg-blue-100 border-2 border-blue-600 shadow-sm"
-            title="Arrastra a la habitación D o haz clic para sumar +10"
-          >
-            <span class="w-3.5 h-3.5 rounded bg-blue-600 border border-blue-900 inline-block"></span>
-            <span class="text-[11px] font-black text-blue-950">+1 D (10)</span>
-          </div>
-
-          <!-- Pieza arrastrable U (Rojo - 1) -->
-          <div
-            draggable="true"
-            ondragstart="onDragStartModule(event, 'U')"
-            onclick="changeBlocks('U', 1)"
-            data-room-drag="U"
-            class="touch-none flex items-center gap-1.5 rounded-xl py-1 px-2.5 cursor-grab active:cursor-grabbing transition hover:-translate-y-0.5 bg-red-100 border-2 border-red-600 shadow-sm"
-            title="Arrastra a la habitación U o haz clic para sumar +1"
-          >
-            <span class="w-3.5 h-3.5 rounded bg-red-600 border border-red-900 inline-block"></span>
-            <span class="text-[11px] font-black text-red-950">+1 U (1)</span>
-          </div>
-        </div>
-
-        <!-- Cuadrilla LEGO 3D -->
-        <div class="flex items-center gap-2 dio-card p-1.5">
-          <div class="relative w-20 h-12 rounded-lg overflow-hidden" style="border:2px solid #4a2c17; background: linear-gradient(180deg,#bfe0f0,#9cc98a);">
-            <canvas id="crew3DCanvas" class="w-full h-full block"></canvas>
-          </div>
-          <div>
-            <span class="text-[11px] font-black block leading-tight" style="color:#3b2a1a">Lucas y Sofía 3D</span>
-            <span id="crewStatusLabel" class="text-[9px] font-bold text-emerald-700 block">✓ Listos en la obra</span>
-          </div>
-        </div>
+    <!-- Elementos manipulativos y cuadrilla conservados ocultos para máxima compatibilidad -->
+    <div class="hidden" aria-hidden="true">
+      <div id="dragSourceDM" draggable="true" ondragstart="onDragStartModule(event, 'DM')" onclick="changeBlocks('DM', 1)" data-room-drag="DM"></div>
+      <div id="dragSourceUM" draggable="true" ondragstart="onDragStartModule(event, 'UM')" onclick="changeBlocks('UM', 1)" data-room-drag="UM"></div>
+      <div draggable="true" ondragstart="onDragStartModule(event, 'C')" onclick="changeBlocks('C', 1)" data-room-drag="C"></div>
+      <div draggable="true" ondragstart="onDragStartModule(event, 'D')" onclick="changeBlocks('D', 1)" data-room-drag="D"></div>
+      <div draggable="true" ondragstart="onDragStartModule(event, 'U')" onclick="changeBlocks('U', 1)" data-room-drag="U"></div>
+      <canvas id="crew3DCanvas"></canvas>
+      <span id="crewStatusLabel"></span>
+      <div id="workshopBlocksTray">
+        <div id="blocksAreaDM"></div>
+        <div id="blocksAreaUM"></div>
+        <div id="blocksAreaC"></div>
+        <div id="blocksAreaD"></div>
+        <div id="blocksAreaU"></div>
       </div>
-
-      <!-- Bandeja opcional de bloques manipulativos Base-10 (fuera de las habitaciones, para actividades de conteo visual) -->
-      <div id="workshopBlocksTray" class="hidden grid-cols-5 gap-2 pt-2" style="border-top: 2px dashed #c9a86e">
-        <div class="dio-card p-1.5 flex flex-col items-center">
-          <span class="text-[9px] font-black text-purple-800 uppercase mb-1">Bloques DM</span>
-          <div id="blocksAreaDM" class="w-full flex flex-wrap items-center justify-center gap-1 min-h-[42px]"></div>
-        </div>
-        <div class="dio-card p-1.5 flex flex-col items-center">
-          <span class="text-[9px] font-black text-amber-800 uppercase mb-1">Bloques UM</span>
-          <div id="blocksAreaUM" class="w-full flex flex-wrap items-center justify-center gap-1 min-h-[42px]"></div>
-        </div>
-        <div class="dio-card p-1.5 flex flex-col items-center">
-          <span class="text-[9px] font-black text-emerald-800 uppercase mb-1">Bloques C</span>
-          <div id="blocksAreaC" class="w-full flex flex-wrap items-center justify-center gap-1 min-h-[42px]"></div>
-        </div>
-        <div class="dio-card p-1.5 flex flex-col items-center">
-          <span class="text-[9px] font-black text-blue-800 uppercase mb-1">Bloques D</span>
-          <div id="blocksAreaD" class="w-full flex flex-wrap items-end justify-center gap-1 min-h-[42px]"></div>
-        </div>
-        <div class="dio-card p-1.5 flex flex-col items-center">
-          <span class="text-[9px] font-black text-red-800 uppercase mb-1">Bloques U</span>
-          <div id="blocksAreaU" class="w-full flex flex-wrap items-center justify-center gap-1 min-h-[42px]"></div>
-        </div>
-      </div>
-    </section>
+    </div>
 
     <!-- PERGAMINO PEDAGÓGICO: DESCOMPOSICIÓN POSICIONAL + ADITIVA + LECTURA -->
-    <div class="w-full max-w-5xl mt-3 dio-panel p-3 flex flex-col gap-1.5">
-      <div class="flex flex-wrap items-center justify-between gap-2 pb-1.5" style="border-bottom: 2px dashed #c9a86e">
+    <div class="w-full max-w-5xl mt-1.5 dio-panel p-2 flex flex-col gap-1">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-1" style="border-bottom: 2px dashed #c9a86e">
         <div class="flex items-center gap-2 flex-wrap">
           <span class="text-[10px] font-black uppercase tracking-wider" style="color:#7a4a24">Posicional:</span>
           <div id="positionalDecompBox" class="flex items-center gap-1.5 text-xs font-black lego-font flex-wrap"></div>
@@ -1436,7 +1340,7 @@
           <span id="numberInWordsLabel" class="text-xs sm:text-sm font-extrabold italic capitalize" style="color:#3b2a1a">
             "Cero"
           </span>
-          <button onclick="speakCurrentNumber()" class="dio-btn dio-btn-wood text-xs px-2 py-1 flex items-center gap-1" title="Escuchar cómo se lee el número construido">
+          <button onclick="speakCurrentNumber()" class="dio-btn dio-btn-wood text-xs px-2 py-0.5 flex items-center gap-1" title="Escuchar cómo se lee el número construido">
             <span>🔊</span> Leer
           </button>
         </div>
