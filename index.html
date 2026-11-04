@@ -3940,6 +3940,10 @@
         verifyChallengeAttempt();
         return;
       }
+      if (state.mode === 'exam') {
+        submitExamAnswer();
+        return;
+      }
       const currentTotal = getCurrentTotal();
       if (currentTotal === state.target) {
         if (!state.isInaugurated) {
@@ -4959,6 +4963,7 @@
     }
 
     function updateLeoSpeech(currentTotal) {
+      if (state.mode === "exam") return;
       const bubble = document.getElementById("leoSpeechBubble");
       if (!bubble) return;
 
@@ -4990,6 +4995,15 @@
       const roofBadge = document.getElementById("houseRoofBadge");
       const roofTitle = document.getElementById("houseTitleText");
       const btnNext = document.getElementById("btnNextMission");
+
+      // En Modo Examen la verificación es exclusivamente al pulsar "¡Responder!".
+      // Nunca debe aparecer ninguna notificación de edificio inaugurado, cinta ni modal.
+      if (state.mode === "exam") {
+        banner?.classList.add("hidden");
+        btnNext?.classList.add("hidden");
+        if (roofTitle) roofTitle.innerText = "La Casa de los Números";
+        return;
+      }
 
       // En Modo Desafíos la verificación es manual mediante el botón "¡Comprobar Obra!"
       if (state.mode === "challenge") {
@@ -6536,17 +6550,14 @@
 
       if (isCorrect) {
         state.exam.score += 1;
-        playSound("win");
-        showToast("¡Pregunta " + q.num + " Correcta! ⭐", "🎉");
-        triggerFloatingPointsAnim(50);
+        playSound("snap");
         const avatarImg = document.getElementById("leoAvatarImg");
         if (avatarImg) {
           avatarImg.src = "assets/leo_avatar_happy.png";
-          setTimeout(() => { if (avatarImg) avatarImg.src = "assets/leo_avatar_talk.png"; }, 2500);
+          setTimeout(() => { if (avatarImg) avatarImg.src = "assets/leo_avatar_talk.png"; }, 1500);
         }
       } else {
-        playSound("error");
-        showToast("Pregunta " + q.num + ": Pusiste " + currentTotal.toLocaleString("es-CO") + " (era " + q.target.toLocaleString("es-CO") + ")", "❌");
+        playSound("click");
       }
 
       renderExamDots();
