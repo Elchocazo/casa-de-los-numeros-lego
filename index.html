@@ -1851,7 +1851,10 @@
       <button id="btnModeChallenge" onclick="switchGameMode('challenge')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
         <span>⚔️</span> Retos
       </button>
-            <button id="btnModeFree" onclick="switchGameMode('free')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
+      <button id="btnModeExam" onclick="switchGameMode('exam')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
+        <span>📝</span> Examen
+      </button>
+      <button id="btnModeFree" onclick="switchGameMode('free')" class="mode-pill-btn mode-pill-inactive font-extrabold lego-font">
         <span>💼</span> Taller
       </button>
       <button id="btnNavShop" onclick="openRewardsModal()" class="mode-pill-btn font-extrabold lego-font bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-amber-950 border-2 border-amber-800 shadow-md flex items-center gap-1.5 px-3 py-1 rounded-full cursor-pointer transition-all active:scale-95" title="¡Tienda de Numbrópolis y Sala de Trofeos!">
@@ -1984,6 +1987,10 @@
           <span>⚔️</span> ¡Comprobar!
         </button>
 
+        <button id="btnSubmitExamAnswer" onclick="submitExamAnswer()" class="hidden btn-gold-cta text-xs sm:text-sm py-2 px-5 w-full flex items-center justify-center gap-1.5 shadow-sm font-black">
+          <span>📝</span> ¡Responder!
+        </button>
+
         <!-- Pastillas organizadas de Racha y Puntos en Retos -->
         <div id="challengeScoreBadges" class="hidden flex items-center justify-center gap-1 text-[11px] font-black w-full">
           <button id="streakBadgeBox" onclick="openRewardsModal()" class="bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-300 text-amber-950 px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-2xs cursor-pointer hover:scale-105 transition-all" title="¡Toca para ver tu racha y trofeos!">
@@ -2021,6 +2028,36 @@
         <div id="missionStarsContainer" class="flex items-center gap-0.5 text-xs"></div>
         <button id="btnNextMission" onclick="advanceToNextMission()" class="hidden btn-gold-cta text-xs sm:text-sm py-1.5 px-4 rounded-xl flex items-center gap-1.5 font-black shadow-md hover:scale-105 active:scale-95 transition-transform cursor-pointer">
           <span>➡️</span> ¡Siguiente!
+        </button>
+      </div>
+    </div>
+
+    <!-- FRANJA PARA MODO EXAMEN (10 PREGUNTAS) -->
+    <div id="examControlBar" class="hidden flex-wrap items-center justify-between gap-2 text-xs pt-2.5 pb-0.5 border-t border-amber-200/80 min-h-[46px] overflow-visible">
+      <!-- Indicador de pregunta actual y dots -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-sm">📝</span>
+        <span class="font-extrabold text-amber-950 text-xs sm:text-sm">
+          Pregunta <span id="examCurrentNum" class="text-blue-700 font-black">1</span> de 10
+        </span>
+        <span id="examCategoryBadge" class="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full border border-amber-300 font-bold text-[10px]">
+          Nivel 1
+        </span>
+        <!-- Pistas de estado de las 10 preguntas (1..10) -->
+        <div id="examDotsTrack" class="flex items-center gap-1 ml-1 select-none"></div>
+      </div>
+
+      <!-- Acciones del examen -->
+      <div class="flex items-center gap-2">
+        <div class="bg-amber-100/90 border border-amber-400 px-2.5 py-1 rounded-xl flex items-center gap-1 shadow-xs">
+          <span class="text-xs">⭐</span>
+          <span class="text-[11px] font-black text-amber-900">Aciertos: <span id="examLiveAciertos" class="text-emerald-700">0</span>/10</span>
+        </div>
+        <button onclick="resetHouseBlocks()" class="bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold text-xs py-1.5 px-3 rounded-xl border border-stone-300 shadow-sm transition-all active:translate-y-0.5 flex items-center gap-1" title="Poner en cero todas las posiciones">
+          <span>🧹</span> Borrar
+        </button>
+        <button onclick="restartExam()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs py-1.5 px-2.5 rounded-xl border border-amber-300 shadow-sm transition-all active:translate-y-0.5 flex items-center gap-1" title="Reiniciar examen con 10 preguntas nuevas">
+          <span>🔄</span> Reiniciar
         </button>
       </div>
     </div>
@@ -2862,6 +2899,101 @@
     </div>
   </div>
 
+  <!-- ========================================================================= -->
+  <!-- MODAL DE RESULTADOS DEL EXAMEN (DIPLOMA DE NUMBRÓPOLIS)                     -->
+  <!-- ========================================================================= -->
+  <div id="modalExamResults" class="fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden" style="background: rgba(15, 7, 2, 0.75);">
+    <div class="relative w-full max-w-2xl bg-[#fdf8ed] rounded-3xl border-4 border-[#8B4513] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <!-- ENCABEZADO DIPLOMA DE MADERA -->
+      <div class="wood-nav-grain px-5 py-4 border-b-4 border-amber-950 flex items-center justify-between text-white shadow-md shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-b from-yellow-300 to-amber-500 border-2 border-amber-950 shadow-md flex items-center justify-center text-2xl shrink-0">
+            📜
+          </div>
+          <div>
+            <h2 class="text-base sm:text-xl font-black lego-font text-white drop-shadow">EVALUACIÓN DE ARQUITECTO</h2>
+            <p class="text-xs font-bold text-amber-200">Reino de Numbrópolis · Calificación Oficial</p>
+          </div>
+        </div>
+        <button onclick="closeExamResultsModal()" class="w-8 h-8 rounded-full bg-stone-200 hover:bg-white text-stone-900 border-2 border-stone-800 text-sm font-black flex items-center justify-center shadow-md cursor-pointer transition-transform active:scale-95">
+          ✕
+        </button>
+      </div>
+
+      <!-- CUERPO DEL DIPLOMA / RESULTADOS -->
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-4">
+        
+        <!-- TARJETA PRINCIPAL DE CALIFICACIÓN -->
+        <div class="bg-gradient-to-b from-amber-100 to-amber-50 border-3 border-amber-400 rounded-2xl p-4 text-center shadow-inner flex flex-col items-center justify-center gap-1">
+          <span id="examDiplomaIcon" class="text-4xl drop-shadow">👑</span>
+          <h3 id="examDiplomaTitle" class="text-lg sm:text-2xl font-black text-amber-950 lego-font">
+            ¡CALIFICACIÓN PERFECTA!
+          </h3>
+          <div class="flex items-center justify-center gap-2 my-1">
+            <span class="text-4xl sm:text-5xl font-black text-blue-700 lego-font" id="examFinalScore">10</span>
+            <span class="text-2xl font-black text-amber-900">/ 10</span>
+          </div>
+          <p id="examDiplomaDesc" class="text-xs sm:text-sm font-bold text-amber-900 max-w-md">
+            ¡Has demostrado dominio total del valor posicional y la descomposición aditiva en la Casa de los Números!
+          </p>
+          
+          <!-- Recompensas ganadas -->
+          <div class="flex items-center justify-center gap-3 mt-2 flex-wrap">
+            <span id="examBonusPointsBadge" class="bg-amber-200/90 border border-amber-400 text-amber-950 text-xs font-black px-3 py-1 rounded-full shadow-2xs">
+              ⭐ +250 Puntos de Tienda
+            </span>
+            <span id="examBonusXpBadge" class="bg-blue-200/90 border border-blue-400 text-blue-950 text-xs font-black px-3 py-1 rounded-full shadow-2xs">
+              ⚡ +100 XP de Arquitecto
+            </span>
+          </div>
+        </div>
+
+        <!-- DESGLOSE DETALLADO DE LAS 10 PREGUNTAS -->
+        <div>
+          <h4 class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-900 mb-2 flex items-center gap-1.5">
+            <span>📋</span> Revisión de Preguntas:
+          </h4>
+          <div id="examReviewList" class="space-y-1.5 text-xs">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- FIRMA DEL MAESTRO CHOCAZO -->
+        <div class="flex items-center justify-between border-t-2 border-dashed border-amber-300 pt-3 text-[11px] font-bold text-amber-800">
+          <div class="flex items-center gap-2">
+            <img src="assets/leo_avatar_happy.png" class="w-8 h-8 rounded-full border border-amber-400 object-contain bg-amber-100" alt="Chocazo">
+            <div>
+              <span class="block font-black text-amber-950">Maestro Chocazo</span>
+              <span>Gran Arquitecto de Numbrópolis</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="block text-emerald-700 font-black">Certificado Oficial LEGO</span>
+            <span class="text-[10px] text-amber-700/80">Base 10 Verificada</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PIE DE ACCIONES -->
+      <div class="p-3 sm:p-4 bg-amber-100/80 border-t-2 border-amber-300 flex items-center justify-between gap-2 shrink-0 flex-wrap">
+        <button onclick="restartExam()" class="btn-gold-cta py-2 px-4 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1">
+          <span>🔄</span> Repetir Examen
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="openRewardsModal()" class="bg-amber-300 hover:bg-amber-400 text-amber-950 border-2 border-amber-700 py-2 px-3 rounded-xl font-black text-xs sm:text-sm shadow-xs flex items-center gap-1">
+            <span>🏪</span> Ir a Tienda
+          </button>
+          <button onclick="closeExamResultsModal(); switchGameMode('adventure');" class="bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-900 py-2 px-4 rounded-xl font-black text-xs sm:text-sm shadow-md">
+            🚩 Volver a Misiones
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- MODAL DE MENSAJES Y CELEBRACIÓN (PERGAMINO) -->
   <div id="modalBox" class="fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" style="background: rgba(20,12,5,0.6)">
     <div class="dio-panel max-w-sm w-full p-5 text-center anim-dock flex flex-col items-center">
@@ -3100,6 +3232,15 @@
           maxTime: 25,
           combo: 1
         }
+      },
+      exam: {
+        active: false,
+        currentIndex: 0,
+        totalQuestions: 10,
+        score: 0,
+        questions: [],
+        answers: [],
+        finished: false
       }
     };
 
@@ -3859,6 +4000,7 @@
       const btnAdv = document.getElementById("btnModeAdventure");
       const btnDec = document.getElementById("btnModeDecompose");
       const btnCha = document.getElementById("btnModeChallenge");
+      const btnExam = document.getElementById("btnModeExam");
       const btnFree = document.getElementById("btnModeFree");
 
       const houseScroller = document.getElementById("houseStageScroller");
@@ -3881,6 +4023,7 @@
       if (btnAdv) btnAdv.className = mode === "adventure" ? activeClass : idleClass;
       if (btnDec) btnDec.className = mode === "decompose" ? activeClass : idleClass;
       if (btnCha) btnCha.className = mode === "challenge" ? activeClass : idleClass;
+      if (btnExam) btnExam.className = mode === "exam" ? activeClass : idleClass;
       if (btnFree) btnFree.className = mode === "free" ? activeClass : idleClass;
 
       barAdv?.classList.toggle("hidden", mode !== "adventure");
@@ -3905,15 +4048,20 @@
       missionBar?.classList.toggle("flex", mode === "adventure" || mode === "decompose");
       chalBar?.classList.toggle("hidden", mode !== "challenge");
       chalBar?.classList.toggle("flex", mode === "challenge");
+      const examBar = document.getElementById("examControlBar");
+      examBar?.classList.toggle("hidden", mode !== "exam");
+      examBar?.classList.toggle("flex", mode === "exam");
       const scoreBadges = document.getElementById("challengeScoreBadges");
       scoreBadges?.classList.toggle("hidden", mode !== "challenge");
       scoreBadges?.classList.toggle("flex", mode === "challenge");
 
       const btnActionPrimary = document.getElementById("btnActionPrimary");
       if (btnActionPrimary) {
-        btnActionPrimary.classList.toggle("hidden", mode === "challenge");
+        btnActionPrimary.classList.toggle("hidden", mode === "challenge" || mode === "exam");
       }
       btnVerify?.classList.toggle("hidden", mode !== "challenge");
+      const btnSubmitExam = document.getElementById("btnSubmitExamAnswer");
+      btnSubmitExam?.classList.toggle("hidden", mode !== "exam");
       if (mode !== "challenge") {
         stopUltraTimer();
         const timerContainer = document.getElementById("ultraTimerContainer");
@@ -3928,7 +4076,9 @@
         clueSub.classList.add("hidden");
       }
 
-      if (mode === "adventure") {
+      if (mode === "exam") {
+        startExamMode();
+      } else if (mode === "adventure") {
         if (headerLbl) headerLbl.innerText = "Número objetivo:";
         loadCurrentMission();
       } else if (mode === "decompose") {
@@ -6133,7 +6283,410 @@
         init3DConstructionCrew();
       }, 80);
     });
-  </script>
+  
+
+    // =========================================================================
+    // MODO EXAMEN DE 10 PREGUNTAS (EVALUACIÓN DE ARQUITECTO CHOCAZO)
+    // =========================================================================
+    
+    function buildDecompBadgesHtml(dm, um, c, d, u) {
+      const items = [];
+      if (dm > 0) items.push({ txt: dm + " DM", cls: "bg-purple-100 text-purple-900 border-2 border-purple-400" });
+      if (um > 0) items.push({ txt: um + " UM", cls: "bg-amber-100 text-amber-900 border-2 border-amber-400" });
+      if (c > 0) items.push({ txt: c + " C", cls: "bg-emerald-100 text-emerald-900 border-2 border-emerald-400" });
+      if (d > 0) items.push({ txt: d + " D", cls: "bg-blue-100 text-blue-900 border-2 border-blue-400" });
+      if (u > 0) items.push({ txt: u + " U", cls: "bg-rose-100 text-rose-900 border-2 border-rose-400" });
+      if (items.length === 0) items.push({ txt: "0 U", cls: "bg-rose-100 text-rose-900 border-2 border-rose-400" });
+      return items.map(it => `<span class="px-3 py-1 rounded-xl font-black text-lg sm:text-2xl shadow-xs ${it.cls}">${it.txt}</span>`).join('<span class="text-amber-800 font-black text-xl">+</span>');
+    }
+
+    function generateExamQuestions() {
+      // 10 preguntas balanceadas y graduadas para niños de 6 a 8 años
+      const set = [];
+
+      // Pregunta 1: Número 2 cifras (fácil)
+      const n1 = Math.floor(Math.random() * 40) + 15; // 15..54
+      set.push({
+        num: 1,
+        target: n1,
+        type: "number",
+        category: "Decenas y Unidades",
+        promptText: "Construye el número " + n1 + " en la Casa de los Números.",
+        speechText: "Pregunta uno: Construye el número " + n1
+      });
+
+      // Pregunta 2: Descomposición 2 cifras
+      const d2 = Math.floor(Math.random() * 6) + 2; // 2..7
+      const u2 = Math.floor(Math.random() * 8) + 1; // 1..8
+      const n2 = d2 * 10 + u2;
+      set.push({
+        num: 2,
+        target: n2,
+        type: "additive",
+        category: "Descomposición Básica",
+        promptText: "¿Qué número forman " + d2 + " Decenas y " + u2 + " Unidades?",
+        speechText: "Pregunta dos: Qué número forman " + d2 + " decenas y " + u2 + " unidades"
+      });
+
+      // Pregunta 3: En letras 2 cifras
+      const n3 = [24, 35, 48, 56, 72, 83, 91][Math.floor(Math.random() * 7)];
+      set.push({
+        num: 3,
+        target: n3,
+        type: "words",
+        category: "Lectura de Números",
+        promptText: "Lee las palabras y construye la cifra exacta.",
+        speechText: "Pregunta tres: Lee las palabras y construye la cifra en la casa"
+      });
+
+      // Pregunta 4: Centenas sin cero
+      const c4 = Math.floor(Math.random() * 5) + 1;
+      const d4 = Math.floor(Math.random() * 6) + 2;
+      const u4 = Math.floor(Math.random() * 7) + 1;
+      const n4 = c4 * 100 + d4 * 10 + u4;
+      set.push({
+        num: 4,
+        target: n4,
+        type: "number",
+        category: "Centenas Completas",
+        promptText: "Construye el número " + n4 + " en la Casa de los Números.",
+        speechText: "Pregunta cuatro: Construye el número " + n4
+      });
+
+      // Pregunta 5: Centenas con CERO intercalado en las Decenas (CRUCIAL)
+      const c5 = Math.floor(Math.random() * 6) + 2; // 2..7
+      const u5 = Math.floor(Math.random() * 8) + 1; // 1..8
+      const n5 = c5 * 100 + u5; // ej: 308, 504
+      set.push({
+        num: 5,
+        target: n5,
+        type: "additive",
+        category: "Cero Intercalado en Decenas",
+        promptText: "¡Atención al cero! Forma el número de " + c5 + " Centenas y " + u5 + " Unidades.",
+        speechText: "Pregunta cinco: Mucha atención al cero. Qué número forman " + c5 + " centenas y " + u5 + " unidades"
+      });
+
+      // Pregunta 6: Centenas con CERO en las Unidades
+      const c6 = Math.floor(Math.random() * 6) + 2;
+      const d6 = Math.floor(Math.random() * 7) + 1;
+      const n6 = c6 * 100 + d6 * 10; // ej: 420, 650
+      set.push({
+        num: 6,
+        target: n6,
+        type: "words",
+        category: "Cero en las Unidades",
+        promptText: "Lee con atención y recuerda dejar la habitación de unidades en cero.",
+        speechText: "Pregunta seis: Lee la cifra y constrúyela"
+      });
+
+      // Pregunta 7: Unidades de Mil (fácil)
+      const um7 = Math.floor(Math.random() * 4) + 1;
+      const c7 = Math.floor(Math.random() * 5) + 1;
+      const n7 = um7 * 1000 + c7 * 100;
+      set.push({
+        num: 7,
+        target: n7,
+        type: "number",
+        category: "Unidades de Mil",
+        promptText: "Acopla el Ala UM y construye " + n7.toLocaleString("es-CO") + ".",
+        speechText: "Pregunta siete: Construye " + n7
+      });
+
+      // Pregunta 8: Unidades de Mil con ceros intercalados
+      const um8 = Math.floor(Math.random() * 5) + 2;
+      const d8 = Math.floor(Math.random() * 7) + 2;
+      const u8 = Math.floor(Math.random() * 8) + 1;
+      const n8 = um8 * 1000 + d8 * 10 + u8; // ej: 3.045
+      set.push({
+        num: 8,
+        target: n8,
+        type: "additive",
+        category: "Cero en Centenas de Mil",
+        promptText: "¿Qué número forman " + um8 + " UM + " + d8 + " D + " + u8 + " U?",
+        speechText: "Pregunta ocho: Qué número forman " + um8 + " unidades de mil, " + d8 + " decenas y " + u8 + " unidades"
+      });
+
+      // Pregunta 9: En palabras 4 cifras
+      const n9 = [1025, 2308, 4050, 5204, 7060][Math.floor(Math.random() * 5)];
+      set.push({
+        num: 9,
+        target: n9,
+        type: "words",
+        category: "Lectura Avanzada de Miles",
+        promptText: "Lee las palabras de miles y ubica cada bloque en su habitación.",
+        speechText: "Pregunta nueve: Lee con cuidado y construye la cifra en la casa"
+      });
+
+      // Pregunta 10: Gran Desafío de Arquitecto (5 cifras o reto estelar)
+      const dm10 = Math.floor(Math.random() * 3) + 1; // 1..3
+      const um10 = Math.floor(Math.random() * 5) + 1;
+      const c10 = Math.floor(Math.random() * 4) + 2;
+      const u10 = Math.floor(Math.random() * 7) + 2;
+      const n10 = dm10 * 10000 + um10 * 1000 + c10 * 100 + u10; // ej: 14.305
+      set.push({
+        num: 10,
+        target: n10,
+        type: "additive",
+        category: "Gran Reto de Numbrópolis",
+        promptText: "¡Pregunta final de Maestría! Forma: " + dm10 + " DM + " + um10 + " UM + " + c10 + " C + " + u10 + " U",
+        speechText: "Pregunta diez y última: Gran reto de Numbrópolis. Forma " + dm10 + " decenas de mil, " + um10 + " unidades de mil, " + c10 + " centenas y " + u10 + " unidades"
+      });
+
+      return set;
+    }
+
+    function startExamMode() {
+      initAudio();
+      state.exam.active = true;
+      state.exam.currentIndex = 0;
+      state.exam.score = 0;
+      state.exam.questions = generateExamQuestions();
+      state.exam.answers = [];
+      state.exam.finished = false;
+
+      renderExamDots();
+      loadExamQuestion(0);
+    }
+
+    function restartExam() {
+      initAudio();
+      playSound("snap");
+      startExamMode();
+      showToast("¡Nuevo examen de 10 preguntas listo!", "📝");
+    }
+
+    function renderExamDots() {
+      const track = document.getElementById("examDotsTrack");
+      if (!track) return;
+      track.innerHTML = "";
+      for (let i = 0; i < 10; i++) {
+        const dot = document.createElement("span");
+        dot.id = "examDot_" + i;
+        const ans = state.exam.answers[i];
+        if (ans) {
+          dot.className = ans.isCorrect
+            ? "w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-500 text-white font-black text-[10px] flex items-center justify-center shadow-xs"
+            : "w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-rose-500 text-white font-black text-[10px] flex items-center justify-center shadow-xs";
+          dot.innerText = ans.isCorrect ? "✓" : "✗";
+        } else if (i === state.exam.currentIndex) {
+          dot.className = "w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-blue-600 text-white font-black text-[10px] flex items-center justify-center shadow-xs ring-2 ring-blue-300 animate-pulse";
+          dot.innerText = (i + 1);
+        } else {
+          dot.className = "w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-amber-200/80 text-amber-900 font-bold text-[10px] flex items-center justify-center border border-amber-300";
+          dot.innerText = (i + 1);
+        }
+        track.appendChild(dot);
+      }
+      const aciertosEl = document.getElementById("examLiveAciertos");
+      if (aciertosEl) aciertosEl.innerText = state.exam.score;
+    }
+
+    function loadExamQuestion(idx) {
+      if (idx < 0 || idx >= state.exam.questions.length) return;
+      state.exam.currentIndex = idx;
+      const q = state.exam.questions[idx];
+
+      state.target = q.target;
+      state.targetDM = Math.floor(q.target / 10000);
+      state.targetUM = Math.floor((q.target % 10000) / 1000);
+      state.targetC = Math.floor((q.target % 1000) / 100);
+      state.targetD = Math.floor((q.target % 100) / 10);
+      state.targetU = q.target % 10;
+
+      // Reiniciar casa para la pregunta
+      state.DM = 0; state.UM = 0; state.C = 0; state.D = 0; state.U = 0;
+      state.attachedDM = true;
+      state.attachedUM = true;
+      state.isInaugurated = false;
+
+      // Actualizar UI del Hub
+      const curNumEl = document.getElementById("examCurrentNum");
+      if (curNumEl) curNumEl.innerText = (idx + 1);
+
+      const catBadge = document.getElementById("examCategoryBadge");
+      if (catBadge) catBadge.innerText = q.category;
+
+      const headerLbl = document.getElementById("targetHeaderLabel");
+      const displayEl = document.getElementById("targetNumberDisplay");
+      const speakerEl = document.getElementById("rpgSpeakerLabel");
+      const chocazoBubble = document.getElementById("leoSpeechBubble");
+      const clueSub = document.getElementById("targetClueSubtitle");
+
+      if (speakerEl) speakerEl.innerHTML = '¡Examen con Chocazo!';
+      if (chocazoBubble) chocazoBubble.innerText = q.promptText;
+
+      if (clueSub) {
+        clueSub.classList.add("hidden");
+        clueSub.innerText = "";
+      }
+
+      if (q.type === "number") {
+        if (headerLbl) headerLbl.innerText = "NÚMERO OBJETIVO:";
+        if (displayEl) {
+          displayEl.className = "hero-number-digits text-5xl sm:text-6xl font-black text-blue-600 tracking-wide flex items-center justify-center";
+          displayEl.innerText = q.target.toLocaleString("es-CO");
+        }
+      } else if (q.type === "additive") {
+        if (headerLbl) headerLbl.innerText = "DESCOMPOSICIÓN ADITIVA:";
+        const badgesHtml = buildDecompBadgesHtml(state.targetDM, state.targetUM, state.targetC, state.targetD, state.targetU);
+        if (displayEl) {
+          displayEl.className = "flex items-center justify-center gap-1.5 flex-wrap";
+          displayEl.innerHTML = badgesHtml;
+        }
+      } else if (q.type === "words") {
+        if (headerLbl) headerLbl.innerText = "NÚMERO EN LETRAS:";
+        const words = numberToWordsEs(q.target);
+        const titleWords = words.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        if (displayEl) {
+          displayEl.className = "text-xl sm:text-2xl font-black text-indigo-900 tracking-tight text-center px-2";
+          displayEl.innerText = "«" + titleWords + "»";
+        }
+      }
+
+      state.challenge.promptSpeech = q.speechText;
+      renderExamDots();
+      updateUI();
+    }
+
+    function submitExamAnswer() {
+      initAudio();
+      if (!state.exam.active || state.exam.finished) return;
+
+      const currentTotal = (state.attachedDM ? state.DM : 0) * 10000 +
+                           (state.attachedUM ? state.UM : 0) * 1000 +
+                           state.C * 100 +
+                           state.D * 10 +
+                           state.U;
+
+      const q = state.exam.questions[state.exam.currentIndex];
+      const isCorrect = currentTotal === q.target;
+
+      const wrongRooms = [];
+      if ((state.attachedDM ? state.DM : 0) !== state.targetDM) wrongRooms.push("DM");
+      if ((state.attachedUM ? state.UM : 0) !== state.targetUM) wrongRooms.push("UM");
+      if (state.C !== state.targetC) wrongRooms.push("C");
+      if (state.D !== state.targetD) wrongRooms.push("D");
+      if (state.U !== state.targetU) wrongRooms.push("U");
+
+      state.exam.answers[state.exam.currentIndex] = {
+        questionNum: q.num,
+        category: q.category,
+        target: q.target,
+        userTotal: currentTotal,
+        isCorrect: isCorrect,
+        wrongRooms: wrongRooms
+      };
+
+      if (isCorrect) {
+        state.exam.score += 1;
+        playSound("win");
+        showToast("¡Pregunta " + q.num + " Correcta! ⭐", "🎉");
+        triggerFloatingPointsAnim(50);
+        const avatarImg = document.getElementById("leoAvatarImg");
+        if (avatarImg) {
+          avatarImg.src = "assets/leo_avatar_happy.png";
+          setTimeout(() => { if (avatarImg) avatarImg.src = "assets/leo_avatar_talk.png"; }, 2500);
+        }
+      } else {
+        playSound("error");
+        showToast("Pregunta " + q.num + ": Pusiste " + currentTotal.toLocaleString("es-CO") + " (era " + q.target.toLocaleString("es-CO") + ")", "❌");
+      }
+
+      renderExamDots();
+
+      // Avanzar a la siguiente pregunta o finalizar examen
+      if (state.exam.currentIndex < state.exam.totalQuestions - 1) {
+        setTimeout(() => {
+          loadExamQuestion(state.exam.currentIndex + 1);
+        }, 600);
+      } else {
+        state.exam.finished = true;
+        setTimeout(() => {
+          finishExamAndShowResults();
+        }, 700);
+      }
+    }
+
+    function finishExamAndShowResults() {
+      playSound("win");
+      triggerConfetti();
+
+      // Puntos y XP proporcionales al resultado
+      const earnedPoints = state.exam.score * 25; // hasta 250 pts
+      const earnedXp = state.exam.score * 10;     // hasta 100 XP
+
+      state.challenge.score = (state.challenge.score || 0) + earnedPoints;
+      addPlayerXP(earnedXp, "Completar Examen de 10 Preguntas");
+      saveProgress();
+
+      const finalScoreEl = document.getElementById("examFinalScore");
+      if (finalScoreEl) finalScoreEl.innerText = state.exam.score;
+
+      const titleEl = document.getElementById("examDiplomaTitle");
+      const descEl = document.getElementById("examDiplomaDesc");
+      const iconEl = document.getElementById("examDiplomaIcon");
+
+      if (state.exam.score === 10) {
+        if (iconEl) iconEl.innerText = "👑";
+        if (titleEl) titleEl.innerText = "¡CALIFICACIÓN PERFECTA!";
+        if (descEl) descEl.innerText = "¡Extraordinario! Respondiste las 10 preguntas sin fallar ninguna. Eres el Arquitecto Maestro Absoluto de Numbrópolis.";
+      } else if (state.exam.score >= 8) {
+        if (iconEl) iconEl.innerText = "🥇";
+        if (titleEl) titleEl.innerText = "¡SOBRESALIENTE!";
+        if (descEl) descEl.innerText = "¡Gran trabajo, arquitecto! Dominas con seguridad el valor posicional y la descomposición aditiva.";
+      } else if (state.exam.score >= 6) {
+        if (iconEl) iconEl.innerText = "🥈";
+        if (titleEl) titleEl.innerText = "¡EXAMEN APROBADO!";
+        if (descEl) descEl.innerText = "Buen desempeño. Revisa las preguntas falladas para perfeccionar las habitaciones con ceros intercalados.";
+      } else {
+        if (iconEl) iconEl.innerText = "💪";
+        if (titleEl) titleEl.innerText = "¡SIGUE PRACTICANDO!";
+        if (descEl) descEl.innerText = "¡No te rindas! La Casa de los Números está lista para que entrenes y vuelvas a intentarlo.";
+      }
+
+      const ptsBadge = document.getElementById("examBonusPointsBadge");
+      if (ptsBadge) ptsBadge.innerText = "⭐ +" + earnedPoints + " Puntos de Tienda";
+      const xpBadge = document.getElementById("examBonusXpBadge");
+      if (xpBadge) xpBadge.innerText = "⚡ +" + earnedXp + " XP de Arquitecto";
+
+      // Renderizar tabla de revisión
+      const reviewList = document.getElementById("examReviewList");
+      if (reviewList) {
+        reviewList.innerHTML = state.exam.answers.map(a => {
+          return `<div class="flex items-center justify-between p-2 rounded-xl border ${a.isCorrect ? 'bg-emerald-50 border-emerald-300' : 'bg-rose-50 border-rose-300'}">
+            <div class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full ${a.isCorrect ? 'bg-emerald-500' : 'bg-rose-500'} text-white font-black text-xs flex items-center justify-center">
+                ${a.isCorrect ? '✓' : '✗'}
+              </span>
+              <div>
+                <span class="font-extrabold text-slate-800">Pregunta ${a.questionNum}: ${a.category}</span>
+                <span class="block text-[10px] text-slate-600">Objetivo: <b>${a.target.toLocaleString('es-CO')}</b> | Tu respuesta: <b>${a.userTotal.toLocaleString('es-CO')}</b></span>
+              </div>
+            </div>
+            <span class="font-black text-xs ${a.isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+              ${a.isCorrect ? '+25 pts' : 'Revisar'}
+            </span>
+          </div>`;
+        }).join("");
+      }
+
+      const modal = document.getElementById("modalExamResults");
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function closeExamResultsModal() {
+      const modal = document.getElementById("modalExamResults");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    // Exponer globalmente
+    window.startExamMode = startExamMode;
+    window.restartExam = restartExam;
+    window.loadExamQuestion = loadExamQuestion;
+    window.submitExamAnswer = submitExamAnswer;
+    window.closeExamResultsModal = closeExamResultsModal;
+
+</script>
 
   </body>
 </html>
