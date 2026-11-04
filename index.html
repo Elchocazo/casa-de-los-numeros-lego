@@ -233,6 +233,34 @@
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
     }
 
+    
+    /* Placa del Número Objetivo - Foco visual de alta atención para niños 6-8 años */
+    .target-hero-plaque {
+      background: linear-gradient(180deg, #ffffff 0%, #fffdf5 45%, #fef3c7 100%);
+      border: 3.5px solid #f59e0b;
+      border-radius: 20px;
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9), 0 5px 0 #b45309, 0 8px 18px rgba(180, 83, 9, 0.22);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .target-hero-plaque:hover {
+      transform: translateY(-1px);
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9), 0 6px 0 #b45309, 0 10px 22px rgba(180, 83, 9, 0.28);
+    }
+    .hero-number-digits {
+      font-family: 'Fredoka', 'Lilita One', 'Nunito', system-ui, sans-serif;
+      color: #1d4ed8;
+      text-shadow: 0 3px 0 #1e3a8a, 0 6px 14px rgba(30, 58, 138, 0.32);
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    .hero-clue-pill {
+      background: rgba(254, 243, 199, 0.95);
+      border: 1.5px solid #f59e0b;
+      color: #78350f;
+      border-radius: 9999px;
+      font-weight: 800;
+    }
+
     /* Losa de piedra (para cifras objetivo y estado) */
     .dio-stone {
       background:
@@ -1904,7 +1932,7 @@
           <span class="absolute top-1/2 -left-2 -translate-y-1/2 w-3.5 h-3.5 rotate-45 bg-white border-l-2 border-b-2 border-amber-300"></span>
           <div class="mb-0.5">
             <span id="rpgSpeakerLabel" class="text-xs sm:text-[13px] font-black text-amber-950 block leading-tight">
-              ¡Buenos días, pequeño arquitecto!
+              ¡Compañero Leo!
             </span>
           </div>
           <p id="leoSpeechBubble" class="text-xs font-medium leading-snug text-slate-700">
@@ -1913,40 +1941,44 @@
         </div>
       </div>
 
-      <!-- ZONA CENTRAL: ETIQUETA + NÚMERO OBJETIVO GIGANTE + LADRILLO LEGO 3D -->
-      <div class="flex flex-col items-center justify-center flex-1 min-w-[180px]">
-        <span id="targetHeaderLabel" class="text-[11px] font-black uppercase tracking-wider text-amber-950/80 block leading-none mb-1">
-          Número objetivo:
-        </span>
-        <div class="flex items-center gap-2.5">
-          <div id="targetNumberDisplay" class="text-3xl sm:text-4xl font-black text-blue-600 lego-font tracking-wide flex items-center justify-center flex-wrap" style="text-shadow: 0 2px 0 rgba(255,255,255,0.9), 0 3px 6px rgba(37,99,235,0.2)">
-            35
+      <!-- ZONA CENTRAL: FOCO VISUAL PRINCIPAL - PLACA DEL NÚMERO OBJETIVO -->
+      <div class="flex flex-col items-center justify-center flex-1 min-w-[220px]">
+        <div class="target-hero-plaque flex flex-col items-center justify-center px-6 sm:px-8 py-2 select-none">
+          <span id="targetHeaderLabel" class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-900/90 block leading-none mb-1">
+            Número objetivo:
+          </span>
+          <div class="flex items-center justify-center gap-3">
+            <div id="targetNumberDisplay" class="hero-number-digits text-5xl sm:text-6xl font-black text-blue-600 tracking-wide flex items-center justify-center">
+              35
+            </div>
+            <!-- Bloque LEGO 3D decorativo dorado -->
+            <div class="w-8 h-8 sm:w-9 sm:h-9 relative shrink-0 cursor-pointer transition-transform hover:scale-110 active:scale-95" onclick="speakTargetNumber()" title="Pieza LEGO mágica">
+              <svg viewBox="0 0 40 40" class="w-full h-full drop-shadow">
+                <!-- Bloque isométrico amarillo -->
+                <polygon points="20,4 36,12 20,20 4,12" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+                <polygon points="4,12 20,20 20,36 4,28" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+                <polygon points="20,20 36,12 36,28 20,36" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+                <!-- Studs -->
+                <ellipse cx="14" cy="10" rx="4" ry="2.2" fill="#fef08a" stroke="#d97706" stroke-width="1"/>
+                <ellipse cx="26" cy="14" rx="4" ry="2.2" fill="#fef08a" stroke="#d97706" stroke-width="1"/>
+              </svg>
+            </div>
+            <button onclick="speakTargetNumber()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-b from-amber-300 to-amber-400 hover:from-amber-200 hover:to-amber-300 border-2 border-amber-600 text-amber-950 flex items-center justify-center text-sm shrink-0 shadow-sm transition-all active:scale-95" title="Escuchar objetivo en voz alta">
+              🔊
+            </button>
           </div>
-          <!-- Bloque LEGO 3D decorativo dorado -->
-          <div class="w-8 h-8 relative shrink-0" title="Pieza LEGO mágica">
-            <svg viewBox="0 0 40 40" class="w-full h-full drop-shadow">
-              <!-- Bloque isométrico amarillo -->
-              <polygon points="20,4 36,12 20,20 4,12" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
-              <polygon points="4,12 20,20 20,36 4,28" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
-              <polygon points="20,20 36,12 36,28 20,36" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
-              <!-- Studs -->
-              <ellipse cx="14" cy="10" rx="4" ry="2.2" fill="#fef08a" stroke="#d97706" stroke-width="1"/>
-              <ellipse cx="26" cy="14" rx="4" ry="2.2" fill="#fef08a" stroke="#d97706" stroke-width="1"/>
-            </svg>
-          </div>
-          <button onclick="speakTargetNumber()" class="w-7 h-7 rounded-full bg-amber-200 hover:bg-amber-300 border border-amber-900 text-amber-950 flex items-center justify-center text-xs shrink-0 shadow transition-all active:translate-y-0.5" title="Escuchar objetivo en voz alta">
-            📢
-          </button>
+          <!-- Subtítulo complementario aislado (solo pistas en retos, nunca reemplaza la cifra gigante) -->
+          <div id="targetClueSubtitle" class="hidden mt-1 hero-clue-pill px-3 py-0.5 text-[11px] sm:text-xs max-w-xs text-center truncate shadow-2xs"></div>
         </div>
       </div>
 
-      <!-- ZONA DERECHA: BOTÓN PRINCIPAL DE ACCIÓN (¡A CONSTRUIR! / ¡COMPROBAR!) -->
+      <!-- ZONA DERECHA: BOTÓN PRINCIPAL DE ACCIÓN (UN SOLO BOTÓN SEGÚN EL MODO) -->
       <div class="flex items-center gap-2 shrink-0">
         <button id="btnActionPrimary" onclick="handlePrimaryAction()" class="btn-gold-cta text-sm sm:text-base py-2.5 px-6 flex items-center gap-2">
           <span id="btnActionPrimaryIcon">▶</span> <span id="btnActionPrimaryText">¡A construir!</span>
         </button>
 
-        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden btn-gold-cta text-sm sm:text-base py-2 px-5 flex items-center gap-2">
+        <button id="btnVerifyChallenge" onclick="verifyChallengeAttempt()" class="hidden btn-gold-cta text-sm sm:text-base py-2.5 px-6 flex items-center gap-2">
           <span>⚔️</span> ¡Comprobar!
         </button>
       </div>
@@ -2798,7 +2830,7 @@
         district: "Plaza Mayor",
         step: "Misión 1 de 8",
         phaseLabel: "Paso 1: Unidades y Decenas",
-        storyIntro: "¡Buenos días, pequeño arquitecto! Necesitamos hornear exactamente 35 panes dorados para la fiesta del pueblo. Pon 3 barras de Decenas y 5 ladrillos de Unidades. ¡El reino cuenta contigo!",
+        storyIntro: "¡Necesitamos hornear 35 panes dorados para la fiesta! Pon 3 Decenas y 5 Unidades en la casa. ¡Tú puedes!",
         hint: "Para formar 35: pon 3 en Decenas (D) y 5 en Unidades (U). Deja Centenas, UM y DM en 0.",
         palette: { bg: "from-amber-400 to-amber-600", roof: "bg-red-600" }
       },
@@ -3755,7 +3787,16 @@
       chalBar?.classList.toggle("hidden", mode !== "challenge");
       chalBar?.classList.toggle("flex", mode === "challenge");
 
+      const btnActionPrimary = document.getElementById("btnActionPrimary");
+      if (btnActionPrimary) {
+        btnActionPrimary.classList.toggle("hidden", mode === "challenge");
+      }
       btnVerify?.classList.toggle("hidden", mode !== "challenge");
+
+      const clueSub = document.getElementById("targetClueSubtitle");
+      if (clueSub && mode !== "challenge") {
+        clueSub.classList.add("hidden");
+      }
 
       if (mode === "adventure") {
         if (headerLbl) headerLbl.innerText = "Número objetivo:";
@@ -3768,8 +3809,8 @@
           leoBubble.innerText = "¡Separa las cifras en sumandos posicionales! Comprueba cómo la suma forma el número completo.";
         }
       } else if (mode === "challenge") {
-        if (headerLbl) headerLbl.innerText = "Acertijo del Arquitecto:";
-        if (speakerEl) speakerEl.innerHTML = '¡Reto Posicional!';
+        if (headerLbl) headerLbl.innerText = "Número objetivo:";
+        if (speakerEl) speakerEl.innerHTML = '¡Reto de Construcción!';
         updateChallengeScoreUI();
         generateNewChallenge();
       } else {
@@ -3778,7 +3819,7 @@
         setTargetNumber(state.target || 245);
         const leoBubble = document.getElementById("leoSpeechBubble");
         if (leoBubble) {
-          leoBubble.innerText = "¡Bienvenido al Taller Libre! Experimenta con cualquier combinación de dígitos o canjes sin límite.";
+          leoBubble.innerText = "¡Crea el número que quieras sumando o restando bloques en cada habitación!";
         }
       }
     }
@@ -3882,7 +3923,7 @@
       }
       const speakerEl = document.getElementById("rpgSpeakerLabel");
       if (speakerEl) {
-        speakerEl.innerHTML = `<span>¡Buenos días, pequeño arquitecto!</span>`;
+        speakerEl.innerHTML = `<span>¡Compañero Leo!</span>`;
       }
       speakText(mission.storyIntro);
     }
@@ -4071,14 +4112,37 @@
       state.challenge.promptHtml = promptHtml;
       state.challenge.promptSpeech = promptSpeech;
 
+      // El número objetivo es SIEMPRE el foco visual protagonista e indiscutible
       const displayEl = document.getElementById("targetNumberDisplay");
-      if (displayEl) displayEl.innerHTML = promptHtml;
+      if (displayEl) {
+        displayEl.innerText = n.toLocaleString("es-CO");
+      }
 
+      // El subtítulo / pista complementaria limpia (sin mezclar con la cifra gigante)
+      const clueSub = document.getElementById("targetClueSubtitle");
+      if (clueSub) {
+        clueSub.classList.remove("hidden");
+        if (chosenType === "dictation") {
+          clueSub.innerText = "«" + words + "»";
+        } else if (chosenType === "scrambled") {
+          clueSub.innerHTML = promptHtml;
+        } else {
+          clueSub.innerHTML = promptHtml;
+        }
+      }
+
+      // Mensaje amigable, corto y motivador de Leo (sin textos largos ni confusos para niños)
       const leoBubble = document.getElementById("leoSpeechBubble");
-      if (leoBubble) leoBubble.innerText = `${promptSpeech} Cuando termines, pulsa «¡Comprobar Obra!».`;
+      if (leoBubble) {
+        leoBubble.innerText = "¡Construye el número " + n.toLocaleString("es-CO") + " en la Casa de los Números!";
+      }
+      const speakerEl = document.getElementById("rpgSpeakerLabel");
+      if (speakerEl) {
+        speakerEl.innerText = "¡Reto de Construcción!";
+      }
 
       updateUI();
-      speakText(promptSpeech);
+      speakText("Construye el número " + words + ".");
     }
 
     function updateChallengeScoreUI() {
@@ -4151,20 +4215,11 @@
     function renderColoredTargetDigits() {
       const displayEl = document.getElementById("targetNumberDisplay");
       if (!displayEl) return;
-      let htmlStr = "";
-      if (state.targetDM > 0) htmlStr += `<span class="text-purple-600">${state.targetDM}</span>`;
-      if (state.targetUM > 0 || state.targetDM > 0) {
-        htmlStr += `<span class="text-amber-500">${state.targetUM}</span>`;
-        htmlStr += `<span class="text-amber-600 px-1">•</span>`;
+      displayEl.innerText = (state.target ?? 0).toLocaleString("es-CO");
+      const clueSub = document.getElementById("targetClueSubtitle");
+      if (clueSub && state.mode !== "challenge") {
+        clueSub.classList.add("hidden");
       }
-      if (state.targetC > 0 || state.targetUM > 0 || state.targetDM > 0) {
-        htmlStr += `<span class="text-emerald-600">${state.targetC}</span>`;
-      }
-      if (state.targetD > 0 || state.targetC > 0 || state.targetUM > 0 || state.targetDM > 0) {
-        htmlStr += `<span class="text-blue-600">${state.targetD}</span>`;
-      }
-      htmlStr += `<span class="text-red-600">${state.targetU}</span>`;
-      displayEl.innerHTML = htmlStr;
     }
 
     // ACTUALIZACIÓN INTEGRAL DE LA INTERFAZ
