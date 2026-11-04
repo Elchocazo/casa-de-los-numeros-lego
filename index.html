@@ -1257,162 +1257,149 @@
       justify-content: center;
     }
 
+
+    /* =====================================================================
+       DIORAMA THREE.JS + INTERFAZ INTEGRADA
+       ===================================================================== */
+    #mainDiorama3DCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    /* Contenedor central de la casa que se proyecta sobre el modelo 3D */
+    .house-stage-center {
+      width: 100%;
+      max-width: 1050px;
+      height: 420px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 6px;
+      margin-top: 22px;
+      box-sizing: border-box;
+      z-index: 20;
+    }
+
+    /* Placa tallada en el tejado */
+    .house-carved-sign-ui {
+      background: linear-gradient(180deg, #fdf7eb 0%, #f4dfb5 100%);
+      border: 3px solid #5a2e10;
+      border-radius: 14px;
+      padding: 4px 22px;
+      box-shadow:
+        inset 0 1.5px 0 #ffffff,
+        0 4px 0 #3a1c09,
+        0 8px 18px rgba(0, 0, 0, 0.35);
+      color: #3c1e0b;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Fila de las 5 habitaciones superpuestas en los huecos de la casa 3D */
+    .rooms-flex-row {
+      width: 100%;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 16px;
+      z-index: 20;
+    }
+    .room-ui-alcove {
+      flex: 1;
+      max-width: 176px;
+      height: 296px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(4px);
+      box-shadow:
+        inset 0 2px 0 #ffffff,
+        0 8px 20px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      border-width: 4px;
+      border-style: solid;
+      transition: transform 0.12s ease;
+    }
+    .room-ui-alcove:hover {
+      transform: translateY(-2px);
+    }
+    .room-giant-digit {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 3.6rem;
+      line-height: 1;
+      font-weight: 900;
+      padding: 6px 0 2px 0;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.9);
+    }
+    .room-equiv-badge {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 2px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .room-btn-touch {
+      height: 36px;
+      border-radius: 10px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s ease;
+    }
+    .room-btn-touch:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+    .room-btn-touch:active {
+      transform: translateY(2px);
+    }
+
 </style>
 </head>
 <body class="min-h-screen p-1.5 sm:p-3 flex flex-col items-center justify-between relative z-10">
+  
   <!-- ========================================================================= -->
-  <!-- FONDO ESCÉNICO VIBRANTE: REINO FANTASY LEGO (CIELO, CASTILLO, COLINAS)   -->
+  <!-- LIENZO THREE.JS DEL MUNDO LEGO Y CASA 3D COMPLETA (VOLUMEN REAL)         -->
   <!-- ========================================================================= -->
-  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" style="background: linear-gradient(180deg, #62b6f6 0%, #a2dcfb 50%, #dcf0fe 75%, #f6fbf9 100%);" aria-hidden="true">
-    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" class="w-full h-full opacity-95">
-      <defs>
-        <linearGradient id="hillGradFar" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#9ce662" />
-          <stop offset="100%" stop-color="#64be37" />
-        </linearGradient>
-        <linearGradient id="hillGradNear" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#76cc42" />
-          <stop offset="100%" stop-color="#4a9e25" />
-        </linearGradient>
-        <linearGradient id="castleStone" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#dce0ee" />
-          <stop offset="50%" stop-color="#f2f4fc" />
-          <stop offset="100%" stop-color="#bac0d6" />
-        </linearGradient>
-        <linearGradient id="castlePurpleCone" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#8b5cf6" />
-          <stop offset="100%" stop-color="#4f46e5" />
-        </linearGradient>
-        <linearGradient id="treeCanopy" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#6ad442" />
-          <stop offset="100%" stop-color="#2d7e18" />
-        </linearGradient>
-      </defs>
+  <canvas id="mainDiorama3DCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0" style="width:100vw; height:100vh;"></canvas>
+  
 
-      <!-- Nubes suaves -->
-      <g fill="#ffffff" opacity="0.85">
-        <ellipse cx="200" cy="100" rx="95" ry="36" />
-        <ellipse cx="260" cy="85" rx="70" ry="42" />
-        <ellipse cx="150" cy="105" rx="60" ry="32" />
-
-        <ellipse cx="800" cy="75" rx="115" ry="38" />
-        <ellipse cx="865" cy="60" rx="80" ry="45" />
-
-        <ellipse cx="1400" cy="110" rx="105" ry="38" />
-        <ellipse cx="1465" cy="95" rx="70" ry="40" />
-      </g>
-
-      <!-- Castillo de juguete en la colina derecha (como en la imagen de referencia) -->
-      <g transform="translate(1380, 150) scale(0.9)">
-        <!-- Colina del castillo -->
-        <path d="M-90 280 Q-40 180 30 180 Q90 180 140 280 Z" fill="#88bb44" opacity="0.7"/>
-        <!-- Muralla principal -->
-        <rect x="-40" y="80" width="80" height="90" fill="url(#castleStone)" rx="4"/>
-        <rect x="-46" y="70" width="92" height="14" fill="#a4aac2" rx="2"/>
-        <!-- Almenas -->
-        <rect x="-44" y="58" width="14" height="14" fill="#a4aac2" rx="1"/>
-        <rect x="-7" y="58" width="14" height="14" fill="#a4aac2" rx="1"/>
-        <rect x="30" y="58" width="14" height="14" fill="#a4aac2" rx="1"/>
-        <!-- Puerta con arco -->
-        <path d="M-14 170 A14 14 0 0 1 14 170 Z" fill="#382d20"/>
-        <!-- Torre izquierda con cono morado -->
-        <rect x="-72" y="40" width="34" height="130" fill="url(#castleStone)" rx="3"/>
-        <polygon points="-78,40 -55,-45 -32,40" fill="url(#castlePurpleCone)"/>
-        <polygon points="-55,-45 -55,-62 -38,-54" fill="#fbbf24"/>
-        <!-- Torre derecha con cono morado -->
-        <rect x="38" y="40" width="34" height="130" fill="url(#castleStone)" rx="3"/>
-        <polygon points="32,40 55,-45 78,40" fill="url(#castlePurpleCone)"/>
-        <polygon points="55,-45 55,-62 72,-54" fill="#fbbf24"/>
-        <!-- Torreón central alto -->
-        <rect x="-18" y="10" width="36" height="70" fill="url(#castleStone)"/>
-        <polygon points="-25,10 0,-85 25,10" fill="url(#castlePurpleCone)"/>
-        <polygon points="0,-85 0,-105 22,-95" fill="#fbbf24"/>
-        <!-- Ventanas azulejas -->
-        <rect x="-6" y="26" width="12" height="18" rx="6" fill="#1e1b4b"/>
-        <rect x="-60" y="66" width="8" height="14" rx="4" fill="#1e1b4b"/>
-        <rect x="52" y="66" width="8" height="14" rx="4" fill="#1e1b4b"/>
-      </g>
-
-      <!-- Colinas lejanas -->
-      <path d="M-50 430 Q260 290 620 370 T1260 330 T1650 390 L1650 900 L-50 900 Z" fill="url(#hillGradFar)" />
-
-      <!-- Árboles lejanos redondos -->
-      <g>
-        <circle cx="170" cy="340" r="38" fill="url(#treeCanopy)"/>
-        <circle cx="195" cy="320" r="30" fill="#78dd4d"/>
-        <circle cx="225" cy="345" r="35" fill="url(#treeCanopy)"/>
-
-        <circle cx="490" cy="370" r="44" fill="url(#treeCanopy)"/>
-        <circle cx="525" cy="350" r="36" fill="#78dd4d"/>
-
-        <circle cx="1150" cy="340" r="45" fill="url(#treeCanopy)"/>
-        <circle cx="1190" cy="320" r="38" fill="#78dd4d"/>
-      </g>
-
-      <!-- Colinas primer plano -->
-      <path d="M-50 515 Q340 430 820 485 T1650 455 L1650 900 L-50 900 Z" fill="url(#hillGradNear)" />
-
-      <!-- Arboledas de primer plano laterales -->
-      <g transform="translate(-10, 360)">
-        <rect x="70" y="120" width="22" height="65" fill="#6d421e" rx="4"/>
-        <circle cx="81" cy="85" r="62" fill="#3d941c"/>
-        <circle cx="65" cy="65" r="48" fill="#5ec431"/>
-        <circle cx="102" cy="75" r="42" fill="#7ee44b" opacity="0.65"/>
-      </g>
-      <g transform="translate(1430, 360)">
-        <rect x="80" y="120" width="22" height="65" fill="#6d421e" rx="4"/>
-        <circle cx="91" cy="85" r="64" fill="#3d941c"/>
-        <circle cx="75" cy="65" r="50" fill="#5ec431"/>
-        <circle cx="112" cy="75" r="44" fill="#7ee44b" opacity="0.65"/>
-      </g>
-
-      <!-- Vallas de madera laterales estilo granja de juguete -->
-      <g transform="translate(45, 570)">
-        <rect x="10" y="0" width="14" height="68" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
-        <rect x="70" y="5" width="14" height="63" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
-        <rect x="130" y="10" width="14" height="58" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
-        <rect x="5" y="16" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
-        <rect x="5" y="38" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
-      </g>
-      <g transform="translate(1375, 570)">
-        <rect x="10" y="10" width="14" height="58" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
-        <rect x="70" y="5" width="14" height="63" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
-        <rect x="130" y="0" width="14" height="68" fill="#a56534" rx="2" stroke="#5f3211" stroke-width="2"/>
-        <rect x="5" y="16" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
-        <rect x="5" y="38" width="145" height="12" fill="#ba7a46" rx="2" stroke="#5f3211" stroke-width="1.8"/>
-      </g>
-
-      <!-- Macetas de flores en el suelo -->
-      <g transform="translate(205, 605)">
-        <polygon points="5,42 35,42 31,16 9,16" fill="#d26437" stroke="#7c2f12" stroke-width="1.8"/>
-        <rect x="6" y="11" width="28" height="6" fill="#e07547" rx="2" stroke="#7c2f12" stroke-width="1.5"/>
-        <circle cx="14" cy="2" r="7" fill="#f43f5e"/><circle cx="14" cy="2" r="3" fill="#fef08a"/>
-        <circle cx="26" cy="5" r="6" fill="#fbbf24"/><circle cx="26" cy="5" r="2.5" fill="#ffffff"/>
-        <circle cx="20" cy="-3" r="6.5" fill="#ec4899"/><circle cx="20" cy="-3" r="2.5" fill="#fef08a"/>
-      </g>
-      <g transform="translate(1340, 605)">
-        <polygon points="5,42 35,42 31,16 9,16" fill="#d26437" stroke="#7c2f12" stroke-width="1.8"/>
-        <rect x="6" y="11" width="28" height="6" fill="#e07547" rx="2" stroke="#7c2f12" stroke-width="1.5"/>
-        <circle cx="14" cy="3" r="6.5" fill="#ef4444"/><circle cx="14" cy="3" r="2.5" fill="#fef08a"/>
-        <circle cx="26" cy="1" r="7" fill="#f59e0b"/><circle cx="26" cy="1" r="3" fill="#ffffff"/>
-        <circle cx="20" cy="-4" r="6" fill="#f43f5e"/><circle cx="20" cy="-4" r="2.5" fill="#fef08a"/>
-      </g>
-
-      <!-- Suelo de camino de adoquines en primer plano -->
-      <path d="M-50 710 Q800 680 1650 710 L1650 900 L-50 900 Z" fill="#e8d7bb" stroke="#cca97b" stroke-width="3"/>
-    </svg>
-  </div>
-
-
+  <!-- BARRA SUPERIOR: CARTEL DE MADERA COMPACTO Y ALEGRE -->
+  
   <!-- TOAST NO BLOQUEANTE PARA CANJES BASE 10 Y AVISOS RÁPIDOS -->
   <div id="liveToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-3">
-    <div class="dio-plank px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-bold" style="border-color:#f2c14e">
+    <div class="px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-bold bg-amber-100 border-2 border-amber-900 text-amber-950">
       <span id="liveToastEmoji" class="text-xl">✨</span>
       <span id="liveToastText">¡Canje Base 10!</span>
     </div>
   </div>
 
-  <!-- BARRA SUPERIOR: CARTEL DE MADERA COMPACTO Y ALEGRE -->
   <nav class="w-full max-w-6xl mb-2 wood-nav-bar px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 z-20">
     
     <!-- Hojas decorativas de las esquinas -->
@@ -1657,9 +1644,20 @@
     <!-- =================================================================== -->
     <!-- LA CASA DE LOS NÚMEROS (5 HABITACIONES LEGO RPG PREMIUM)            -->
     <!-- =================================================================== -->
-    <div id="houseStageScroller" class="w-full overflow-x-auto p-1 sm:p-2 pb-2 custom-scroll z-20">
-      <div class="diorama-stage flex flex-col items-center px-2 sm:px-4 pt-1 pb-4 relative w-fit max-w-full mx-auto">
-        
+    
+    <!-- =================================================================== -->
+    <!-- LA CASA DE LOS NÚMEROS (ESPACIO CENTRAL ALINEADO CON EL MODELO 3D)  -->
+    <!-- =================================================================== -->
+    <div id="houseStageScroller" class="w-full overflow-x-auto p-1 pb-1 custom-scroll z-20 flex justify-center">
+      
+      <!-- Contenedor central que encuadra con la casa tridimensional -->
+      <div class="house-stage-center">
+
+        <!-- Cartel tallado en el tejado -->
+        <div id="houseRoofBadge" class="house-carved-sign-ui">
+          <span>🧱</span> <span id="houseTitleText">La Casa de los Números</span> <span>🧱</span>
+        </div>
+
         <!-- Compatibilidad de slots heredados (ocultos) -->
         <div id="emptyDM" class="hidden" aria-hidden="true">
           <button onclick="attachRoom('DM')">+</button>
@@ -1670,266 +1668,114 @@
           <button onclick="detachRoom('UM')">x</button>
         </div>
 
-        <!-- ESTRUCTURA PRINCIPAL DE LA CASA -->
-        <div class="w-full flex flex-col items-center relative z-10">
-
-          <!-- FAROLES LATERALES CON LUZ CÁLIDA -->
-          <div class="wall-lantern -left-3 hidden sm:flex" aria-hidden="true">
-            <div class="wall-lantern-glass"></div>
-          </div>
-          <div class="wall-lantern -right-3 hidden sm:flex" aria-hidden="true">
-            <div class="wall-lantern-glass"></div>
-          </div>
-
-          <!-- TEJADO ROJO DE PIEZAS LEGO CON PLACA TALLADA Y CHIMENEA -->
-          <div class="house-lego-roof">
-            <!-- Chimenea clásica de piedra -->
-            <div class="hidden sm:flex absolute -top-4 right-16 z-10 flex-col items-center pointer-events-none">
-              <span class="smoke-puff" style="top:-14px; left:6px;"></span>
-              <span class="smoke-puff" style="top:-14px; left:10px; animation-delay:1.1s"></span>
-              <div class="w-7 h-9 stone-wall rounded-t border-2 border-[#381a0b] shadow"></div>
-            </div>
-
-            <!-- SVG del Tejado Rojo con Studs LEGO y Tejas -->
-            <svg viewBox="0 0 1000 100" preserveAspectRatio="none" class="w-full h-full" style="filter: drop-shadow(0 6px 4px rgba(45,15,5,0.4))">
-              <defs>
-                <linearGradient id="roofGradUnified" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#991b1b"/></linearGradient>
-              <linearGradient id="legoRoofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#ef4444" />
-                  <stop offset="50%" stop-color="#dc2626" />
-                  <stop offset="100%" stop-color="#991b1b" />
-                </linearGradient>
-                <pattern id="legoRoofStudsPattern" width="28" height="14" patternUnits="userSpaceOnUse">
-                  <path d="M0 14 Q7 2 14 14 Q21 2 28 14" fill="none" stroke="#7f1d1d" stroke-width="1.8" opacity="0.6"/>
-                  <ellipse cx="7" cy="6" rx="2.8" ry="1.4" fill="#fca5a5" opacity="0.4"/>
-                  <ellipse cx="21" cy="6" rx="2.8" ry="1.4" fill="#fca5a5" opacity="0.4"/>
-                </pattern>
-              </defs>
-              <!-- Faldón principal del tejado triangular -->
-              <polygon points="500,6 996,96 4,96" fill="url(#legoRoofGrad)" stroke="#7f1d1d" stroke-width="3" stroke-linejoin="round"/>
-              <polygon points="500,6 996,96 4,96" fill="url(#legoRoofStudsPattern)"/>
-              <!-- Borde de madera del alero -->
-              <rect x="0" y="88" width="1000" height="10" rx="3" fill="#6d3916" stroke="#3b1d0a" stroke-width="1.8"/>
-            </svg>
-
-            <!-- Placa central tallada: "La Casa de los Números" -->
-            <div id="houseRoofBadge" class="house-carved-sign absolute left-1/2 -translate-x-1/2 bottom-[-8px] z-30">
-              <span class="text-xs">🧱</span>
-              <span id="houseTitleText" class="text-xs sm:text-sm tracking-wide">La Casa de los Números</span>
-              <span class="text-xs">🧱</span>
+        <!-- FILA DE LAS 5 HABITACIONES SUPERPUESTAS EN LAS ALCOBAS 3D -->
+        <div class="rooms-flex-row">
+          
+          <!-- 1. HABITACIÓN DECENAS DE MIL (DM) — MORADO -->
+          <div id="slotDM" class="room-ui-alcove border-purple-600">
+            <div id="roomDM" class="w-full flex flex-col items-center h-full justify-between">
+              <div class="w-full bg-gradient-to-b from-purple-500 to-purple-600 text-white text-center py-1 font-black text-xs">
+                Decenas de Mil (DM)
+              </div>
+              <div onclick="changeBlocks('DM', 1)" id="chamberDM" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Decenas de Mil (DM) · Clic para sumar +1">
+                <span class="hidden" id="digitCardDM"></span>
+                <span id="digitDM" class="room-giant-digit text-purple-600">0</span>
+                <div class="room-equiv-badge bg-purple-100 text-purple-900 border border-purple-300">
+                  = <span id="valBadgeDM">0</span>
+                </div>
+              </div>
+              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-purple-50/80 border-t border-purple-200">
+                <button onclick="changeBlocks('DM', -1)" class="room-btn-touch bg-purple-100 hover:bg-purple-200 text-purple-950 border-2 border-purple-300">−</button>
+                <button onclick="changeBlocks('DM', 1)" class="room-btn-touch bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-800 shadow">+</button>
+              </div>
             </div>
           </div>
 
-          <!-- CUERPO ARQUITECTÓNICO DE MADERA (5 HABITACIONES ALINEADAS) -->
-          <div class="w-full flex items-stretch justify-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-b-2xl border-4 border-[#3b1d09] border-t-0 shadow-2xl relative" style="background: linear-gradient(180deg, #d49862 0%, #b87a45 50%, #995c2e 100%);">
-            
-            <!-- 1. HABITACIÓN DECENAS DE MIL (DM) — MORADO -->
-            <div id="slotDM" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
-              <!-- Lámpara colgante morada -->
-              <div class="room-hanging-lamp">
-                <div class="lamp-cord"></div>
-                <div class="lamp-shade bg-purple-600"></div>
-                <div class="lamp-glow"></div>
+          <!-- 2. HABITACIÓN UNIDADES DE MIL (UM) — NARANJA -->
+          <div id="slotUM" class="room-ui-alcove border-orange-500">
+            <div id="roomUM" class="w-full flex flex-col items-center h-full justify-between">
+              <div class="w-full bg-gradient-to-b from-orange-500 to-orange-600 text-white text-center py-1 font-black text-xs">
+                Unidades de Mil (UM)
               </div>
-
-              <div id="roomDM" class="lego-room-card w-full border-[3px] border-purple-700 bg-[#fdfaff] shadow-md">
-                <!-- Arco de Encabezado -->
-                <div class="w-full bg-gradient-to-b from-purple-500 to-purple-700 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-purple-900 shadow">
-                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Decenas de Mil (DM)</span>
-                </div>
-
-                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
-                <div onclick="changeBlocks('DM', 1)" id="chamberDM" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-purple-50/50 transition-colors" title="Decenas de Mil (DM) · Clic para sumar +1">
-                  <span class="hidden" id="digitCardDM"></span>
-                  <span id="digitDM" class="room-giant-digit-premium text-purple-600">0</span>
-                  <div class="room-equiv-badge bg-purple-100 text-purple-900 border border-purple-300">
-                    = <span id="valBadgeDM">0</span>
-                  </div>
-                </div>
-
-                <!-- Botones táctiles (− y +) -->
-                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-purple-50/80 border-t border-purple-200">
-                  <button onclick="changeBlocks('DM', -1)" class="room-btn-touch bg-purple-100 hover:bg-purple-200 text-purple-950 border-2 border-purple-300" aria-label="Restar 1 Decena de Mil">−</button>
-                  <button onclick="changeBlocks('DM', 1)" class="room-btn-touch bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-800 shadow" aria-label="Sumar 1 Decena de Mil">+</button>
+              <div onclick="changeBlocks('UM', 1)" id="chamberUM" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Unidades de Mil (UM) · Clic para sumar +1">
+                <span class="hidden" id="digitCardUM"></span>
+                <span id="digitUM" class="room-giant-digit text-orange-500">0</span>
+                <div class="room-equiv-badge bg-orange-100 text-orange-950 border border-orange-300">
+                  = <span id="valBadgeUM">0</span>
                 </div>
               </div>
-
-              <!-- Tapete morado en la entrada -->
-              <div class="room-entry-doormat bg-purple-500"></div>
+              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-orange-50/80 border-t border-orange-200">
+                <button onclick="changeBlocks('UM', -1)" class="room-btn-touch bg-orange-100 hover:bg-orange-200 text-orange-950 border-2 border-orange-300">−</button>
+                <button onclick="changeBlocks('UM', 1)" class="room-btn-touch bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-700 shadow">+</button>
+              </div>
             </div>
-
-            <!-- COLUMNA DE MADERA -->
-            <div class="timber-post">
-              <div class="pillar-flower-pot"></div>
-            </div>
-
-            <!-- 2. HABITACIÓN UNIDADES DE MIL (UM) — NARANJA -->
-            <div id="slotUM" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
-              <!-- Lámpara colgante naranja -->
-              <div class="room-hanging-lamp">
-                <div class="lamp-cord"></div>
-                <div class="lamp-shade bg-orange-500"></div>
-                <div class="lamp-glow"></div>
-              </div>
-
-              <div id="roomUM" class="lego-room-card w-full border-[3px] border-orange-600 bg-[#fffbf7] shadow-md">
-                <!-- Arco de Encabezado -->
-                <div class="w-full bg-gradient-to-b from-orange-500 to-orange-600 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-orange-800 shadow">
-                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Unidades de Mil (UM)</span>
-                </div>
-
-                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
-                <div onclick="changeBlocks('UM', 1)" id="chamberUM" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-orange-50/50 transition-colors" title="Unidades de Mil (UM) · Clic para sumar +1">
-                  <span class="hidden" id="digitCardUM"></span>
-                  <span id="digitUM" class="room-giant-digit-premium text-orange-500">0</span>
-                  <div class="room-equiv-badge bg-orange-100 text-orange-950 border border-orange-300">
-                    = <span id="valBadgeUM">0</span>
-                  </div>
-                </div>
-
-                <!-- Botones táctiles (− y +) -->
-                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-orange-50/80 border-t border-orange-200">
-                  <button onclick="changeBlocks('UM', -1)" class="room-btn-touch bg-orange-100 hover:bg-orange-200 text-orange-950 border-2 border-orange-300" aria-label="Restar 1 Unidad de Mil">−</button>
-                  <button onclick="changeBlocks('UM', 1)" class="room-btn-touch bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-700 shadow" aria-label="Sumar 1 Unidad de Mil">+</button>
-                </div>
-              </div>
-
-              <!-- Tapete naranja en la entrada -->
-              <div class="room-entry-doormat bg-orange-500"></div>
-            </div>
-
-            <!-- COLUMNA DE MADERA CON MEDALLÓN PUNTO DE MIL -->
-            <div class="timber-post flex items-center justify-center">
-              <button id="milPointBtn" onclick="speakMilPoint()" class="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 border-2 border-amber-900 shadow-md flex items-center justify-center text-[8px] font-black text-amber-950 transition-transform active:scale-95" title="Punto de Mil: separa los miles de las centenas">
-                •
-              </button>
-              <div class="pillar-flower-pot"></div>
-            </div>
-
-            <!-- 3. HABITACIÓN CENTENAS (C) — VERDE -->
-            <div id="slotC" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
-              <!-- Lámpara colgante verde -->
-              <div class="room-hanging-lamp">
-                <div class="lamp-cord"></div>
-                <div class="lamp-shade bg-emerald-600"></div>
-                <div class="lamp-glow"></div>
-              </div>
-
-              <div id="chamberWrapC" class="lego-room-card w-full border-[3px] border-emerald-700 bg-[#f7fdfa] shadow-md">
-                <!-- Arco de Encabezado -->
-                <div class="w-full bg-gradient-to-b from-emerald-500 to-emerald-700 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-emerald-900 shadow">
-                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Centenas (C)</span>
-                </div>
-
-                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
-                <div onclick="changeBlocks('C', 1)" id="chamberC" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-50/50 transition-colors" title="Centenas (C) · Clic para sumar +1">
-                  <span class="hidden" id="digitCardC"></span>
-                  <span id="digitC" class="room-giant-digit-premium text-emerald-600">0</span>
-                  <div class="room-equiv-badge bg-emerald-100 text-emerald-950 border border-emerald-300">
-                    = <span id="valBadgeC">0</span>
-                  </div>
-                </div>
-
-                <!-- Botones táctiles (− y +) -->
-                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-emerald-50/80 border-t border-emerald-200">
-                  <button onclick="changeBlocks('C', -1)" class="room-btn-touch bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border-2 border-emerald-300" aria-label="Restar 1 Centena">−</button>
-                  <button onclick="changeBlocks('C', 1)" class="room-btn-touch bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-800 shadow" aria-label="Sumar 1 Centena">+</button>
-                </div>
-              </div>
-
-              <!-- Tapete verde en la entrada -->
-              <div class="room-entry-doormat bg-emerald-600"></div>
-            </div>
-
-            <!-- COLUMNA DE MADERA -->
-            <div class="timber-post">
-              <div class="pillar-flower-pot"></div>
-            </div>
-
-            <!-- 4. HABITACIÓN DECENAS (D) — AZUL -->
-            <div id="slotD" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
-              <!-- Lámpara colgante azul -->
-              <div class="room-hanging-lamp">
-                <div class="lamp-cord"></div>
-                <div class="lamp-shade bg-sky-500"></div>
-                <div class="lamp-glow"></div>
-              </div>
-
-              <div id="chamberWrapD" class="lego-room-card w-full border-[3px] border-sky-600 bg-[#f7fbff] shadow-md">
-                <!-- Arco de Encabezado -->
-                <div class="w-full bg-gradient-to-b from-sky-500 to-sky-600 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-sky-800 shadow">
-                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Decenas (D)</span>
-                </div>
-
-                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
-                <div onclick="changeBlocks('D', 1)" id="chamberD" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-sky-50/50 transition-colors" title="Decenas (D) · Clic para sumar +1">
-                  <span class="hidden" id="digitCardD"></span>
-                  <span id="digitD" class="room-giant-digit-premium text-sky-600">0</span>
-                  <div class="room-equiv-badge bg-sky-100 text-sky-950 border border-sky-300">
-                    = <span id="valBadgeD">0</span>
-                  </div>
-                </div>
-
-                <!-- Botones táctiles (− y +) -->
-                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-sky-50/80 border-t border-sky-200">
-                  <button onclick="changeBlocks('D', -1)" class="room-btn-touch bg-sky-100 hover:bg-sky-200 text-sky-950 border-2 border-sky-300" aria-label="Restar 1 Decena">−</button>
-                  <button onclick="changeBlocks('D', 1)" class="room-btn-touch bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-700 shadow" aria-label="Sumar 1 Decena">+</button>
-                </div>
-              </div>
-
-              <!-- Tapete azul en la entrada -->
-              <div class="room-entry-doormat bg-sky-500"></div>
-            </div>
-
-            <!-- COLUMNA DE MADERA -->
-            <div class="timber-post">
-              <div class="pillar-flower-pot"></div>
-            </div>
-
-            <!-- 5. HABITACIÓN UNIDADES (U) — ROJO -->
-            <div id="slotU" class="flex-1 min-w-[70px] sm:min-w-[130px] max-w-[170px] flex flex-col items-center relative">
-              <!-- Lámpara colgante roja -->
-              <div class="room-hanging-lamp">
-                <div class="lamp-cord"></div>
-                <div class="lamp-shade bg-rose-600"></div>
-                <div class="lamp-glow"></div>
-              </div>
-
-              <div id="chamberWrapU" class="lego-room-card w-full border-[3px] border-rose-600 bg-[#fff8f8] shadow-md">
-                <!-- Arco de Encabezado -->
-                <div class="w-full bg-gradient-to-b from-rose-500 to-rose-600 text-white text-center py-1 sm:py-1.5 px-1 rounded-t-[14px] border-b-2 border-rose-800 shadow">
-                  <span class="text-[9px] sm:text-[11px] font-black uppercase tracking-wider block leading-tight">Unidades (U)</span>
-                </div>
-
-                <!-- Alcoba interior con Cifra Gigante + Equivalencia en Unidades -->
-                <div onclick="changeBlocks('U', 1)" id="chamberU" class="w-full py-2 sm:py-3 flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50/50 transition-colors" title="Unidades (U) · Clic para sumar +1">
-                  <span class="hidden" id="digitCardU"></span>
-                  <span id="digitU" class="room-giant-digit-premium text-rose-600">0</span>
-                  <div class="room-equiv-badge bg-rose-100 text-rose-950 border border-rose-300">
-                    = <span id="valBadgeU">0</span>
-                  </div>
-                </div>
-
-                <!-- Botones táctiles (− y +) -->
-                <div class="w-full p-1 sm:p-1.5 grid grid-cols-2 gap-1 bg-rose-50/80 border-t border-rose-200">
-                  <button onclick="changeBlocks('U', -1)" class="room-btn-touch bg-rose-100 hover:bg-rose-200 text-rose-950 border-2 border-rose-300" aria-label="Restar 1 Unidad">−</button>
-                  <button onclick="changeBlocks('U', 1)" class="room-btn-touch bg-rose-600 hover:bg-rose-500 text-white border-2 border-rose-800 shadow" aria-label="Sumar 1 Unidad">+</button>
-                </div>
-              </div>
-
-              <!-- Tapete rojo en la entrada -->
-              <div class="room-entry-doormat bg-rose-600"></div>
-            </div>
-
           </div>
 
-          <!-- CIMIENTOS DE PIEDRA DE LA CASA -->
-          <div class="w-full h-3 rounded-b-xl bg-[#595248] border-2 border-[#38332c] shadow"></div>
+          <!-- 3. HABITACIÓN CENTENAS (C) — VERDE -->
+          <div id="slotC" class="room-ui-alcove border-emerald-600">
+            <div id="chamberWrapC" class="w-full flex flex-col items-center h-full justify-between">
+              <div class="w-full bg-gradient-to-b from-emerald-500 to-emerald-600 text-white text-center py-1 font-black text-xs">
+                Centenas (C)
+              </div>
+              <div onclick="changeBlocks('C', 1)" id="chamberC" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Centenas (C) · Clic para sumar +1">
+                <span class="hidden" id="digitCardC"></span>
+                <span id="digitC" class="room-giant-digit text-emerald-600">0</span>
+                <div class="room-equiv-badge bg-emerald-100 text-emerald-950 border border-emerald-300">
+                  = <span id="valBadgeC">0</span>
+                </div>
+              </div>
+              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-emerald-50/80 border-t border-emerald-200">
+                <button onclick="changeBlocks('C', -1)" class="room-btn-touch bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border-2 border-emerald-300">−</button>
+                <button onclick="changeBlocks('C', 1)" class="room-btn-touch bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-800 shadow">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. HABITACIÓN DECENAS (D) — AZUL -->
+          <div id="slotD" class="room-ui-alcove border-sky-500">
+            <div id="chamberWrapD" class="w-full flex flex-col items-center h-full justify-between">
+              <div class="w-full bg-gradient-to-b from-sky-500 to-sky-600 text-white text-center py-1 font-black text-xs">
+                Decenas (D)
+              </div>
+              <div onclick="changeBlocks('D', 1)" id="chamberD" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Decenas (D) · Clic para sumar +1">
+                <span class="hidden" id="digitCardD"></span>
+                <span id="digitD" class="room-giant-digit text-sky-600">0</span>
+                <div class="room-equiv-badge bg-sky-100 text-sky-950 border border-sky-300">
+                  = <span id="valBadgeD">0</span>
+                </div>
+              </div>
+              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-sky-50/80 border-t border-sky-200">
+                <button onclick="changeBlocks('D', -1)" class="room-btn-touch bg-sky-100 hover:bg-sky-200 text-sky-950 border-2 border-sky-300">−</button>
+                <button onclick="changeBlocks('D', 1)" class="room-btn-touch bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-700 shadow">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. HABITACIÓN UNIDADES (U) — ROJO -->
+          <div id="slotU" class="room-ui-alcove border-rose-500">
+            <div id="chamberWrapU" class="w-full flex flex-col items-center h-full justify-between">
+              <div class="w-full bg-gradient-to-b from-rose-500 to-rose-600 text-white text-center py-1 font-black text-xs">
+                Unidades (U)
+              </div>
+              <div onclick="changeBlocks('U', 1)" id="chamberU" class="flex flex-col items-center justify-center cursor-pointer w-full flex-1" title="Unidades (U) · Clic para sumar +1">
+                <span class="hidden" id="digitCardU"></span>
+                <span id="digitU" class="room-giant-digit text-rose-600">0</span>
+                <div class="room-equiv-badge bg-rose-100 text-rose-950 border border-rose-300">
+                  = <span id="valBadgeU">0</span>
+                </div>
+              </div>
+              <div class="w-full p-1.5 grid grid-cols-2 gap-1 bg-rose-50/80 border-t border-rose-200">
+                <button onclick="changeBlocks('U', -1)" class="room-btn-touch bg-rose-100 hover:bg-rose-200 text-rose-950 border-2 border-rose-300">−</button>
+                <button onclick="changeBlocks('U', 1)" class="room-btn-touch bg-rose-600 hover:bg-rose-500 text-white border-2 border-rose-800 shadow">+</button>
+              </div>
+            </div>
+          </div>
 
         </div>
 
       </div>
     </div>
+
 
     <!-- ELEMENTOS MANIPULATIVOS Y CUADRILLA (PRESERVADOS OCULTOS PARA COMPATIBILIDAD JS) -->
     <div class="hidden" aria-hidden="true">
@@ -2246,6 +2092,9 @@
     <!-- CONTENEDOR DE COMPATIBILIDAD LEGACY (PRESERVA CONTRATO DOM) -->
   <div class="hidden" aria-hidden="true" style="display:none!important;">
     <div id="adventureMissionBar"></div>
+    <button id="milPointBtn" onclick="speakMilPoint()"></button>
+    <svg class="hidden" aria-hidden="true"><defs><linearGradient id="roofGradUnified"></linearGradient></defs></svg>
+
     <div id="challengeControlsRow">
       <select id="challengeTypeSelect" onchange="generateNewChallenge()"></select>
       <select id="challengeLevelSelect" onchange="generateNewChallenge()"></select>
@@ -4446,7 +4295,353 @@
     }
 
     // INICIALIZACIÓN GENERAL
+    
+    // =========================================================================
+    // ESCENARIO THREE.JS TRIDIMENSIONAL COMPLETO: MUNDO Y CASA LEGO 3D
+    // =========================================================================
+    function initMainDiorama3D() {
+      const canvas = document.getElementById("mainDiorama3DCanvas");
+      if (!canvas) return;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x7ec8f8);
+      scene.fog = new THREE.FogExp2(0xbbe4ff, 0.012);
+
+      const camera = new THREE.PerspectiveCamera(34, window.innerWidth / window.innerHeight, 0.1, 500);
+      camera.position.set(0, 0.05, 15.6);
+      camera.lookAt(0, -1.2, 0);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+
+      // LUCES AMBIENTAL Y DIRECCIONAL CON SOMBRAS SUAVES
+      const hemiLight = new THREE.HemisphereLight(0xdff0ff, 0x5a8838, 0.95);
+      scene.add(hemiLight);
+
+      const sunLight = new THREE.DirectionalLight(0xfff6e5, 1.55);
+      sunLight.position.set(-14, 26, 18);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.width = 2048;
+      sunLight.shadow.mapSize.height = 2048;
+      sunLight.shadow.camera.near = 0.5;
+      sunLight.shadow.camera.far = 70;
+      const d = 16;
+      sunLight.shadow.camera.left = -d;
+      sunLight.shadow.camera.right = d;
+      sunLight.shadow.camera.top = d;
+      sunLight.shadow.camera.bottom = -d;
+      sunLight.shadow.bias = -0.0005;
+      scene.add(sunLight);
+
+      const fillLight = new THREE.DirectionalLight(0xbadfff, 0.45);
+      fillLight.position.set(12, 10, -10);
+      scene.add(fillLight);
+
+      // MATERIALES REALISTAS ESTILIZADOS
+      const mats = {
+        wood: new THREE.MeshStandardMaterial({ color: 0x844820, roughness: 0.65, metalness: 0.04 }),
+        woodDark: new THREE.MeshStandardMaterial({ color: 0x48230b, roughness: 0.8 }),
+        woodTrim: new THREE.MeshStandardMaterial({ color: 0xb46b33, roughness: 0.55 }),
+        roofRed: new THREE.MeshStandardMaterial({ color: 0xc42022, roughness: 0.28, metalness: 0.12 }),
+        roofStud: new THREE.MeshStandardMaterial({ color: 0xdb2729, roughness: 0.22, metalness: 0.14 }),
+        stone: new THREE.MeshStandardMaterial({ color: 0xded5c2, roughness: 0.85 }),
+        stoneDark: new THREE.MeshStandardMaterial({ color: 0xa89e8a, roughness: 0.9 }),
+        grass: new THREE.MeshStandardMaterial({ color: 0x68c436, roughness: 0.9 }),
+        grassFar: new THREE.MeshStandardMaterial({ color: 0x82d446, roughness: 0.95 }),
+        path: new THREE.MeshStandardMaterial({ color: 0xecdab9, roughness: 0.8 }),
+        foliage1: new THREE.MeshStandardMaterial({ color: 0x44a621, roughness: 0.85 }),
+        foliage2: new THREE.MeshStandardMaterial({ color: 0x62c732, roughness: 0.85 }),
+        foliage3: new THREE.MeshStandardMaterial({ color: 0x7fe346, roughness: 0.85 }),
+        pot: new THREE.MeshStandardMaterial({ color: 0xc8592d, roughness: 0.7 }),
+        gold: new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.3, metalness: 0.6 }),
+        lanternGlow: new THREE.MeshStandardMaterial({ color: 0xfef08a, emissive: 0xfbbf24, emissiveIntensity: 1.2 }),
+        dm: new THREE.MeshStandardMaterial({ color: 0x8b5cf6, roughness: 0.35 }),
+        um: new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.35 }),
+        c: new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.35 }),
+        d: new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.35 }),
+        u: new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.35 })
+      };
+
+      // PAISAJE: TERRENO, CAMINO Y COLINAS
+      const groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(80, 50), mats.grass);
+      groundMesh.rotation.x = -Math.PI / 2;
+      groundMesh.position.set(0, -3.7, 0);
+      groundMesh.receiveShadow = true;
+      scene.add(groundMesh);
+
+      const pathMesh = new THREE.Mesh(new THREE.BoxGeometry(32, 0.15, 8), mats.path);
+      pathMesh.position.set(0, -3.62, 2.5);
+      pathMesh.receiveShadow = true;
+      scene.add(pathMesh);
+
+      function addHill(x, y, z, rx, ry, rz, mat) {
+        const hill = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), mat);
+        hill.scale.set(rx, ry, rz);
+        hill.position.set(x, y, z);
+        scene.add(hill);
+      }
+      addHill(-16, -5, -18, 22, 12, 14, mats.grassFar);
+      addHill(0, -6, -22, 28, 11, 16, mats.grassFar);
+      addHill(18, -4, -16, 20, 13, 14, mats.grassFar);
+      addHill(14, -3.5, -10, 14, 8, 10, mats.grass);
+      addHill(-12, -4, -9, 15, 7, 9, mats.grass);
+
+      // CASTILLO MEDIEVAL DE FANTASÍA EN LA COLINA DERECHA
+      const castleGroup = new THREE.Group();
+      castleGroup.position.set(8.8, 0.9, -6.5);
+      castleGroup.scale.set(0.72, 0.72, 0.72);
+      const cWall = new THREE.Mesh(new THREE.BoxGeometry(4.6, 4.2, 2.6), mats.stone);
+      cWall.castShadow = true;
+      castleGroup.add(cWall);
+      for (let bx = -2.0; bx <= 2.0; bx += 0.8) {
+        const merlon = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.45, 0.28), mats.stoneDark);
+        merlon.position.set(bx, 2.3, 1.2);
+        castleGroup.add(merlon);
+      }
+      function addTower(tx, ty, tz, th, tr) {
+        const tower = new THREE.Mesh(new THREE.CylinderGeometry(tr, tr * 1.08, th, 16), mats.stone);
+        tower.position.set(tx, ty, tz);
+        tower.castShadow = true;
+        castleGroup.add(tower);
+        const roofCone = new THREE.Mesh(new THREE.ConeGeometry(tr * 1.35, 2.4, 16), mats.d);
+        roofCone.position.set(tx, ty + th / 2 + 1.2, tz);
+        roofCone.castShadow = true;
+        castleGroup.add(roofCone);
+        const flagPole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.8), mats.gold);
+        flagPole.position.set(tx, ty + th / 2 + 2.5, tz);
+        castleGroup.add(flagPole);
+        const pennant = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.22, 0.02), mats.roofRed);
+        pennant.position.set(tx + 0.2, ty + th / 2 + 2.65, tz);
+        castleGroup.add(pennant);
+      }
+      addTower(-2.4, 0.6, 0, 5.2, 0.95);
+      addTower(2.4, 0.6, 0, 5.2, 0.95);
+      addTower(0, 2.0, -0.4, 6.8, 0.9);
+      scene.add(castleGroup);
+
+      // ÁRBOLES TRIDIMENSIONALES
+      function addTree(tx, ty, tz, s = 1) {
+        const tree = new THREE.Group();
+        tree.position.set(tx, ty, tz);
+        tree.scale.set(s, s, s);
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.38, 2.2, 10), mats.woodDark);
+        trunk.position.y = 1.1;
+        trunk.castShadow = true;
+        tree.add(trunk);
+        const c1 = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 12), mats.foliage1);
+        c1.position.set(0, 2.6, 0);
+        c1.castShadow = true;
+        tree.add(c1);
+        const c2 = new THREE.Mesh(new THREE.SphereGeometry(1.1, 16, 12), mats.foliage2);
+        c2.position.set(-0.4, 3.2, 0.3);
+        c2.castShadow = true;
+        tree.add(c2);
+        scene.add(tree);
+      }
+      addTree(-8.2, -3.7, -2.5, 1.2);
+      addTree(-10.5, -3.7, -4.5, 1.4);
+      addTree(8.6, -3.7, -2.8, 1.1);
+      addTree(10.8, -3.7, -4.5, 1.4);
+
+      // VALLAS RÚSTICAS DE MADERA
+      function addFence(startX, endX, z) {
+        const fence = new THREE.Group();
+        fence.position.set(startX, -3.7, z);
+        const len = Math.abs(endX - startX);
+        for (let x = 0; x <= len; x += 1.1) {
+          const post = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.3, 0.18), mats.wood);
+          post.position.set(x, 0.65, 0);
+          post.castShadow = true;
+          fence.add(post);
+        }
+        const rail1 = new THREE.Mesh(new THREE.BoxGeometry(len + 0.2, 0.12, 0.08), mats.woodTrim);
+        rail1.position.set(len / 2, 0.45, 0);
+        rail1.castShadow = true;
+        fence.add(rail1);
+        const rail2 = new THREE.Mesh(new THREE.BoxGeometry(len + 0.2, 0.12, 0.08), mats.woodTrim);
+        rail2.position.set(len / 2, 0.9, 0);
+        rail2.castShadow = true;
+        fence.add(rail2);
+        scene.add(fence);
+      }
+      addFence(-9.8, -6.4, 0.8);
+      addFence(6.4, 9.8, 0.8);
+
+      // FAROLES VINTAGE FLANQUEANDO LA CASA
+      function addCarriageLantern(lx, lz) {
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 2.8, 10), mats.woodDark);
+        post.position.set(lx, -1.2, lz);
+        post.castShadow = true;
+        scene.add(post);
+        const lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.68, 0.46), mats.woodDark);
+        lMesh.position.set(lx, 0.35, lz);
+        lMesh.castShadow = true;
+        scene.add(lMesh);
+        const glass = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.5, 0.35), mats.lanternGlow);
+        glass.position.set(lx, 0.35, lz);
+        scene.add(glass);
+        const lanternLight = new THREE.PointLight(0xffbe55, 0.85, 7);
+        lanternLight.position.set(lx, 0.35, lz + 0.3);
+        scene.add(lanternLight);
+      }
+      addCarriageLantern(-7.2, 1.5);
+      addCarriageLantern(7.2, 1.5);
+
+      // LA CASA LEGO EN 3D REAL (CON VOLUMEN Y MATERIALES FÍSICOS)
+      const houseGroup = new THREE.Group();
+      houseGroup.position.set(0, -1.55, 0);
+
+      const houseW = 12.8;
+      const houseH = 3.8;
+      const houseD = 2.4;
+
+      // Cimientos de piedra
+      const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(houseW + 0.8, 0.45, houseD + 0.6), mats.stoneDark);
+      baseMesh.position.set(0, -2.1, 0);
+      baseMesh.castShadow = true;
+      baseMesh.receiveShadow = true;
+      houseGroup.add(baseMesh);
+
+      // Viga superior de roble
+      const architrave = new THREE.Mesh(new THREE.BoxGeometry(houseW + 0.5, 0.48, houseD + 0.3), mats.woodDark);
+      architrave.position.set(0, houseH / 2, 0);
+      architrave.castShadow = true;
+      houseGroup.add(architrave);
+
+      // 6 Columnas divisoras con ménsulas y macetitas
+      const roomWidth = (houseW - 0.2) / 5;
+      const postW = 0.34;
+      for (let i = 0; i <= 5; i++) {
+        const x = -houseW / 2 + i * roomWidth;
+        const postMesh = new THREE.Mesh(new THREE.BoxGeometry(postW, houseH, postW * 1.5), mats.woodDark);
+        postMesh.position.set(x, 0, houseD / 2 - postW / 2);
+        postMesh.castShadow = true;
+        postMesh.receiveShadow = true;
+        houseGroup.add(postMesh);
+
+        // Ménsulas diagonales de madera bajo la viga
+        if (i > 0) {
+          const corbelL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.44, 0.18), mats.woodTrim);
+          corbelL.position.set(x - 0.2, houseH / 2 - 0.3, houseD / 2 - postW / 2);
+          corbelL.rotation.z = Math.PI / 4;
+          corbelL.castShadow = true;
+          houseGroup.add(corbelL);
+        }
+        if (i < 5) {
+          const corbelR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.44, 0.18), mats.woodTrim);
+          corbelR.position.set(x + 0.2, houseH / 2 - 0.3, houseD / 2 - postW / 2);
+          corbelR.rotation.z = -Math.PI / 4;
+          corbelR.castShadow = true;
+          houseGroup.add(corbelR);
+        }
+
+        // Macetitas en las bases de las columnas
+        if (i > 0 && i < 5) {
+          const miniPot = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.09, 0.22, 10), mats.pot);
+          miniPot.position.set(x, -houseH / 2 + 0.25, houseD / 2 + 0.12);
+          miniPot.castShadow = true;
+          houseGroup.add(miniPot);
+          const miniPlant = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), mats.foliage2);
+          miniPlant.position.set(x, -houseH / 2 + 0.38, houseD / 2 + 0.12);
+          houseGroup.add(miniPlant);
+        }
+      }
+
+      // Tejado LEGO 3D con studs y chimenea
+      const roofGroup = new THREE.Group();
+      roofGroup.position.set(0, houseH / 2 + 0.24, 0);
+      const roofLayers = 6;
+      for (let l = 0; l < roofLayers; l++) {
+        const prog = l / roofLayers;
+        const lw = (houseW + 0.8) * (1 - prog * 0.48);
+        const ly = prog * 1.35;
+        const lz = (1 - prog) * (houseD / 2 + 0.6);
+
+        const stepMesh = new THREE.Mesh(new THREE.BoxGeometry(lw, 0.34, 0.65), mats.roofRed);
+        stepMesh.position.set(0, ly, lz);
+        stepMesh.rotation.x = -0.42;
+        stepMesh.castShadow = true;
+        stepMesh.receiveShadow = true;
+        roofGroup.add(stepMesh);
+
+        // Studs LEGO (cilindros reales)
+        const studSpacing = 0.55;
+        const numStuds = Math.floor(lw / studSpacing);
+        for (let s = -numStuds / 2; s <= numStuds / 2; s++) {
+          const stud = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.16, 12), mats.roofStud);
+          stud.position.set(s * studSpacing, ly + 0.12, lz);
+          stud.rotation.x = -0.42;
+          stud.castShadow = true;
+          roofGroup.add(stud);
+        }
+      }
+
+      // Chimenea de piedra en el tejado
+      const chimney = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.9, 0.85), mats.stoneDark);
+      chimney.position.set(houseW / 2 - 1.8, houseH / 2 + 1.25, -0.2);
+      chimney.castShadow = true;
+      houseGroup.add(chimney);
+      const chimneyCap = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.2, 1.05), mats.stone);
+      chimneyCap.position.set(houseW / 2 - 1.8, houseH / 2 + 2.2, -0.2);
+      chimneyCap.castShadow = true;
+      houseGroup.add(chimneyCap);
+
+      houseGroup.add(roofGroup);
+
+      // Lámparas colgantes y tapetes de las 5 habitaciones
+      const roomMats = [mats.dm, mats.um, mats.c, mats.d, mats.u];
+      for (let r = 0; r < 5; r++) {
+        const rx = -houseW / 2 + (r + 0.5) * roomWidth;
+        const rMat = roomMats[r];
+
+        const lampCord = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.35), mats.woodDark);
+        lampCord.position.set(rx, houseH / 2 + 0.12, houseD / 2 + 0.35);
+        houseGroup.add(lampCord);
+
+        const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.2, 12), rMat);
+        lampShade.position.set(rx, houseH / 2 - 0.05, houseD / 2 + 0.35);
+        lampShade.castShadow = true;
+        houseGroup.add(lampShade);
+
+        const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), mats.lanternGlow);
+        bulb.position.set(rx, houseH / 2 - 0.16, houseD / 2 + 0.35);
+        houseGroup.add(bulb);
+
+        const rLight = new THREE.PointLight(rMat.color, 0.55, 3.5);
+        rLight.position.set(rx, houseH / 2 - 0.18, houseD / 2 + 0.4);
+        houseGroup.add(rLight);
+
+        // Tapete de color
+        const matMesh = new THREE.Mesh(new THREE.BoxGeometry(roomWidth - 0.5, 0.05, 0.75), rMat);
+        matMesh.position.set(rx, -1.9, houseD / 2 + 0.4);
+        matMesh.receiveShadow = true;
+        houseGroup.add(matMesh);
+      }
+
+      scene.add(houseGroup);
+
+      // REDIMENSIÓN RESPONSIVA
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // BUCLE DE RENDERIZADO SUAVE
+      function animateDiorama() {
+        requestAnimationFrame(animateDiorama);
+        renderer.render(scene, camera);
+      }
+      animateDiorama();
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
+      initMainDiorama3D();
       loadProgress();
       setupDragAndDrop();
       renderCitySkyline();
