@@ -2225,6 +2225,131 @@
       </div>
     </div>
 
+    <!-- =================================================================== -->
+    <!-- PANEL PROTAGONISTA: «DESCOMPOSICIÓN ADITIVA Y VALOR POSICIONAL»     -->
+    <!-- =================================================================== -->
+    <div id="additiveLiveRibbon" class="w-full max-w-5xl mb-3 parchment-card-premium p-3 sm:p-4 flex flex-col gap-3 z-20 shadow-lg">
+      
+      <!-- Hojas decorativas de esquina -->
+      <div class="leaf-corner-left" aria-hidden="true">
+        <svg viewBox="0 0 30 30" class="w-5 h-5 drop-shadow">
+          <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="leaf-corner-right" aria-hidden="true">
+        <svg viewBox="0 0 30 30" class="w-5 h-5 drop-shadow scale-x-[-1]">
+          <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+        </svg>
+      </div>
+
+      <!-- ENCABEZADO DEL PANEL DE DESCOMPOSICIÓN -->
+      <div class="flex items-center justify-between pb-2 border-b-2 border-amber-300/80 gap-2 flex-wrap">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-b from-amber-300 to-amber-500 border-2 border-amber-700 flex items-center justify-center text-base shadow-sm select-none">
+            🧩
+          </div>
+          <div>
+            <span class="text-xs sm:text-sm font-black text-amber-950 uppercase tracking-wide block leading-tight">
+              Panel de Descomposición Aditiva
+            </span>
+            <span class="text-[10px] sm:text-[11px] font-bold text-amber-800 leading-tight block">
+              Suma posicional exacta de los bloques en cada habitación
+            </span>
+          </div>
+        </div>
+
+        <!-- Botón para escuchar la lectura y pronunciación del número -->
+        <div class="flex items-center gap-2">
+          <span id="numberInWordsLabel" class="text-xs sm:text-sm font-black text-amber-950 bg-amber-100/90 border border-amber-300 px-3 py-1 rounded-xl shadow-2xs">"Cero"</span>
+          <button onclick="speakCurrentNumber()" class="bg-gradient-to-b from-amber-300 to-amber-400 hover:from-amber-200 hover:to-amber-300 text-amber-950 text-xs font-black px-3 py-1.5 rounded-xl border-2 border-amber-600 shadow-sm flex items-center gap-1 transition-all active:scale-95" title="Escuchar cómo se lee este número">
+            <span>🔊</span> Escuchar
+          </button>
+        </div>
+      </div>
+
+      <!-- FILA PRINCIPAL: 5 BLOQUES POSICIONALES + SUMAS INTERMEDIAS + RECUADRO VALOR TOTAL -->
+      <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 py-1">
+        
+        <!-- CONTENEDOR CONECTADO DE LAS 5 TARJETAS CON SIGNOS + -->
+        <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto py-1 flex-1 justify-center sm:justify-start">
+          
+          <!-- Tarjeta DM (Morado) -->
+          <div class="flex flex-col items-center justify-center bg-purple-50/95 border-2 border-purple-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-purple-900 uppercase">DM</span>
+            <span id="cardDigitDM" class="text-xl sm:text-2xl font-black text-purple-700 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValDM" class="bg-white text-purple-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-purple-300 shadow-2xs leading-none">0</span>
+          </div>
+
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
+
+          <!-- Tarjeta UM (Naranja) -->
+          <div class="flex flex-col items-center justify-center bg-orange-50/95 border-2 border-orange-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-orange-950 uppercase">UM</span>
+            <span id="cardDigitUM" class="text-xl sm:text-2xl font-black text-orange-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValUM" class="bg-white text-orange-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-orange-300 shadow-2xs leading-none">0</span>
+          </div>
+
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
+
+          <!-- Tarjeta C (Verde) -->
+          <div class="flex flex-col items-center justify-center bg-emerald-50/95 border-2 border-emerald-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-emerald-950 uppercase">C</span>
+            <span id="cardDigitC" class="text-xl sm:text-2xl font-black text-emerald-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValC" class="bg-white text-emerald-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-emerald-300 shadow-2xs leading-none">0</span>
+          </div>
+
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
+
+          <!-- Tarjeta D (Azul) -->
+          <div class="flex flex-col items-center justify-center bg-sky-50/95 border-2 border-sky-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-sky-950 uppercase">D</span>
+            <span id="cardDigitD" class="text-xl sm:text-2xl font-black text-sky-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValD" class="bg-white text-sky-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-sky-300 shadow-2xs leading-none">0</span>
+          </div>
+
+          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
+
+          <!-- Tarjeta U (Rojo) -->
+          <div class="flex flex-col items-center justify-center bg-rose-50/95 border-2 border-rose-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
+            <span class="text-[10px] sm:text-[11px] font-black text-rose-950 uppercase">U</span>
+            <span id="cardDigitU" class="text-xl sm:text-2xl font-black text-rose-600 font-fredoka leading-none my-0.5">0</span>
+            <span id="cardValU" class="bg-white text-rose-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-rose-300 shadow-2xs leading-none">0</span>
+          </div>
+
+        </div>
+
+        <span class="hidden sm:inline-block text-xl sm:text-2xl font-black text-amber-900 select-none mx-1">=</span>
+
+        <!-- RECUADRO DESTACADO: VALOR TOTAL PROTAGONISTA -->
+        <div class="golden-total-box min-w-[120px] sm:min-w-[140px] shrink-0">
+          <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-amber-950/80 leading-none mb-0.5">
+            Valor total:
+          </span>
+          <div id="grandTotalDisplay" class="text-2xl sm:text-3xl font-black text-amber-950 lego-font tracking-wide leading-none" style="text-shadow: 0 1px 0 rgba(255,255,255,0.7)">
+            0
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FRANJA DE FÓRMULA MATEMÁTICA ADITIVA PROTAGONISTA -->
+      <div class="bg-gradient-to-r from-amber-50 via-white to-amber-50 border-2 border-amber-300 rounded-xl px-4 py-2 shadow-inner flex items-center justify-center text-center">
+        <div id="additiveFormulaDisplay" class="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-wide font-fredoka leading-tight">
+          0 + 0 + 0 + 0 + 0 = 0 unidades
+        </div>
+      </div>
+
+      <!-- Compatibilidad oculta de elementos del contrato previo -->
+      <div class="hidden" aria-hidden="true">
+        <div id="positionalDecompBox"></div>
+        <button id="btnUnpackUM" onclick="event.stopPropagation(); borrowFromLeft('C')"></button>
+        <button id="btnUnpackC" onclick="event.stopPropagation(); borrowFromLeft('D')"></button>
+        <button id="btnUnpackD" onclick="event.stopPropagation(); borrowFromLeft('U')"></button>
+        <div id="additiveDecompBox"></div>
+      </div>
+
+    </div>
+
     <!-- DIORAMA: ESCENARIO CON LAS 5 HABITACIONES PERMANENTES EN UN MISMO EDIFICIO LEGO -->
     
     <!-- =================================================================== -->
@@ -2496,131 +2621,7 @@
       </div>
     </div>
 
-    <!-- =================================================================== -->
-    <!-- PANEL PROTAGONISTA: «DESCOMPOSICIÓN ADITIVA Y VALOR POSICIONAL»     -->
-    <!-- =================================================================== -->
-    <div class="w-full max-w-5xl mt-3 parchment-card-premium p-3 sm:p-4 flex flex-col gap-3 z-20 shadow-lg">
-      
-      <!-- Hojas decorativas de esquina -->
-      <div class="leaf-corner-left" aria-hidden="true">
-        <svg viewBox="0 0 30 30" class="w-5 h-5 drop-shadow">
-          <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
-        </svg>
-      </div>
-      <div class="leaf-corner-right" aria-hidden="true">
-        <svg viewBox="0 0 30 30" class="w-5 h-5 drop-shadow scale-x-[-1]">
-          <path d="M0 0 C10 4 20 14 24 26 C12 24 4 14 0 0 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
-        </svg>
-      </div>
-
-      <!-- ENCABEZADO DEL PANEL DE DESCOMPOSICIÓN -->
-      <div class="flex items-center justify-between pb-2 border-b-2 border-amber-300/80 gap-2 flex-wrap">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-b from-amber-300 to-amber-500 border-2 border-amber-700 flex items-center justify-center text-base shadow-sm select-none">
-            🧩
-          </div>
-          <div>
-            <span class="text-xs sm:text-sm font-black text-amber-950 uppercase tracking-wide block leading-tight">
-              Panel de Descomposición Aditiva
-            </span>
-            <span class="text-[10px] sm:text-[11px] font-bold text-amber-800 leading-tight block">
-              Suma posicional exacta de los bloques en cada habitación
-            </span>
-          </div>
-        </div>
-
-        <!-- Botón para escuchar la lectura y pronunciación del número -->
-        <div class="flex items-center gap-2">
-          <span id="numberInWordsLabel" class="text-xs sm:text-sm font-black text-amber-950 bg-amber-100/90 border border-amber-300 px-3 py-1 rounded-xl shadow-2xs">"Cero"</span>
-          <button onclick="speakCurrentNumber()" class="bg-gradient-to-b from-amber-300 to-amber-400 hover:from-amber-200 hover:to-amber-300 text-amber-950 text-xs font-black px-3 py-1.5 rounded-xl border-2 border-amber-600 shadow-sm flex items-center gap-1 transition-all active:scale-95" title="Escuchar cómo se lee este número">
-            <span>🔊</span> Escuchar
-          </button>
-        </div>
-      </div>
-
-      <!-- FILA PRINCIPAL: 5 BLOQUES POSICIONALES + SUMAS INTERMEDIAS + RECUADRO VALOR TOTAL -->
-      <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 py-1">
-        
-        <!-- CONTENEDOR CONECTADO DE LAS 5 TARJETAS CON SIGNOS + -->
-        <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto py-1 flex-1 justify-center sm:justify-start">
-          
-          <!-- Tarjeta DM (Morado) -->
-          <div class="flex flex-col items-center justify-center bg-purple-50/95 border-2 border-purple-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
-            <span class="text-[10px] sm:text-[11px] font-black text-purple-900 uppercase">DM</span>
-            <span id="cardDigitDM" class="text-xl sm:text-2xl font-black text-purple-700 font-fredoka leading-none my-0.5">0</span>
-            <span id="cardValDM" class="bg-white text-purple-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-purple-300 shadow-2xs leading-none">0</span>
-          </div>
-
-          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
-
-          <!-- Tarjeta UM (Naranja) -->
-          <div class="flex flex-col items-center justify-center bg-orange-50/95 border-2 border-orange-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
-            <span class="text-[10px] sm:text-[11px] font-black text-orange-950 uppercase">UM</span>
-            <span id="cardDigitUM" class="text-xl sm:text-2xl font-black text-orange-600 font-fredoka leading-none my-0.5">0</span>
-            <span id="cardValUM" class="bg-white text-orange-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-orange-300 shadow-2xs leading-none">0</span>
-          </div>
-
-          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
-
-          <!-- Tarjeta C (Verde) -->
-          <div class="flex flex-col items-center justify-center bg-emerald-50/95 border-2 border-emerald-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
-            <span class="text-[10px] sm:text-[11px] font-black text-emerald-950 uppercase">C</span>
-            <span id="cardDigitC" class="text-xl sm:text-2xl font-black text-emerald-600 font-fredoka leading-none my-0.5">0</span>
-            <span id="cardValC" class="bg-white text-emerald-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-emerald-300 shadow-2xs leading-none">0</span>
-          </div>
-
-          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
-
-          <!-- Tarjeta D (Azul) -->
-          <div class="flex flex-col items-center justify-center bg-sky-50/95 border-2 border-sky-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
-            <span class="text-[10px] sm:text-[11px] font-black text-sky-950 uppercase">D</span>
-            <span id="cardDigitD" class="text-xl sm:text-2xl font-black text-sky-600 font-fredoka leading-none my-0.5">0</span>
-            <span id="cardValD" class="bg-white text-sky-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-sky-300 shadow-2xs leading-none">0</span>
-          </div>
-
-          <span class="text-base sm:text-xl font-black text-amber-800 select-none">+</span>
-
-          <!-- Tarjeta U (Rojo) -->
-          <div class="flex flex-col items-center justify-center bg-rose-50/95 border-2 border-rose-400 rounded-2xl p-1.5 sm:p-2 min-w-[64px] sm:min-w-[76px] shadow-sm transition-transform hover:scale-105">
-            <span class="text-[10px] sm:text-[11px] font-black text-rose-950 uppercase">U</span>
-            <span id="cardDigitU" class="text-xl sm:text-2xl font-black text-rose-600 font-fredoka leading-none my-0.5">0</span>
-            <span id="cardValU" class="bg-white text-rose-950 font-black text-[11px] sm:text-xs px-2 py-0.5 rounded-md border border-rose-300 shadow-2xs leading-none">0</span>
-          </div>
-
-        </div>
-
-        <span class="hidden sm:inline-block text-xl sm:text-2xl font-black text-amber-900 select-none mx-1">=</span>
-
-        <!-- RECUADRO DESTACADO: VALOR TOTAL PROTAGONISTA -->
-        <div class="golden-total-box min-w-[120px] sm:min-w-[140px] shrink-0">
-          <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-amber-950/80 leading-none mb-0.5">
-            Valor total:
-          </span>
-          <div id="grandTotalDisplay" class="text-2xl sm:text-3xl font-black text-amber-950 lego-font tracking-wide leading-none" style="text-shadow: 0 1px 0 rgba(255,255,255,0.7)">
-            0
-          </div>
-        </div>
-
-      </div>
-
-      <!-- FRANJA DE FÓRMULA MATEMÁTICA ADITIVA PROTAGONISTA -->
-      <div class="bg-gradient-to-r from-amber-50 via-white to-amber-50 border-2 border-amber-300 rounded-xl px-4 py-2 shadow-inner flex items-center justify-center text-center">
-        <div id="additiveFormulaDisplay" class="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-wide font-fredoka leading-tight">
-          0 + 0 + 0 + 0 + 0 = 0 unidades
-        </div>
-      </div>
-
-      <!-- Compatibilidad oculta de elementos del contrato previo -->
-      <div class="hidden" aria-hidden="true">
-        <div id="positionalDecompBox"></div>
-        <button id="btnUnpackUM" onclick="event.stopPropagation(); borrowFromLeft('C')"></button>
-        <button id="btnUnpackC" onclick="event.stopPropagation(); borrowFromLeft('D')"></button>
-        <button id="btnUnpackD" onclick="event.stopPropagation(); borrowFromLeft('U')"></button>
-        <div id="additiveDecompBox"></div>
-      </div>
-
-    </div>
-
+    
   </main>
 
   
